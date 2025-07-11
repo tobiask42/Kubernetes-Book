@@ -2,7 +2,7 @@
 
 **Sprache / Language**: Deutsch 🇩🇪  
 **Lizenz / License**: [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)  
-**PDF**: [Download hier](./main.pdf)  
+**PDF**: [Download hier](https://tobias-koch.dev/kubernetes-buch.pdf)  
 
 ---
 
