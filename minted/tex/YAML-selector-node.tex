@@ -1,0 +1,12 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-with-node-selector
+spec:
+  nodeSelector:
+    disktype: ssd
+  containers:
+    - name: nginx
+      image: nginx
+\end{minted}

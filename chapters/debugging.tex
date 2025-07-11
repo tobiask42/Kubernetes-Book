@@ -1,0 +1,483 @@
+\chapter{Überwachung und Debugging}
+
+\section{Events}
+Events ermöglichen die Überwachung von Ereignissen im Kubernetes-Cluster.\\
+
+\noindent
+\begin{tabular}{|p{0.45\textwidth}|p{0.55\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get events} & Alle Events im aktuellen Namespace auflisten \\
+\texttt{kubectl describe event <event-name>} & Details zu einem Event anzeigen \\
+\texttt{kubectl get events --sort-by=.metadata.creationTimestamp} & Events nach Erstellungszeitpunkt sortieren \\
+\texttt{kubectl get events -n <namespace>} & Alle Events in einem bestimmten Namespace auflisten \\
+\texttt{kubectl get events --field-selector involvedObject.name=<resource-name>} & Events für eine bestimmte Ressource filtern \\
+\hline
+\end{tabular}
+
+\subsection{Anwendungsfälle für Events}
+\begin{itemize}
+    \item Überwachung des Zustands und Verhaltens von Ressourcen im Cluster.
+    \item Fehlerbehebung und Diagnose von Problemen bei Deployments und Betriebsabläufen.
+    \item Nachvollziehen von Änderungen und Aktivitäten im Cluster.
+    \item Unterstützung bei der Einhaltung von Compliance- und Auditanforderungen.
+    \item Integration in Monitoring- und Benachrichtigungssysteme für proaktive Überwachung.
+\end{itemize}
+
+\subsection{Best Practices für die Nutzung von Events}
+\begin{itemize}
+    \item Regelmäßig die Events im Cluster überwachen, um frühzeitig auf Probleme reagieren zu können.
+    \item Tools und Dashboards wie \href{https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-usage-monitoring/}{Kubernetes Dashboard} oder \href{https://prometheus.io/}{Prometheus} nutzen, um Events zu visualisieren und zu analysieren.
+    \item Benachrichtigungssysteme implementieren, um bei kritischen Events automatisch alarmiert zu werden.
+    \item Regelmäßige Audits der Events durchführen, um sicherzustellen, dass alle Änderungen und Aktivitäten nachvollziehbar sind.
+    \item Events nach Relevanz sortieren und filtern, um die wichtigsten Informationen schnell zu identifizieren.
+\end{itemize}
+
+\subsection{Integration von Events in Monitoring-Tools}
+Kubernetes-Events können in verschiedene Monitoring- und Logging-Tools integriert werden, um eine umfassende Überwachung und Analyse zu ermöglichen:
+
+\begin{itemize}
+    \item \textbf{Prometheus und Grafana}: Den \texttt{kube-state-metrics} Exporter nutzen, um Kubernetes-Events in Prometheus zu importieren und mit Grafana zu visualisieren.
+    \item \textbf{ELK Stack (Elasticsearch, Logstash, Kibana)}: Events an Elasticsearch weiterleiten und sie mit Kibana visualisieren.
+    \item \textbf{Alertmanager}: Benachrichtigungen basierend auf bestimmten Event-Typen oder -Meldungen einrichten.
+\end{itemize}
+
+\subsubsection{Automatisierte Benachrichtigungen bei kritischen Events}
+\input{minted/tex/YAML-events-alert.tex}
+
+
+\subsection{Zusätzliche Ressourcen und Tools}
+\begin{itemize}
+    \item \href{https://kubernetes.io/docs/reference/kubectl/generated/kubectl_events/}{Kubernetes-Dokumentation zu Events}: Offizielle Dokumentation zu Events in Kubernetes.
+    \item \href{https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/}{Kubernetes Dashboard}: Ein Web-UI, um Kubernetes-Clusterressourcen zu verwalten und zu überwachen.
+    \item \href{https://github.com/kubernetes/kube-state-metrics}{kube-state-metrics}: Ein Prometheus-Exporter, der den Zustand der Kubernetes-Ressourcen überwacht.
+    \item \href{https://prometheus.io/}{Prometheus}: Ein Open-Source-Monitoring-System und Zeitreihen-Datenbank.
+    \item \href{https://www.elastic.co/elk-stack}{ELK Stack}: Eine Sammlung von Tools für das Suchen, Analysieren und Visualisieren von loggierten Daten in Echtzeit.
+    \item \href{https://grafana.com/}{Grafana}: Ein Open-Source-Analysetool zur Visualisierung von Metriken.
+\end{itemize}
+\newpage
+\subsection{Integration mit Prometheus und Grafana}
+\input{minted/tex/BASH-kube-state-metrics-install.tex}
+\subsubsection{Installation von kube-state-metrics}
+
+\subsubsection{Konfiguration von Prometheus}
+Die Prometheus-Konfigurationsdatei bearbeiten, um kube-state-metrics als Datenquelle hinzuzufügen:
+\input{minted/tex/YAML-prometheus-config.tex}
+
+\subsubsection{Visualisierung in Grafana}
+Dashboard in Grafana erstellen und Panels hinzufügen, um Kubernetes-Events zu visualisieren. Prometheus-Abfragen verwenden, um relevante Event-Metriken darzustellen.
+\input{minted/tex/BASH-visualize-grafana.tex}
+\subsubsection{Einrichtung von Benachrichtigungen}
+Grafana Alarme einrichten, um bei kritischen Events automatisch Benachrichtigungen zu erhalten:
+\input{minted/tex/YAML-grafana-alarms.tex}
+
+\newpage
+
+\section{Logs und Debugging}
+Befehle zur Überwachung und Fehlerbehebung von Anwendungen.\\
+
+\noindent
+\begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl logs <pod-name>} & Logs eines Pods anzeigen \\
+\texttt{kubectl logs <pod-name> -c <container-name>} & Logs eines bestimmten Containers in einem Pod anzeigen \\
+\texttt{kubectl logs -f <pod-name>} & Live-Logs eines Pods verfolgen \\
+\texttt{kubectl exec -it <pod-name> -- /bin/sh} & Eine interaktive Shell in einem Pod starten \\
+\texttt{kubectl exec <pod-name> -- <command>} & Einen Befehl ausführen, ohne eine Shell zu starten \\
+\texttt{kubectl describe pod <pod-name>} & Detaillierte Informationen über einen Pod anzeigen \\
+\texttt{kubectl get pods -o wide} & Status aller Pods in einem Namespace anzeigen\\
+\texttt{kubectl get pod <pod-name> -o yaml} & gibt den Status eines Pods im YAML-Format aus\\
+\texttt{kubectl get events} & Cluster-Events anzeigen, um Probleme und Statusänderungen zu überwachen \\
+\texttt{kubectl top pod <pod-name>} & Ressourcenverbrauch (CPU/Memory) eines Pods anzeigen \\
+\texttt{kubectl port-forward <pod-name> <local-port>:<pod-port>} & Port Forwarding (Netzwerkzugriff auf einen Pod innerhalb des Clusters von außerhalb des Clusters) einrichten\\
+\texttt{kubectl cp <pod-name>:/path/to/file /local/path} & Dateien von einem Pod auf den lokalen Rechner kopieren\\
+\texttt{kubectl cp /local/path <pod-name>:/path/to/file} & Dateien vom lokalen Rechner in einen Pod kopieren\\
+\hline
+\end{tabular}
+
+\subsection{Fehlerbehebung bei Pod-Problemen}
+\begin{itemize}
+    \item Überprüfen der Logs des Pods oder der Container innerhalb des Pods.
+    \item Überprüfen der Events
+    \item Überprüfen der Ressourcenlimits
+    \item Überprüfen der Netzwerkverbindungen
+    \item Wiederherstellen eines Pods durch Löschen und automatische Wiederherstellung
+\end{itemize}
+
+\newpage
+
+\subsection{Nützliche Tools und Erweiterungen}
+
+\begin{itemize}
+    \item \href{https://k9scli.io/}{\textbf{K9s}}: Ein Terminal basiertes UI, um Kubernetes-Cluster zu verwalten und zu überwachen.
+    \item \href{https://k8slens.dev/}{\textbf{Lens}}: Eine IDE für Kubernetes, die eine grafische Benutzeroberfläche bietet und es ermöglicht, Cluster-Ressourcen einfach zu überwachen und zu verwalten.
+    \item \href{https://github.com/MuhammedKalkan/OpenLens}{\textbf{OpenLens}}: Nur der offene, unter der MIT-Lizenz stehende, Teil von Lens
+    \item \href{https://github.com/stern/stern}{\textbf{Stern}}: Ein Tool, um Logs von mehreren Pods und Containern in Echtzeit zu verfolgen.
+    \item \href{https://github.com/ahmetb/kubectx}{\textbf{kubectx/kubens}}: Werkzeuge zum schnellen Wechseln zwischen Kubernetes-Clustern (kubectx) und Namespaces (kubens).
+    \item \href{https://prometheus.io/}{\textbf{Prometheus}} \textbf{und} \href{https://grafana.com/}{\textbf{Grafana}}: Prometheus ist ein Monitoring- und Alerting-Toolkit, das speziell für die Überwachung von Kubernetes-Cluster entwickelt wurde. Grafana wird oft zusammen mit Prometheus verwendet, um visuelle Dashboards zu erstellen.
+    \item \href{https://www.jaegertracing.io/}{\textbf{Jaeger}}: Ein Tool zur verteilten Tracing-Überwachung, das hilft, Performance-Probleme und Latenz in verteilten Systemen zu analysieren.
+    \item \href{https://www.fluentd.org/}{\textbf{Fluentd}}\textbf{/}\href{https://fluentbit.io/}{\textbf{Fluent Bit}}: Logging-Agenten, die Logs in Echtzeit sammeln, transformieren und an verschiedene Backends weiterleiten können.
+\end{itemize}
+
+\subsubsection{Verwendung von K9s}
+K9s ist ein beliebtes Tool, das eine benutzerfreundliche Oberfläche zur Verwaltung und Überwachung von Kubernetes-Clustern im Terminal bietet.
+\input{minted/tex/BASH-k9s.tex}
+Es kann unter Anderem genutzt werden um durch Kubernetes-Ressourcen zu navigieren, Logs anzuzeigen und Pods neu zu starten. Dies wird über eine Terminal-Oberfläche realisiert.
+
+\subsubsection{Verwendung von kubectx und kubens}
+Diese Tools erleichtern den Wechsel zwischen Kubernetes-Clustern und Namespaces.
+\input{minted/tex/BASH-kubectx.tex}
+
+\subsubsection{Echtzeit-Log-Verfolgung mit Stern}
+Stern ermöglicht das Verfolgen von Logs mehrerer Pods gleichzeitig.
+\input{minted/tex/BASH-stern.tex}
+
+\section{Metrics Server}
+Der Metrics Server sammelt und aggregiert Echtzeitmetriken von Pods und Nodes im Kubernetes-Cluster. Diese Metriken werden für Auto-Scaling verwendet. Für Monitoring soll der Kubelet Endpoint \texttt{/metrics/resource} verwendet werden.\\
+
+\noindent
+\begin{tabular}{
+|p{0.62\textwidth}|p{0.38\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get --raw "/apis/metrics.k8s.io/v1beta1/nodes"} & Metriken aller Nodes im Cluster anzeigen \\
+\texttt{kubectl get --raw "/apis/metrics.k8s.io/v1beta1/pods"} & Metriken aller Pods im Cluster anzeigen \\
+\texttt{kubectl top nodes} & Ressourcenverbrauch (CPU/Memory) aller Nodes anzeigen \\
+\texttt{kubectl top pods} & Ressourcenverbrauch (CPU/Memory) aller Pods im aktuellen Namespace anzeigen \\
+\texttt{kubectl top pod <pod-name>} & Ressourcenverbrauch eines bestimmten Pods anzeigen \\
+\texttt{kubectl top pod <pod-name> --containers} & Ressourcenverbrauch der Container innerhalb eines bestimmten Pods anzeigen \\
+\texttt{kubectl top pod --all-namespaces} & Ressourcenverbrauch aller Pods in allen Namespaces anzeigen \\
+\hline
+\end{tabular}
+\subsection{Verwendungszwecke}
+
+Metrics Server haben folgende Anwendungszwecke:
+
+\begin{itemize}
+    \item CPU-/Speicher-basiertes \href{https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/}{horizontales Autoscaling}
+    \item Automatisches Anpassen/Vorschlagen der von Containern benötigten Ressourcen (\href{https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#vertical-pod-autoscaling}{Vertikales Autoscaling})
+\end{itemize}
+
+Der Metric Server sollte nicht genutzt werden, wenn Folgendes benötigt wird:
+
+\begin{itemize}
+    \item Nicht-Kubernetes-Cluster
+    \item Eine genaue Quelle für Ressourcennutzungsmetriken
+    \item Horizontales Autoscaling basierend auf anderen Ressourcen als CPU/Speicher
+\end{itemize}
+
+Für nicht unterstützte Anwendungsfälle sollten vollständige Überwachungslösungen wie Prometheus genutzt werden.
+
+
+\subsection{Installation und Konfiguration des Metrics Servers}
+\input{minted/tex/BASH-metrics-server-install.tex}
+
+Nach der Installation kann der Status des Metrics Servers überprüft werden:
+\input{minted/tex/BASH-metrics-server-check-pods.tex}
+\newpage
+\subsection{Konfiguration}
+
+Abhängig von der Cluster-Einrichtung müssen möglicherweise auch die an den Metrics Server-Container übergebenen Flags geändert werden. Die nützlichsten Flags:
+
+\begin{itemize}
+    \item \enquote{texttt{--kubelet-preferred-address-types}} - Die Priorität der Knotentypen, die verwendet werden, wenn eine Adresse für die Verbindung zu einem bestimmten Knoten ermittelt wird (Standard: [Hostname, InternalDNS, InternalIP, ExternalDNS, ExternalIP])
+    \item \enquote{texttt{--kubelet-insecure-tls}} - Die CA der von Kubelets präsentierten Servier-Zertifikate nicht überprüfen. Nur für Testzwecke.
+    \item \enquote{texttt{--requestheader-client-ca-file}} - Ein Root-Zertifikat-Bundle zur Überprüfung von Client-Zertifikaten bei eingehenden Anfragen angeben.
+    \item \enquote{texttt{--node-selector}} - Kann vervollständigen, um die Metriken von den angegebenen Knoten basierend auf Labels zu erfassen
+\end{itemize}
+
+Eine vollständige Liste der Konfigurations-Flags des Metrics Servers wird ausgegeben, indem folgender Befehl ausgeführt wird:
+\input{minted/tex/BASH-metrics-server-cofig-flags.tex}
+
+
+\subsection{Verwendung des Metrics Servers für Auto-Scaling}
+Der Metrics Server wird häufig in Kombination mit dem Horizontal Pod Autoscaler (HPA) verwendet, um die Anzahl der Replicas basierend auf den CPU- und Speicherauslastungen automatisch zu skalieren.
+
+\subsubsection{Erstellen eines Horizontal Pod Autoscalers}
+\input{minted/tex/BASH-metrics-server-make-hpa.tex}
+
+
+\subsubsection{Überprüfen des Status des Horizontal Pod Autoscalers}
+\input{minted/tex/BASH-metrics-server-get-hpa.tex}
+
+
+\subsection{Best Practices für die Nutzung des Metrics Servers}
+\begin{itemize}
+    \item Stelle sicher, dass der Metrics Server korrekt installiert und konfiguriert ist, um genaue Metriken zu erhalten.
+    \item Überwache den Zustand und die Logs des Metrics Servers, um sicherzustellen, dass er ordnungsgemäß funktioniert.
+    \item Verwende den Metrics Server in Kombination mit anderen Monitoring- und Logging-Tools, um eine umfassende Überwachung des Clusters zu gewährleisten.
+    \item Skalieren Sie den Metrics Server entsprechend der Größe und den Anforderungen Ihres Clusters, um eine optimale Leistung zu gewährleisten.
+    \item Aktualisieren Sie den Metrics Server regelmäßig, um von Verbesserungen und Fehlerbehebungen zu profitieren.
+\end{itemize}
+
+\subsection{Troubleshooting des Metrics Servers}
+Falls Probleme mit dem Metrics Server auftreten, können folgende Schritte zur Fehlerbehebung helfen:
+
+\begin{itemize}
+    \item Logs des Metrics Server Pods überprüfen:
+    \input{minted/tex/BASH-metrics-server-check-logs.tex}
+    
+    \item Sicherstellen, dass der Metrics Server die erforderlichen Berechtigungen hat:
+    \input{minted/tex/BASH-metrics-server-permissions.tex}
+    
+    \item Überprüfen, ob der Metrics Server die Metriken korrekt sammelt und verarbeitet:
+    \input{minted/tex/BASH-metrics-server-check-collect.tex}
+
+    \item Vergewissern, dass der Metrics Server auf alle Nodes im Cluster zugreifen kann:
+    \input{minted/tex/BASH-metrics-server-nodes-get.tex}
+
+    \item Die Netzwerkverbindung und Firewall-Einstellungen überprüfen, um sicherzustellen, dass der Metrics Server die Nodes erreichen kann:
+    \input{minted/tex/BASH-metrics-server-network.tex}
+
+    \item Überprüfen, ob der Metrics Server die richtigen Ressourcenlimits und -anforderungen hat:
+    \input{minted/tex/BASH-metrics-server-resources.tex}
+    
+    \item Sicherstellen, dass der Metrics Server korrekt konfiguriert ist, um Metriken von den Nodes zu sammeln. Die Konfigurationsdateien und Argumente des Metrics Servers prüfen:
+    \input{minted/tex/BASH-metrics-server-check-config.tex}
+    
+    \item Überprüfen, ob alle Abhängigkeiten des Metrics Server erfüllt sind, wie z.B. die API-Server- und Kubelet-Konfiguration:
+    \input{minted/tex/BASH-metrics-server-dependencies.tex}
+\end{itemize}
+
+\newpage
+
+\section{Monitoring-Tools}
+\subsection{Dashboard}
+\subsubsection{Dashboard installieren und starten}
+\begin{enumerate}
+    \item \texttt{helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/}
+    \item  \texttt{helm repo update}
+    \item \texttt{helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard}
+    \item \texttt{kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443 \# Pod muss laufen (Start dauert eventuell etwas)}
+\end{enumerate}
+Das Dashboard ist in diesem Fall unter \enquote{\texttt{https://localhost:8443}} erreichbar, es kann aber auch ein anderer Port verwendet werden.
+\subsubsection{Bearer Token erstellen}
+Um auf das Dashboard zugreifen zu können muss ein BearerToken erstellt werden
+\begin{enumerate}
+    \item \textbf{ServiceAccount erstellen:}\\ \texttt{kubectl create serviceaccount dashboard-admin-sa -n kubernetes-dashboard}
+    \item \textbf{ClusterRoleBindung erstellen:}\\ \texttt{kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:dashboard-admin-sa}
+    \item \textbf{BearerToken generieren:}\\ \texttt{kubectl -n kubernetes-dashboard create token dashboard-admin-sa}
+\end{enumerate}
+Zum Login wird das BearerToken bei der Seite des Dashboards im Browser eingesetzt.
+\subsection{Prometheus}
+Prometheus ist ein Open-Source-Monitoring-System und eine Zeitreihen-Datenbank, die speziell für die Überwachung und Alarmierung von Cloud-nativen Anwendungen entwickelt wurde. Es ist bekannt für seine flexible Abfragesprache, PromQL, und seine Fähigkeit, Metriken in Echtzeit zu sammeln und zu speichern.
+
+\subsubsection{Hauptmerkmale von Prometheus:}
+\begin{itemize}
+  \item Multi-dimensionales Datenmodell
+  \item Flexible und leistungsstarke Abfragesprache (PromQL)
+  \item Autonomer Betrieb ohne Abhängigkeiten
+  \item Push-basierte Metriksammlung über das Prometheus-Pushgateway
+\end{itemize}
+
+\subsubsection{Prometheus installieren}
+\begin{enumerate}
+    \item \texttt{helm repo add prometheus-community https://prometheus-community.github.io/helm-charts}
+    \item \texttt{helm repo update}
+    \item \texttt{helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace}
+    \item \texttt{kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090 \# Pod muss laufen}
+\end{enumerate}
+
+Prometheus ist in diesem Fall im Browser unter \texttt{127.0.0.1:9090} erreichbar.
+
+\subsection{Grafana}
+Grafana ist ein Open-Source-Analyse- und Visualisierungstool, das zur Überwachung und Analyse von Metriken verwendet wird. Es bietet eine benutzerfreundliche Oberfläche zum Erstellen und Verwalten von Dashboards und unterstützt eine Vielzahl von Datenquellen, einschließlich Prometheus.
+
+\subsubsection{Hauptmerkmale von Grafana:}
+\begin{itemize}
+  \item Unterstützung für mehrere Datenquellen (z. B. Prometheus, Graphite, InfluxDB)
+  \item Anpassbare Dashboards mit einer Vielzahl von Visualisierungsoptionen
+  \item Alarmierungs- und Benachrichtigungsfunktionen
+  \item Benutzer- und Rechteverwaltung
+\end{itemize}
+
+\subsubsection{Grafana installieren}
+Für Grafana muss Prometheus, oder eine andere Datenquelle installiert sein.
+\begin{enumerate}
+    \item \texttt{helm repo add grafana https://grafana.github.io/helm-charts}
+    \item \texttt{helm repo update}
+    \item \texttt{helm install grafana grafana/grafana --namespace monitoring}
+\end{enumerate}
+\textbf{Passwort generieren:}
+\begin{verbatim}
+    kubectl get secret --namespace monitoring grafana -o
+    jsonpath="{.data.admin-password}" | base64 --decode ; echo
+\end{verbatim}
+\textbf{Umgebungsvariable setzen}
+\begin{verbatim}
+    export POD_NAME=$(kubectl get pods --namespace monitoring -l
+    "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=grafana"
+    -o jsonpath="{.items[0].metadata.name}")
+\end{verbatim}
+\textbf{Auf Pod starten}
+\begin{verbatim}
+    kubectl --namespace monitoring port-forward $POD_NAME 3000
+\end{verbatim}
+In diesem Fall ist Grafana im Browser unter \enquote{127.0.0.1:3000} unter dem  Nutzernamen \enquote{admin} erreichbar.
+
+\subsection{ELK-Stack}
+Der ELK-Stack besteht aus Elasticsearch, Logstash und Kibana und bietet eine leistungsstarke Lösung für die Sammlung, Analyse und Visualisierung von Log-Daten.\\
+Jedoch sind die Lizenzen restriktiver: Cloud-Service Anbieter dürfen Elasticsearch und Kibana nicht als gehostete Dienste anbieten, es sei denn sie haben eine komerzielle Vereinbarung mit Elastic. Zudem muss jeder, der den Dienst öffentlich zugänglich macht auch den gesamten Code der verwendeten Software, einschließlich der eigenen Anpassungen unter derselben Lizenz zur Verfügung stellen. Logstash und Beats sind unter der Apache 2.0 Lizenz verfügbar, was ihre Anwendung flexibler macht und es gibt proprietäre Plugins, die jeweils einer Lizenzgebühr unterliegen.
+
+\subsubsection{Elasticsearch:}
+Eine verteilte Such- und Analyse-Engine, die für ihre Skalierbarkeit und Echtzeitleistung bekannt ist.
+
+\subsubsection{Logstash:}
+Ein Datenverarbeitungspipeline-Tool, das Daten von einer Vielzahl von Quellen sammeln, transformieren und in Elasticsearch einfügen kann.
+
+\subsubsection{Kibana:}
+Ein Visualisierungs- und Dashboard-Tool, das speziell für die Arbeit mit Elasticsearch entwickelt wurde.
+
+\subsection{TICK-Stack}
+Der TICK-Stack besteht aus vier Hauptkomponenten: Telegraf, InfluxDB, Chronograf und Kapacitor. Zusammen bieten sie eine umfassende Lösung zur Sammlung, Speicherung, Visualisierung und Alarmierung von Zeitreihendaten.
+
+\subsubsection{Telegraf:}
+Telegraf ist ein serverseitiger Agent zum Sammeln und Senden von Metriken und Ereignissen aus Datenbanken, Systemen und IoT-Sensoren. Es unterstützt eine Vielzahl von Eingabe- und Ausgabe-Plugins, was es sehr flexibel macht.
+
+\subsubsection{InfluxDB:}
+InfluxDB ist eine leistungsstarke Zeitreihen-Datenbank, die speziell für hohe Schreiblasten und Echtzeitanalysen entwickelt wurde. Sie bietet eine SQL-ähnliche Abfragesprache (InfluxQL) sowie Unterstützung für die Datenkomprimierung.
+
+\subsubsection{Chronograf:}
+Chronograf ist das visuelle Dashboarding-Tool des TICK-Stacks. Es ermöglicht die einfache Visualisierung und Analyse der in InfluxDB gespeicherten Daten sowie das Erstellen und Verwalten von Dashboards.
+
+\subsubsection{Kapacitor:}
+Kapacitor ist die Echtzeit-Datenverarbeitungs- und Alarmierungskomponente des TICK-Stacks. Es ermöglicht die Erstellung von benutzerdefinierten Datenverarbeitungs-Pipelines und Alarmierungsregeln basierend auf den in InfluxDB gespeicherten Daten.
+\newpage
+\subsubsection{TICK-Stack installieren}
+\begin{enumerate}
+    \item \textbf{Telegraf installieren:}
+    \begin{verbatim}
+    wget -q https://repos.influxdata.com/influxdata-archive_compat.key
+    echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c influxdata-archive_compat.key' | sha256sum -c && cat influxdata-archive_compat.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
+    echo 'deb [signed-by=/etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg] https://repos.influxdata.com/debian stable main' | sudo tee /etc/apt/sources.list.d/influxdata.list
+    sudo apt-get update && sudo apt-get install telegraf
+    
+    \end{verbatim}
+    \item \textbf{InfluxDB OSS installieren:}
+    \begin{verbatim}
+    wget -q https://repos.influxdata.com/influxdata-archive_compat.key
+    echo 'deb [signed-by=/etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg] https://repos.influxdata.com/debian stable main' | sudo tee /etc/apt/sources.list.d/influxdata.list
+    sudo apt-get update && sudo apt-get install influxdb
+    sudo systemctl unmask influxdb.service
+    sudo systemctl start influxdb
+    \end{verbatim}
+    \item \textbf{Chronograf installieren:}
+    \begin{verbatim}
+    wget https://download.influxdata.com/chronograf/releases/chronograf_1.10.5_amd64.deb
+    sudo dpkg -i chronograf_1.10.5_amd64.deb
+    \end{verbatim}
+    \item \textbf{Kapacitor installieren:}
+    \begin{verbatim}
+    wget https://download.influxdata.com/kapacitor/releases/kapacitor_1.7.5-1_amd64.deb
+    sudo dpkg -i kapacitor_1.7.5-1_amd64.deb
+    \end{verbatim}
+\end{enumerate}
+\href{https://www.influxdata.com/downloads/}{Aktuelle Versionen (Abschnitt \enquote{Are you interested in InfluxDB 1.x Open Source?}}
+
+\noindent
+Die verschiedenen TICK-Stack-Komponenten sind auf den entsprechenden Ports erreichbar, die in ihren Konfigurationsdateien angegeben sind.
+
+
+
+
+\newpage
+
+\subsection{Integration von Prometheus, Grafana und ELK-Stack in Kubernetes}
+Die Integration dieser Tools in Kubernetes ermöglicht eine umfassende Überwachung und Analyse der Cluster-Ressourcen und Anwendungen.
+
+\subsubsection{Prometheus:}
+\begin{itemize}
+  \item Prometheus mithilfe von Helm installieren:
+  \input{minted/tex/BASH-prometheus-install.tex}
+  \item Prometheus wird konfiguriert, um Metriken von Kubernetes zu sammeln, indem der \texttt{kube-state-metrics} Exporter hinzugefügt wird.
+\end{itemize}
+
+\subsubsection{Grafana:}
+\begin{itemize}
+  \item Grafana mithilfe von Helm installieren:
+  \input{minted/tex/BASH-grafana-install.tex}
+    \item Prometheus als Datenquelle in Grafana hinzufügen und Dashboards zur Visualisierung der Metriken erstellen.
+\end{itemize}
+
+\subsubsection{ELK-Stack:}
+\begin{itemize}
+  \item ELK-Stack mithilfe von Helm installieren:
+  \input{minted/tex/BASH-elk-stack-install.tex}
+  \item Logstash konfigurieren, um Logs von Kubernetes zu sammeln und an Elasticsearch weiterzuleiten.\\
+  Logstash-Konfigurationsdatei:
+  \input{minted/tex/DSL-logstash-configure.tex}
+  \item In Kibana eine Indexvorlage hinzufügen, um die Logs von Elasticsearch zu visualisieren.
+\end{itemize}
+\newpage
+\subsection{Best Practices für Monitoring in Kubernetes}
+Um sicherzustellen, dass Ihre Monitoring-Strategie effektiv ist, sollten die folgenden Best Practices befolgt werden:
+\begin{itemize}
+  \item \textbf{Zentrale Überwachung:} Zentrale Monitoring-Tools nutzen, um alle Metriken, Logs und Events an einem Ort zu sammeln und zu analysieren.
+  \item \textbf{Automatisierte Benachrichtigungen:} Alarme und Benachrichtigungen einrichten, um bei kritischen Ereignissen oder Metriken sofort informiert zu werden.
+  \item \textbf{Ressourcensparende Konfiguration:} Sicherstellen, dass die Monitoring-Tools ressourcenschonend konfiguriert sind, um die Leistung des Clusters nicht zu beeinträchtigen.
+  \item \textbf{Regelmäßige Audits:} Regelmäßige Audits der Monitoring-Konfiguration durchführen, um sicherzustellen, dass alle relevanten Metriken und Logs erfasst werden.
+  \item \textbf{Sicherheitsaspekte beachten:} Auf die Sicherheit der Monitoring-Tools achten, insbesondere wenn diese Zugang zu sensiblen Daten haben.
+  \item \textbf{Dokumentation und Schulung:} Die Monitoring-Strategie dokumentieren und das Team im Umgang mit den Tools und Dashboards schulen.
+\end{itemize}
+
+\subsection{Zusätzliche Ressourcen}
+\begin{itemize}
+  \item \href{https://prometheus.io/}{Prometheus Website}
+  \item \href{https://grafana.com/}{Grafana Website}
+  \item \href{https://www.elastic.co/elk-stack}{ELK-Stack Website}
+\end{itemize}
+\newpage
+\subsection{Verwendung von JSONPath}
+\label{subsec:use-json-path}
+JSONPath ist eine Abfragesprache, die es ermöglicht, bestimmte Teile einer JSON-Struktur zu extrahieren. In Kubernetes wird JSONPath verwendet, um spezifische Felder aus den JSON-Antworten der Kubernetes-API zu extrahieren. Dies ist besonders nützlich, um präzise Informationen aus Ressourcen zu erhalten.
+
+\subsubsection{Grundlagen von JSONPath}
+JSONPath verwendet ähnliche Konzepte wie XPath, das für XML verwendet wird.\\
+Grundlegende JSONPath-Ausdrücke:
+
+\begin{itemize}
+    \item \texttt{.}: Wurzelselektor, der das gesamte Dokument darstellt.
+    \item \texttt{.field}: Selektiert das angegebene Feld.
+    \item \texttt{.field.subfield}: Selektiert ein Unterfeld.
+    \item \texttt{.field[index]}: Selektiert ein Element in einem Array.
+    \item \texttt{.field[*]}: Selektiert alle Elemente in einem Array.
+\end{itemize}
+
+\subsubsection{Beispiele für JSONPath-Ausdrücke}
+Beispiele, wie JSONPath-Ausdrücke verwendet werden können:
+\input{minted/tex/BASH-jsonpath-samples.tex}
+\newpage
+\subsubsection{JSON-Beispiel}
+Beispiel für die JSON-Ausgabe eines Deployments, das von der Kubernetes-API zurückgegeben wird:
+\input{minted/tex/JSON-jsonpath-output.tex}
+\noindent
+Mit dem JSONPath-Ausdruck \texttt{.spec.replicas} wird der Wert des Feldes \texttt{replicas} innerhalb des \texttt{spec}-Blocks extrahiert, was in diesem Fall \texttt{3} wäre.
+\newpage
+\subsubsection{Verwendung von JSONPath in kubectl}
+JSONPath kann in Kombination mit \texttt{kubectl} verwendet werden, um spezifische Informationen aus Kubernetes-Ressourcen zu extrahieren und anzuzeigen. Hier sind einige Beispiele, wie dies gemacht werden kann:
+\input{minted/tex/BASH-jsonpath-kubectl.tex}
+
+Durch die Verwendung von JSONPath-Ausdrücken in \texttt{kubectl} können Administratoren und Entwickler präzise und gezielte Informationen aus der API-Antwort extrahieren, ohne die gesamte JSON-Antwort durchsehen zu müssen.
+
+\subsubsection{Weitere nützliche JSONPath-Ausdrücke}
+Hier sind einige zusätzliche nützliche JSONPath-Ausdrücke, die häufig in Kubernetes verwendet werden:
+
+\begin{itemize}
+    \item \texttt{.items[*].metadata.name}: Selektiert die Namen aller Elemente in einer Liste (z.B. alle Pod-Namen).
+    \item \texttt{.items[?(@.status.phase=="Running")].metadata.name}: Selektiert die Namen aller Pods, die im Zustand "Running" sind.
+    \item \texttt{.spec.template.spec.containers[?(@.name=="nginx")].image}: Selektiert das Image des Containers mit dem Namen "nginx".
+    \item \texttt{.items[*].status.containerStatuses[?(@.ready==true)].name}: Selektiert die Namen aller Container, die bereit sind.
+\end{itemize}
+
+\subsubsection{Nützliche Links und Ressourcen}
+Um mehr über JSONPath und seine Verwendung in Kubernetes zu erfahren, sind hier einige nützliche Links und Ressourcen:
+
+\begin{itemize}
+    \item Offizielle JSONPath-Spezifikation: \url{https://goessner.net/articles/JsonPath/}
+    \item \texttt{kubectl} Dokumentation: \url{https://kubernetes.io/docs/reference/kubectl/overview/}
+    \item Kubernetes JSONPath Support: \url{https://kubernetes.io/docs/reference/kubectl/jsonpath/}
+\end{itemize}

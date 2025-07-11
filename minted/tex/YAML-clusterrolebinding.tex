@@ -1,0 +1,14 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: beispiel-clusterrolebinding
+subjects:
+  - kind: User
+    name: example-user
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: beispiel-clusterrole
+  apiGroup: rbac.authorization.k8s.io
+\end{minted}

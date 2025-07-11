@@ -1,0 +1,57 @@
+\begin{minted}[frame=lines, bgcolor=bg, linenos]{go}
+package main
+
+import (
+    "fmt"
+    "os"
+    "time"
+
+    "k8s.io/client-go/informers"
+    "k8s.io/client-go/kubernetes"
+    "k8s.io/client-go/tools/cache"
+    "k8s.io/client-go/tools/clientcmd"
+)
+
+func main() {
+    // Laden der Kubernetes-Konfiguration (innerhalb oder außerhalb des Clusters)
+    config, err := clientcmd.BuildConfigFromFlags("", clientcmd.RecommendedHomeFile)
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error building kubeconfig: %s\n", err.Error())
+        os.Exit(1)
+    }
+    // Erstellen des Clientsets
+    clientset, err := kubernetes.NewForConfig(config)
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error creating clientset: %s\n", err.Error())
+        os.Exit(1)
+    }
+    // Erstellen eines Factory für SharedInformers
+    factory := informers.NewSharedInformerFactory(clientset, 10*time.Minute)
+    // Informer für Pods erstellen
+    podInformer := factory.Core().V1().Pods().Informer()
+    stopCh := make(chan struct{})
+    defer close(stopCh)
+    // Event-Handler für den Pod-Informer hinzufügen
+    podInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
+        AddFunc: func(obj interface{}) {
+            fmt.Println("Pod added:", obj)
+        },
+        UpdateFunc: func(oldObj, newObj interface{}) {
+            fmt.Println("Pod updated:", newObj)
+        },
+        DeleteFunc: func(obj interface{}) {
+            fmt.Println("Pod deleted:", obj)
+        },
+    })
+    // Informer starten
+    go podInformer.Run(stopCh)
+    // Warten auf Synchronisierung der Caches
+    if !cache.WaitForCacheSync(stopCh, podInformer.HasSynced) {
+        fmt.Fprintf(os.Stderr, "Error waiting for cache sync\n")
+        os.Exit(1)
+    }
+    fmt.Println("Controller running")
+    select {}
+}
+
+\end{minted}

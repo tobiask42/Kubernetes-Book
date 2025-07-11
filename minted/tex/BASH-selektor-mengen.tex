@@ -1,0 +1,3 @@
+\begin{minted}[frame=lines, bgcolor=bg, breaklines]{bash}
+kubectl get pods -l 'app in (web,api),env notin (staging),release'
+\end{minted}

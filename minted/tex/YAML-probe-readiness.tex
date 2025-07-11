@@ -1,0 +1,16 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: readiness-example
+spec:
+  containers:
+    - name: app
+      image: your-image:latest
+      readinessProbe:
+        httpGet:
+          path: /readyz
+          port: 8080
+        initialDelaySeconds: 10
+        periodSeconds: 5
+\end{minted}

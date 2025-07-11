@@ -1,0 +1,17 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+    - name: my-container
+      image: my-image
+      volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config
+  volumes:
+    - name: config-volume
+      configMap:
+        name: my-config
+\end{minted}

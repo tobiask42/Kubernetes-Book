@@ -1,0 +1,16 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tolerant-pod
+spec:
+  tolerations:
+    - key: key
+      operator: Equal
+      value: value
+      effect: NoSchedule
+  containers:
+    - name: nginx
+      image: nginx
+
+\end{minted}

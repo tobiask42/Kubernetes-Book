@@ -1,0 +1,14 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dynamic-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: fast
+
+\end{minted}

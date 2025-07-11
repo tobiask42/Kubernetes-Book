@@ -1,0 +1,7 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+scrape_configs:
+  - job_name: kube-state-metrics
+    static_configs:
+      - targets:
+          - <kube-state-metrics-service>:8080
+\end{minted}

@@ -1,0 +1,17 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-with-node-affinity
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        labelSelector:
+          matchLabels:
+            app: my-app
+        topologyKey: 'kubernetes.io/hostname'
+  containers:
+    - name: my-container
+      image: my-image
+\end{minted}

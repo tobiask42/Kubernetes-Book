@@ -1,0 +1,8 @@
+\begin{minted}[frame=lines, bgcolor=bg, breaklines]{bash}
+# Installiere kube-state-metrics in den Kubernetes-Cluster
+kubectl apply -f https://github.com/kubernetes/kube-state-metrics/blob/master/ examples/standard/kube-state-metrics-service-account.yaml
+kubectl apply -f https://github.com/kubernetes/kube-state-metrics/blob/master/ examples/standard/kube-state-metrics-cluster-role.yaml
+kubectl apply -f https://github.com/kubernetes/kube-state-metrics/blob/master/ examples/standard/kube-state-metrics-cluster-role-binding.yaml
+kubectl apply -f https://github.com/kubernetes/kube-state-metrics/blob/master/ examples/standard/kube-state-metrics-deployment.yaml
+kubectl apply -f https://github.com/kubernetes/kube-state-metrics/blob/master/ examples/standard/kube-state-metrics-service.yaml
+\end{minted}

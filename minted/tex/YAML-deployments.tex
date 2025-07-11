@@ -1,0 +1,21 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beispiel-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: beispiel-app
+  template:
+    metadata:
+      labels:
+        app: beispiel-app
+    spec:
+      containers:
+      - name: app
+        image: beispiel:latest
+        ports:
+        - containerPort: 80
+\end{minted}

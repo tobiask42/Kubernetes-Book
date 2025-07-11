@@ -1,0 +1,16 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: liveness-example-tcp
+spec:
+  containers:
+    - name: app
+      image: your-image:latest
+      livenessProbe:
+        tcpSocket:
+          port: 8080
+        failureThreshold: 3
+        initialDelaySeconds: 15
+        periodSeconds: 10
+\end{minted}

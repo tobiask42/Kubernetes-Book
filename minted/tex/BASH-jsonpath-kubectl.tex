@@ -1,0 +1,16 @@
+\begin{minted}[frame=lines, bgcolor=bg, breaklines]{bash}
+# Anzahl der Replikate eines Deployments anzeigen
+kubectl get deployment nginx-deployment -o=jsonpath='{.spec.replicas}'
+
+# Image des Containers in einem Deployment anzeigen
+kubectl get deployment nginx-deployment -o=jsonpath='{.spec.template.spec.containers[0].image}'
+
+# Namen aller Pods in einem Namespace anzeigen
+kubectl get pods -o=jsonpath='{.items[*].metadata.name}'
+
+# IP-Adressen aller Nodes anzeigen
+kubectl get nodes -o=jsonpath='{.items[*].status.addresses[?(@.type=="InternalIP")].address}'
+
+# Namen und Images aller Container in einem Pod anzeigen
+kubectl get pod nginx-pod -o=jsonpath='{.spec.containers[*].name}:{.spec.containers[*].image}'
+\end{minted}

@@ -1,0 +1,31 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: multi-operator-replicaset
+spec:
+  replicas: 3
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - frontend
+          - backend
+      - key: environment
+        operator: NotIn
+        values:
+          - staging
+      - key: release
+        operator: Exists
+  template:
+    metadata:
+      labels:
+        app: frontend
+        environment: production
+        release: stable
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25
+\end{minted}

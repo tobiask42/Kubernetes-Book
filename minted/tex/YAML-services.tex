@@ -1,0 +1,14 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: Service
+metadata:
+  name: beispiel-service
+spec:
+  selector:
+    app: beispiel-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+  type: ClusterIP
+\end{minted}

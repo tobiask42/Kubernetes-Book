@@ -1,0 +1,156 @@
+\documentclass[a4paper,10pt]{scrreport}
+\usepackage{scrhack}
+%\usepackage[utf8]{inputenc} XeLaTeX nutzt inputenc nicht
+\usepackage{fontspec}
+% \usepackage[T1]{fontenc} XeLaTex nutzt fontspec
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[ngerman]{babel}
+\usepackage{makecell}
+\usepackage{xcolor}
+\usepackage{minted}
+\setminted{
+  fontsize=\small,
+  bgcolor=bg,
+  frame=lines,
+  linenos=false
+}
+\usepackage{hyperref}
+\usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage{eso-pic}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{etoolbox}
+\usepackage{xurl}
+\Urlmuskip=0mu plus 1mu
+
+
+% Schriftgröße für URLs anpassen
+\renewcommand{\UrlFont}{\normalsize\ttfamily}
+
+
+
+\setmonofont[
+  Contextuals=Alternate,
+  Scale=MatchLowercase,
+  Ligatures=TeX,
+  ItalicFont={Fira Code}
+]{Fira Code}
+
+
+
+
+\let\oldtexttt\texttt
+\renewcommand{\texttt}[1]{{\normalsize\oldtexttt{#1}}}
+
+
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue,
+  pdftitle={Kubernetes Technische Übersicht und Best Practices},
+  pdfauthor={Tobias Koch},
+  pdfsubject={Kubernetes Objekte, DevOps, Infrastruktur},
+  pdfkeywords={Kubernetes, DevOps, CC BY-NC, Infrastruktur, YAML},
+  pdfcreator={XeLaTeX with minted},
+  pdfproducer={LaTeX Workshop in VS Code}
+}
+
+
+
+\renewcommand{\contentsname}{Inhaltsverzeichnis}
+
+\geometry{a4paper, margin=1in}
+
+
+\setlength{\emergencystretch}{3em}
+
+
+\AddToShipoutPictureBG*{
+    \put(-5,-5){
+        \includegraphics[width=1.01\paperwidth,height=1.01\paperheight]{titlepage/pdf/Kubernetes_Cover.pdf}
+    }
+}
+
+\title{}
+\date{}
+\author{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\vspace*{6cm}
+\begin{center}
+    \textit{Das Titelbild dieses Dokuments stammt von} \\[0.8cm]
+    {\Large\textbf{Growtika}} \\[0.5cm]
+    \href{https://unsplash.com/photos/GSiEeoHcNTQ}{\texttt{unsplash.com/photos/GSiEeoHcNTQ}} \\[1cm]
+    \textit{Veröffentlicht unter der Unsplash-Lizenz.} \\[0.3cm]
+    \textit{Eine Namensnennung ist nicht erforderlich, wird hier jedoch mit Dank gemacht.}\\
+    \vspace{1cm}
+    Dieses Werk ist lizenziert unter der \textbf{Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)}.
+
+\vspace{0.5cm}
+
+\textbf{Erlaubt:}
+\begin{itemize}
+    \item Teilen (kopieren und weiterverbreiten),
+    \item Bearbeiten (remixen, transformieren, darauf aufbauen),
+\end{itemize}
+
+\textbf{Bedingungen:}
+\begin{itemize}
+    \item Namensnennung (BY)
+    \item Nicht-kommerzielle Nutzung (NC)
+\end{itemize}
+
+\noindent
+Lizenztext online: \href{https://creativecommons.org/licenses/by-nc/4.0/}{creativecommons.org/licenses/by-nc/4.0/}
+
+\vspace{0.5cm}
+
+\noindent
+Für kommerzielle Nutzung, Feedback oder allgemeine Anfragen: \href{https://tobias-koch.dev/de/contact}{https://tobias-koch.dev/de/contact}
+\end{center}
+
+\clearpage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\tableofcontents
+
+\input{chapters/grundlagen}
+
+\input{chapters/konfiguration+secrets}
+
+\input{chapters/skalierung}
+
+\input{chapters/speicherverwaltung}
+
+\input{chapters/workloads}
+
+\input{chapters/probes}
+
+\input{chapters/sicherheit}
+
+\input{chapters/ressourcen}
+
+\input{chapters/erweiterungen}
+
+\input{chapters/debugging}
+
+\input{chapters/taints}
+
+\input{chapters/bereitstellung}
+
+\input{chapters/backup}
+
+\input{chapters/cicd}
+
+\input{chapters/kompendium}
+
+\end{document}

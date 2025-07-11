@@ -1,0 +1,12 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: beispiel-pod
+spec:
+  containers:
+    - name: beispiel-container
+      image: beispiel:latest
+      ports:
+        - containerPort: 80
+\end{minted}

@@ -1,0 +1,1 @@
+$clean_ext .= ' nav out snm vrb pyg toc lof lot bbl blg synctex.gz fdb_latexmk fls xdy acn acr alg glg glo gls ist';

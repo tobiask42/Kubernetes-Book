@@ -1,0 +1,15 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-with-gpu
+spec:
+  nodeSelector:
+    gpu: "true"
+  containers:
+    - name: gpu-container
+      image: nvidia/cuda:10.0-base
+      resources:
+        limits:
+          nvidia.com/gpu: 1
+\end{minted}

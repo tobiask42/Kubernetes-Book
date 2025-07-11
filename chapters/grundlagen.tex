@@ -1,0 +1,424 @@
+\chapter{Grundlagen}
+
+\section{Pod}
+Die kleinste und einfachste Kubernetes-Einheit, die eine oder mehrere Container beinhaltet, die zusammen auf einer Node ausgeführt werden. \\
+
+\noindent
+\begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get pods} & Alle Pods im Standard-Namespace auflisten \\
+\texttt{kubectl describe pod <pod-name>} & Details zu einem bestimmten Pod anzeigen \\
+\texttt{kubectl delete pod <pod-name>} & Einen Pod löschen \\
+\texttt{kubectl logs <pod-name>} & Logs eines Pods anzeigen \\
+\texttt{kubectl exec -it <pod-name> -- <command>} & Befehle in einem Pod ausführen \\
+\hline
+\end{tabular}
+
+\subsubsection{Beispielkonfiguration: Pod}
+\input{minted/tex/YAML-pods.tex}
+
+\begin{itemize}
+    \item \textcolor{ForestGreen}{\textbf{image}} legt fest, welches Image verwendet wird
+    \item Nach dem Doppelpunkt steht die Versionsbezeichnung, oder \enquote{latest} für die neueste Version
+    \item In der Produktion sollte die Version spezifiziert werden
+    \item \textcolor{ForestGreen}{\textbf{ports}} gibt an, auf welchen Ports der Container Anfragen entgegennimmt
+    \item Sie dienen als Referenz und machen den Port \emph{nicht} automatisch von außen erreichbar
+\end{itemize}
+
+\subsubsection{Nützliche Links und Ressourcen}
+Dokumentation: \url{https://kubernetes.io/docs/concepts/workloads/pods/}
+
+\newpage
+\section{Deployment}
+Verwaltet und skaliert eine Gruppe von Pods und stellt sicher, dass eine bestimmte Anzahl von Pods immer läuft. \\
+
+\noindent
+\begin{tabular}{|p{0.65\textwidth}|p{0.35\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get deployments} & Alle Deployments auflisten \\
+\texttt{kubectl describe deployment <deployment-name>} & Details anzeigen \\
+\texttt{kubectl delete deployment <deployment-name>} & Deployment löschen \\
+\texttt{kubectl rollout restart deployment <deployment-name>} & Deployment neu starten \\
+\texttt{kubectl scale deployment <deployment-name> --replicas=<number>} & Anzahl der Pods ändern \\
+\texttt{kubectl set image deployment <deployment-name> <container-name>=<new-image>} & Image aktualisieren \\
+\hline
+\end{tabular}
+\noindent
+\subsubsection{Beispielkonfiguration: Deployment}
+\input{minted/tex/YAML-deployments.tex}
+\begin{itemize}
+    \item \textcolor{ForestGreen}{\textbf{replicas}} legt die Anzahl gleichzeitig laufender Pods fest
+    \item \textcolor{ForestGreen}{\textbf{selector}} ordnet Pods über Label-Matching dem Deployment zu
+    \item \textcolor{ForestGreen}{\textbf{template}} beschreibt den Pod-Aufbau
+    \item In \texttt{template.spec} Container, Images und Ports definieren
+    \item Änderungen am Deployment sorgen automatisch für einen geordneten Austausch der Pods
+\end{itemize}
+\subsubsection{Nützliche Links und Ressourcen}
+Dokumentation: \url{https://kubernetes.io/docs/concepts/workloads/controllers/deployment/}
+\newpage
+
+\section{Rollouts}
+Ein Rollout ist der Prozess, mit dem Kubernetes eine neue Version eines Deployments ausrollt. Dabei ersetzt Kubernetes alte Pods schrittweise durch neue, um Ausfälle zu vermeiden. \\
+
+\noindent
+\begin{tabular}{|p{0.58\textwidth}|p{0.42\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl rollout status deployment <name>} & Fortschritt eines Rollouts überwachen \\
+\texttt{kubectl rollout restart deployment <name>} & Deployment neu starten\\
+\texttt{kubectl rollout undo deployment <name>} & Letzten Rollout rückgängig machen \\
+\texttt{kubectl rollout history deployment <name>} & Rollout-Historie anzeigen \\
+\hline
+\end{tabular}
+
+\begin{itemize}
+    \item Rollouts erfolgen automatisch bei jeder Änderung am Deployment
+    \item Rollbacks sind möglich, solange frühere Revisionen gespeichert sind
+    \item Mit \texttt{restart} kann ein Rollout auch ohne Änderung ausgelöst werden
+\end{itemize}
+\subsubsection{Nützliche Links und Ressourcen}
+Dokumentation:\\
+\url{https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#updating-a-deployment}
+
+
+
+
+\section{Services}
+\label{sec:services}
+Services abstrahieren die Kommunikation mit Pods. Sie stellen eine dauerhafte IP-Adresse und einen DNS-Namen bereit, unter dem eine Gruppe von Pods erreicht werden kann. \\
+
+\noindent
+\begin{tabular}{|p{0.58\textwidth}|p{0.42\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get services} & Services auflisten \\
+\texttt{kubectl describe service <service-name>} & Details anzeigen \\
+\texttt{kubectl delete service <service-name>} & Service löschen \\
+\texttt{kubectl expose <resource> --port=<port>} & Service erstellen\\
+\hline
+\end{tabular}
+
+\subsection{Service-Typen}
+Der Service Typ legt fest, wie der Netzwerkzugriff erfolgt:\\
+\begin{tabular}{|p{0.2\textwidth}|p{0.8\textwidth}|}
+\hline
+\textbf{Typ} & \textbf{Beschreibung} \\
+\hline
+\texttt{ClusterIP} & Standard-Typ. Verbindet Clients innerhalb des Clusters. Von außen nicht erreichbar. \\
+\texttt{NodePort} & Öffnet einen festen Port auf jeder Node, leitet Traffic an den Service weiter. \\
+\texttt{LoadBalancer} & Nutzt einen externen Load Balancer des Cloud-Providers. \\
+\texttt{ExternalName} & Leitet den DNS-Namen auf eine externe Adresse um. Kein echter Proxy. \\
+\hline
+\end{tabular}
+
+\subsubsection{Beispielkonfiguration: Service}
+\input{minted/tex/YAML-services}
+
+\subsection{Headless Services}
+\label{subsec:headless-service}
+Eine spezielle Art von Service, die keine Cluster-IP bereitstellen und somit keine Lastverteilung durchführen. Stattdessen ermöglichen sie clientseitiges Load Balancing oder direkten DNS-Zugriff auf die einzelnen Pods.
+Typische Einsatzszenarien sind:
+\begin{itemize}
+    \item StatefulSets mit stabiler Pod-Namensauflösung (siehe \ref{sec:statefulsets})
+    \item Datenbanken, die Peer-Discovery benötigen
+    \item Monitoring-Tools mit direktem Zugriff auf Pods
+\end{itemize}
+\subsubsection{Beispielkonfiguration: Headless Service}
+\input{minted/tex/YAML-headless-service.tex}
+
+\subsubsection{Nützliche Links und Ressourcen}
+Dokumentation: \url{https://kubernetes.io/docs/concepts/services-networking/service/}
+\newpage
+\section{Nodes}
+Nodes sind physische oder virtuelle Maschinen in einem Kubernetes-Cluster. Sie stellen die Rechenressourcen (CPU, RAM, Netzwerk) zur Verfügung und führen die Pods aus.\\
+
+\noindent
+\begin{tabular}{|p{0.4\textwidth}|p{0.6\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get nodes} & Alle Nodes im Cluster auflisten \\
+\texttt{kubectl describe node <node-name>} & Details zu einer bestimmten Node anzeigen \\
+\texttt{kubectl cordon <node-name>} & Node für neue Pods sperren \\
+\texttt{kubectl uncordon <node-name>} & Node wieder freigeben \\
+\texttt{kubectl drain <node-name>} & Node evakuieren und alle Pods darauf verschieben \\
+\texttt{kubectl delete node <node-name>} & Node aus dem Cluster entfernen \\
+\hline
+\end{tabular}
+\subsection{Node-Typen}
+\begin{tabular}{|p{0.2\textwidth}|p{0.8\textwidth}|}
+\hline
+\textbf{Typ} & \textbf{Beschreibung} \\
+\hline
+\textbf{Master Node} & Verantwortlich für die Cluster-Steuerung und das Scheduling von Pods \\
+\textbf{Worker Node} & Führt Pods aus, enthält Kubelet, Kube-Proxy und eine Container Runtime \\
+\textbf{Etcd Node} & Speichert den Cluster-Zustand. Läuft meist auf Master-Nodes, kann auch dediziert sein \\
+\hline
+\end{tabular}
+
+\subsection{Node-Komponenten}
+\begin{tabular}{|p{0.22\textwidth}|p{0.78\textwidth}|}
+\hline
+\textbf{Komponente} & \textbf{Beschreibung} \\
+\hline
+\textbf{Kubelet} & Sorgt dafür, dass Pods auf der Node wie definiert laufen \\
+\textbf{Kube-Proxy} & Verantwortlich für die Weiterleitung von Traffic und Netzwerkrichtlinien \\
+\textbf{Container Runtime} & Führt Container aus (z.\,B. Docker, containerd, CRI-O) \\
+\textbf{API-Server} & Gateway zur Kubernetes-API und Frontend für die Control Plane \\
+\textbf{Scheduler} & Plant neue Pods auf passenden Nodes mit genügend Ressourcen\\
+\textbf{Controller-Manager} & Führt laufende Prozesse aus, um geforderten Zustand stabil zu halten \\
+\textbf{Cloud-Controller} & Kommuniziert mit dem Cloud-Provider \\
+\hline
+\end{tabular}
+\subsubsection{Weitere nützliche Befehle}
+\begin{tabular}{|p{0.53\textwidth}|p{0.47\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl top nodes} & CPU- und RAM-Auslastung der Nodes anzeigen \\
+\texttt{kubectl label node <node-name> <label-key>=<label-value>} & Label hinzufügen \\
+\texttt{kubectl taint nodes <node-name> <key>=<value>:<taint-effect>} & Node für bestimmte Pods unplanbar machen \\
+\texttt{kubectl edit node <node-name>} & Node bearbeiten \\
+\texttt{kubectl get node <node-name> -o yaml} & Konfiguration anzeigen \\
+\texttt{kubectl patch node <node-name> -p <patch-data>} & Patch anwenden \\
+\texttt{kubectl get events --field-selector involvedObject.kind=Node} & Ereignisse der Node anzeigen \\
+\texttt{kubectl annotate node <node-name> <annotation-key>=<annotation-value>} & Annotation hinzufügen \\
+\hline
+\end{tabular}
+\subsubsection{Nützliche Links und Ressourcen}
+Dokumentation: \url{https://kubernetes.io/docs/concepts/architecture/nodes/}
+
+\newpage
+\section{Namespaces}
+Ermöglichen die Trennung von Ressourcen innerhalb eines Kubernetes-Clusters, um verschiedene Umgebungen oder Teams zu unterstützen. \\
+
+\noindent
+\begin{tabular}{|p{0.53\textwidth}|p{0.47\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get namespaces} & Alle Namespaces auflisten \\
+\texttt{kubectl describe namespace <namespace-name>} & Details zu einem Namespace anzeigen \\
+\texttt{kubectl create namespace <namespace-name>} & Neuen Namespace erstellen \\
+\texttt{kubectl delete namespace <namespace-name>} & Einen Namespace löschen \\
+\texttt{kubectl get pods --namespace=<namespace-name>} & In einem bestimmten Namespace ausführen \\
+\texttt{kubectl config set-context --current --namespace=<namespace-name>} & Namespace als Standard setzen \\
+\texttt{kubectl config view --minify | grep namespace:} & Aktuellen Namespace anzeigen \\
+\texttt{kubectl api-resources --namespaced=true} & Ressourcen in namespaces \\
+\texttt{kubectl api-resources --namespaced=false} & Ressourcen außerhalb von namespaces\\
+\hline
+\end{tabular}
+
+\subsection{Best Practices bei Namespaces}
+\begin{itemize}
+    \item Entwicklungs-, Test- und Produktionsumgebungen in separaten Namespaces trennen
+    \item \texttt{ResourceQuotas} und \texttt{LimitRanges} definieren, um Ressourcenverbrauch zu kontrollieren
+    \item Zugriff über \texttt{RoleBindings} auf Namespace-Ebene granular steuern
+    \item Namespace-Anzahl überschaubar halten, um Komplexität zu vermeiden
+    \item Systemreservierte Namespaces wie \texttt{kube-system} und \texttt{default} unangetastet lassen
+    \item Klare, sprechende Namen vergeben (\texttt{frontend-staging} statt \texttt{ns-2})
+\end{itemize}
+
+
+\subsubsection{Nützliche Links und Ressourcen}
+Dokumentation:\\
+\url{https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/}
+\newpage
+\section{Labels und Annotations}
+Labels und Annotations sind Schlüssel-Wert-Paare, die zur Markierung und Beschreibung von Kubernetes-Ressourcen verwendet werden.
+Labels werden zur Identifizierung genutzt, während Annotations zusätzliche Informationen tragen.
+Labels werden zur Selektion und Gruppierung von Ressourcen verwendet, während Annotations zur Speicherung von nicht-selektiven Metadaten dienen. \\
+
+\noindent
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get pods --show-labels} & Alle Pods mit ihren Labels auflisten \\
+\texttt{kubectl label pod <pod-name> <key>=<value>} & Ein Label zu einem Pod hinzufügen \\
+\texttt{kubectl label pod <pod-name> <key>-} & Ein Label von einem Pod entfernen \\
+\texttt{kubectl annotate pod <pod-name> <key>=<value>} & Eine Annotation zu einem Pod hinzufügen \\
+\texttt{kubectl annotate pod <pod-name> <key>-} & Eine Annotation von einem Pod entfernen \\
+\texttt{kubectl get pods -l <key>=<value>} & Pods mit einem bestimmten Label auswählen \\
+\texttt{kubectl get pods -l 'env in (production, qa)'} & Pods mit einem der Labels auswählen\\
+\texttt{kubectl get pods -l 'tier notin (frontend, backend)'} & Pods auswählen, die diese Labels nicht haben \\
+\hline
+\end{tabular}
+
+\subsection{Best Practices für Labels und Annotations}
+\begin{itemize}
+    \item Syntax korrekt verwenden: Key im Format `<prefix>/<name>`, Name max. 63 Zeichen, prefix optional (DNS-Subdomain $\leq$ 253 Zeichen)
+    \item Wenn kein Präfix vorhanden ist kann davon ausgegangen werden dass das Label oder die Annotation privat für Cluster und Nutzer ist
+    \item Präfix verwenden, wenn Labels toolschnittstellenübergreifend oder von Drittanbietertools genutzt werden
+    \item Empfohlene Kubernetes-Labels verwenden
+    \item Labels für das Versionsmanagement verwenden
+    \item Standardisierte Namenskonventionen verwenden
+    \item Nachträgliche Änderungen an Labels vermeiden, da dies zu fehlerhaften Selektoren und unvorhergesehenen Rescheduling-Effekten führen kann
+    \item Labels und Annotationen nicht für sensitive Daten wie Passwörter oder API-Keys verwenden
+    \item Labels systematisch und flächendeckend einsetzen, um granulare Filterung, Auditierung und Management zu ermöglichen
+    \item Labels zur Ressourcen-Selektion, Annotations für ergänzende oder toolbezogene Metadaten nutzen
+    \item Annotations verwenden, um nicht-selektive Metadaten wie Build-IDs, Commit-Hashes, Verantwortliche oder Tool-Informationen abzulegen
+    \item Labels direkt im Pod-Template (z.B. in Deployments) definieren
+    \item Labeling und Annotationen im CI/CD automatisieren, um Konsistenz zu gewährleisten und menschliche Fehler zu vermeiden
+    \item Labels zur Kostenüberwachung verwenden, um unnötige Ausgaben zu vermeiden
+    \item Labels für Debugging und Fehlersuche verwenden, indem man die Labels des Selektors ändert, sodass sie nicht mehr mit den Pods übereinstimmen, die für Probleme verantwortlich sein könnten und sie so aus dem aktiven Cluster herauszulösen
+\end{itemize}
+
+\subsubsection{Nützliche Links und Ressourcen}
+Empfohlene Kubernetes Labels:\\
+\url{https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/}\\
+\url{https://komodor.com/blog/best-practices-guide-for-kubernetes-labels-and-annotations}\\
+\url{https://cast.ai/blog/kubernetes-labels-expert-guide-with-10-best-practices/}\\
+\url{https://www.redhat.com/en/blog/kubernetes-labels-best-practices}\\
+
+
+\section{Selektoren}
+Selektoren sind ein essentielles Konzept in Kubernetes, das verwendet wird, um Ressourcen basierend auf bestimmten Kriterien zu filtern oder auszuwählen. Sie werden häufig in verschiedenen Kubernetes-Objekten wie Pods, ReplicaSets und Services verwendet, um eine gezielte Auswahl und Zuweisung zu ermöglichen.
+
+\subsection{Label-Selektoren}
+Verwenden Labels, um Ressourcen zu filtern.
+
+\subsubsection{Gleichheitsbasierte Selektoren}
+Filtern Ressourcen basierend auf der genauen Übereinstimmung von Label-Werten.
+\input{minted/tex/YAML-gleichbasierter-selektor.tex}
+\noindent
+In diesem Fall wird der Selektor genutzt um die app `web` auszuwählen.\\
+Sie können auch innerhalb der Kommandozeile verwendet werden. Es stehen drei Operatioren zur Auswahl
+\begin{itemize}
+    \item = oder == : Prüft Übereinstimmung mit Label (die Verwendung von \enquote{=} wird empfohlen)
+    \item != : Prüft fehlende Übereinstimmung mit Label
+\end{itemize}
+\subsubsection{CLI-Beispiel:}
+\input{minted/tex/BASH-selektor-gleichheit.tex}
+
+\newpage
+\subsubsection{Mengenbasierte Selektoren}
+
+Filtern Ressourcen basierend auf der Zugehörigkeit von Label-Werten zu einer bestimmten Menge.
+
+\begin{table}[h]
+\renewcommand{\arraystretch}{1.2}
+\centering
+\begin{tabularx}{\textwidth}{|l|p{0.3\textwidth}|p{0.2\textwidth}|X|}
+\hline
+\textbf{YAML} & \textbf{Bedeutung} & \textbf{CLI-Kurzform} & \textbf{Beispiel} \\
+\hline
+\texttt{In} & Schlüssel existiert und hat einen der angegebenen Werte & \texttt{key in (a,b)} & \texttt{app in (web,api)} \\
+\texttt{NotIn} & Schlüssel existiert und hat keinen der angegebenen Werte & \texttt{key notin (a,b)} & \texttt{env notin (prod,qa)} \\
+\texttt{Exists} & Schlüssel existiert, Wert egal & \texttt{key} & \texttt{tier} \\
+\texttt{DoesNotExist} & Schlüssel existiert nicht & \texttt{!key} & \texttt{!partition} \\
+\hline
+\end{tabularx}
+\label{tab:setbasedselectors}
+\end{table}
+\noindent
+In YAML-Dateien werden die Operatoren groß geschrieben. Im CLI gelten Kurzformen.
+\subsubsection{Beispielkonfiguration: Mengenbasierter Selektor}
+\input{minted/tex/YAML-mengenbasierter-selektor}
+Kombinierte \texttt{matchExpressions}. Pods werden nur erstellt, wenn alle Bedingungen erfüllt sind:
+\begin{itemize}
+    \item \texttt{app} ist \texttt{frontend} oder \texttt{backend}
+    \item \texttt{environment} ist nicht \texttt{staging}
+    \item \texttt{release} ist gesetzt (Wert beliebig)
+\end{itemize}
+\subsubsection{CLI-Beispiel:}
+\input{minted/tex/BASH-selektor-mengen.tex}
+\newpage
+\subsection{Feld-Selektoren}
+Verwenden Felder von Ressourcen, um sie zu filtern. Zum Beispiel können Pods basierend auf ihrem Status oder Namen ausgewählt werden.
+\input{minted/tex/BASH-feld-selektor.tex}
+Dieser Befehl listet alle Pods auf, die sich im Status \enquote{Running} befinden.\\
+Es können \enquote{=} und \enquote{==} verwendet werden (empfohlen wird \enquote{=}), um zu prüfen, ob die Felder übereinstimmen, und \enquote{!=}, um fehlende Übereinstimmungen festzustellen.\\
+Sie können miteinander verkettet werden:
+\input{minted/tex/BASH-feld-selector-chain.tex}
+Zudem können mehrere Ressourcentypen gleichzeitig ausgewählt werden:
+\input{minted/tex/BASH-feld-selektor-multi.tex}
+\subsubsection{Durch Feld-Selektoren unterstützte Felder}
+Die folgende Tabelle listet Ressourcenarten und ihre jeweiligen Felder auf, die im Rahmen von Feld-Selektoren (`--field-selector`) verwendet werden können.\\
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|p{0.25\textwidth}|p{0.7\textwidth}|}
+\hline
+\textbf{Typ} & \textbf{Feld} \\
+\hline
+\multirow{8}{*}{Pod} 
+& \texttt{spec.nodeName} \\
+& \texttt{spec.restartPolicy} \\
+& \texttt{spec.schedulerName} \\
+& \texttt{spec.serviceAccountName} \\
+& \texttt{spec.hostNetwork} \\
+& \texttt{status.phase} \\
+& \texttt{status.podIP} \\
+& \texttt{status.nominatedNodeName} \\
+\hline
+\multirow{10}{*}{Event}
+& \texttt{involvedObject.kind} \\
+& \texttt{involvedObject.namespace} \\
+& \texttt{involvedObject.name} \\
+& \texttt{involvedObject.uid} \\
+& \texttt{involvedObject.apiVersion} \\
+& \texttt{involvedObject.resourceVersion} \\
+& \texttt{involvedObject.fieldPath} \\
+& \texttt{reason} \\
+& \texttt{reportingComponent} \\
+& \texttt{source} \\
+& \texttt{type} \\
+\hline
+Secret & \texttt{type} \\
+\hline
+Namespace & \texttt{status.phase} \\
+\hline
+ReplicaSet & \texttt{status.replicas} \\
+\hline
+ReplicationController & \texttt{status.replicas} \\
+\hline
+Job & \texttt{status.successful} \\
+\hline
+Node & \texttt{spec.unschedulable} \\
+\hline
+CertificateSigningRequest & \texttt{spec.signerName} \\
+\hline
+\end{tabular}
+\label{tab:feldselektoren}
+\end{table}\\
+Alle Custom Resources (\ref{sec:crd}) unterstützen die \texttt{metadata.name} und \texttt{metadata.namespace} Felder.
+
+
+\newpage
+\subsection{Verwendung von Selektoren in Kubernetes-Objekten}
+Selektoren werden in verschiedenen Kubernetes-Objekten verwendet, um eine gezielte Auswahl und Verwaltung zu ermöglichen:
+\subsubsection{Deployments}
+Deployments verwenden Selektoren, um die Pods zu identifizieren, die sie verwalten sollen.\\
+\input{minted/tex/YAML-deployment-selektor.tex}
+\subsubsection{Services}
+Services verwenden Selektoren, um die Pods zu identifizieren, denen sie den Netzwerkverkehr weiterleiten sollen.\\
+\input{minted/tex/YAML-service-selektor.tex}
+\newpage
+\subsubsection{ReplicaSets}
+ReplicaSets verwenden Selektoren, um die Pods zu identifizieren, die sie verwalten sollen.\\
+\input{minted/tex/YAML-replicaset-selektor.tex}
+
+\subsection{Best Practices für die Verwendung von Selektoren}
+Im Folgenden sind bewährte Vorgehensweisen für den Einsatz von Selektoren in Kubernetes aufgeführt:
+
+\begin{itemize}
+    \item \textbf{Eindeutige Labels}: Labels sollten eindeutig gewählt werden, um sicherzustellen, dass Selektoren nur die gewünschten Ressourcen erfassen.
+    \item \textbf{Konsistente Benennung}: Eine konsistente Benennungskonvention für Labels und Selektoren erleichtert die Wartung und das Verständnis.
+    \item \textbf{Dokumentation}: Die verwendeten Labels und Selektoren sollten nachvollziehbar dokumentiert werden.
+    \item \textbf{Vermeidung von Konflikten}: Es ist darauf zu achten, dass keine Konflikte zwischen Selektoren und Labels entstehen, die unerwartetes Verhalten verursachen könnten.
+\end{itemize}
+
+\subsubsection{Nützliche Links und Ressourcen}
+Dokumentation:\\
+\url{https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/}\\
+\url{https://kubernetes.io/docs/concepts/overview/working-with-objects/field-selectors/}\\
+Kubernetes Quellcode:\\
+\url{https://github.com/kubernetes/apimachinery/blob/master/pkg/apis/meta/v1/types.go}\\
+Hands-on Guide:\\
+\url{https://devtron.ai/blog/kubernetes-labels-and-selectors-a-definitive-guide-with-hands-on/}

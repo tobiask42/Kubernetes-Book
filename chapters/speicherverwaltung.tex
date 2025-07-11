@@ -1,0 +1,208 @@
+\chapter{Speicherverwaltung}
+
+\section{PersistentVolumes}
+Stellen dauerhaften Speicher bereit, der unabhängig vom Lebenszyklus von Pods existiert. \\
+\subsection{Erstellung und Verwaltung von PersistentVolumes}
+\noindent
+\begin{tabular}{|p{0.57\textwidth}|p{0.43\textwidth}|}
+\hline
+\texttt{kubectl get pv} & Alle PersistentVolumes auflisten \\
+\texttt{kubectl describe pv <pv-name>} & Details zu einem PersistentVolume anzeigen \\
+\texttt{kubectl delete pv <pv-name>} & PersistentVolume löschen \\
+\texttt{kubectl apply -f <pv-config.yaml>} & PersistentVolume erstellen \\
+\texttt{kubectl edit pv <pv-name>} & PersistentVolume bearbeiten \\
+\texttt{kubectl get pv -o yaml} & Alle PersistentVolumes anzeigen \\
+\texttt{kubectl patch pv <pv-name> --patch '<json-patch>'} & PersistentVolume aktualisieren \\
+\hline
+\end{tabular}
+\subsubsection{Beispielkonfiguration eines PersistentVolumes}
+\input{minted/tex/YAML-speicher-pv.tex}
+
+Dies erstellt ein PersistentVolume mit 10 GiB Speicherplatz, das auf dem Hostpfad \texttt{/mnt/data} basiert.
+\section{PersistentVolumeClaims}
+PVs werden in Pods über PersistentVolumeClaims (PVCs) verwendet:
+
+\noindent
+\begin{tabular}{|p{0.6\textwidth}|p{0.4\textwidth}|}
+\hline
+\texttt{kubectl get pvc} & PersistentVolumeClaims auflisten \\
+\texttt{kubectl describe pvc <pvc-name>} & Details anzeigen \\
+\texttt{kubectl delete pvc <pvc-name>} & PersistentVolumeClaim löschen \\
+\texttt{kubectl apply -f <pvc-config.yaml>} & PersistentVolumeClaim erstellen \\
+\texttt{kubectl edit pvc <pvc-name>} & PersistentVolumeClaim bearbeiten \\
+\texttt{kubectl get pvc -o yaml} & PersistentVolumeClaims anzeigen \\
+\texttt{kubectl patch pvc <pvc-name> --patch '<json-patch>'} & PersistentVolumeClaim aktualisieren \\
+\hline
+\end{tabular}
+\newpage
+\subsubsection{Verwendung eines PersistentVolumeClaims in einem Pod}
+\input{minted/tex/YAML-speicher-pvc.tex}
+
+\subsection{Reclaim Policies}
+Die Reclaim-Policy eines PersistentVolumes bestimmt, was mit dem Volume passiert, wenn es nicht mehr benötigt wird. Sie werden in der YAML-Datei einer PersistentVolume unter dem Punkt\\ \enquote{\texttt{persistentVolumeReclaimPolicy}} festgelegt. Die möglichen Werte sind:
+
+\begin{itemize}
+    \item \texttt{Retain}: Das Volume bleibt bestehen und muss manuell gelöscht werden.
+    \item \texttt{Recycle}: Das Volume wird gelöscht und neu erstellt (veraltet und oft nicht unterstützt).
+    \item \texttt{Delete}: Das Volume und die dahinterliegende Speicherressource werden gelöscht.
+\end{itemize}
+\section{StorageClasses}
+StorageClasses definieren die verschiedenen Klassen von Speicher, die in einem Kubernetes-Cluster verwendet werden können. Sie ermöglichen die dynamische Bereitstellung von PersistentVolumes. \\
+\subsubsection{Befehle zur Verwaltung von StorageClasses}
+\begin{tabular}{|p{0.57\textwidth}|p{0.43\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get storageclass} & Alle verfügbaren StorageClasses auflisten \\
+\texttt{kubectl describe storageclass <storageclass-name>} & Details zu einer bestimmten StorageClass anzeigen \\
+\texttt{kubectl create -f <storageclass.yaml>} & Eine neue StorageClass anhand einer YAML-Datei erstellen \\
+\texttt{kubectl delete storageclass <storageclass-name>} & Eine StorageClass löschen \\
+\texttt{kubectl annotate storageclass <storageclass-name> <key>=<value>} & Eine Annotation zu einer StorageClass hinzufügen \\
+\texttt{kubectl edit storageclass <storageclass-name>} & Eine StorageClass im Editor bearbeiten \\
+\texttt{kubectl patch storageclass <storageclass-name> -p <patch-data>} & Eine StorageClass mit Patch-Daten ändern \\
+\hline
+\end{tabular}
+\newpage
+\subsubsection{Beispielkonfiguration einer StorageClass}
+\input{minted/tex/YAML-speicher-storageclass.tex}
+
+\subsubsection{Referenzierung der StorageClass durch einen PVC}
+\input{minted/tex/YAML-speicher-storageclass-pvc.tex}
+\newpage
+\subsection{Beispiele für verschiedene StorageClasses}
+\subsubsection{NFS StorageClass}
+\input{minted/tex/YAML-storageclass-nfs.tex}
+
+\subsubsection{GCE Persistent Disk StorageClass}
+\input{minted/tex/YAML-storageclass-gce.tex}
+
+\subsubsection{Azure Disk StorageClass}
+\input{minted/tex/YAML-storageclass-azure.tex}
+
+\subsubsection{AWS EBS StorageClass}
+\input{minted/tex/YAML-storageclass-aws.tex}
+\newpage
+\subsection{Standard-StorageClass festlegen}
+In Kubernetes kann eine StorageClass als Standard festgelegt werden. Dies bedeutet, dass alle PVCs, die keine spezifische StorageClass angeben, diese Standard-StorageClass verwenden. Um eine Standard-StorageClass festzulegen, wird die Annotation \enquote{\texttt{storageclass.kubernetes.io/is-default-class}} auf \texttt{true} gesetzt:
+\input{minted/tex/YAML-storageclass-standard.tex}
+
+\subsubsection{Best Practices für StorageClasses}
+
+\begin{itemize}
+  \item Eindeutige Benennung
+  \item Sorgfältige Verwaltung der Zugriffsrechte
+  \item Nutzung von Labels und Annotations, um zusätzliche Metadaten zu speichern und die Verwaltung zu erleichtern.
+  \item Überwachen der Nutzung von PersistentVolumes und StorageClasses und Rotierung der zugrunde liegenden Ressourcen, um die Sicherheit und Performance zu gewährleisten.
+\end{itemize}
+
+\subsubsection{Nützliche Links und Ressourcen}
+Kubernetes StorageClass Dokumentation:\\
+\url{https://kubernetes.io/docs/concepts/storage/storage-classes/}\\
+Kubernetes Task: Change the Default StorageClass\\
+\url{https://kubernetes.io/docs/tasks/administer-cluster/change-default-storage-class/}\\
+Kubernetes Blog: Dynamic Provisioning and StorageClasses in Kubernetes:\\
+\url{https://kubernetes.io/blog/2017/03/dynamic-provisioning-and-storage-classes-kubernetes/}\\
+Kubernetes Examples: Persistent Volume Provisioning:\\
+\url{https://github.com/kubernetes/examples/tree/master/staging/persistent-volume-provisioning/}
+
+
+\newpage
+
+\section{Verteilte Dateisysteme}
+\label{subsec:verteilte-dateisysteme}
+Verteilte Dateisysteme wie HDFS (Hadoop Distributed File System) sind darauf ausgelegt, große Datenmengen über mehrere Knoten hinweg zu speichern und zu verwalten. Sie bieten hohe Verfügbarkeit, Fehlertoleranz und parallelen Zugriff auf die Daten, was sie ideal für Big-Data-Anwendungen macht.
+
+\subsubsection{Einführung in verteilte Dateisysteme wie HDFS}
+HDFS ist ein verteiltes Dateisystem, das für die Speicherung sehr großer Dateien konzipiert ist. Es teilt jede Datei in mehrere Blöcke auf, die über verschiedene Knoten verteilt werden. Jeder Block wird normalerweise mehrfach repliziert, um Fehlertoleranz zu gewährleisten.
+
+\subsection{Verwendung von verteilten Dateisystemen in Kubernetes}
+In Kubernetes können verteilte Dateisysteme als Speicherlösung für Anwendungen verwendet werden, die große Datenmengen verarbeiten müssen. Sie können Kubernetes Persistent Volumes (PV) und Persistent Volume Claims (PVC) nutzen, um Speicherplatz in verteilten Dateisystemen zu verwalten.
+
+\subsubsection{Beispielkonfiguration für verteiltes Dateisystem mit PersistentVolume}
+\input{minted/tex/YAML-verteiltes-dateisystem-pv}
+
+\subsubsection{YAML-Datei für verteiltes Dateisystem mit PersistentVolumeClaim}
+\input{minted/tex/YAML-verteiltes-dateisystem-pvc.tex}
+
+\subsubsection{Verwaltung und Best Practices}
+
+\begin{itemize}
+    \item Fehlertoleranz durch ausreichende Replikation der Daten sicherstellen
+    \item Regelmäßige Überwachung der Gesundheit und Leistung des Dateisystems
+    \item Aufteilung von großen Datenmengen in kleinere Blöcke, um die Parallelisierung zu maximieren und die Verarbeitung zu beschleunigen
+    \item sorgfältige Verwaltung der Zugriffsrechte
+    \item Robuste Backup- und Wiederherstellungsstrategien implementieren, um Datenverlust zu vermeiden
+\end{itemize}
+
+\subsubsection{Beispiele für verteilte Dateisysteme}
+
+\begin{itemize}
+    \item \textbf{Ceph}: Ein verteiltes Speichersystem, das sowohl Block-, Datei- als auch Objektspeicher unterstützt. Es ist bekannt für seine Skalierbarkeit und Zuverlässigkeit.
+    \item \textbf{GlusterFS}: Ein weiteres verteiltes Dateisystem, das für seine Flexibilität und Einfachheit bekannt ist.
+    \item \textbf{Amazon S3}: Ein verteiltes Objektspeichersystem von Amazon Web Services, das oft in Verbindung mit Kubernetes verwendet wird.
+\end{itemize}
+
+\subsubsection{Integration von verteilten Dateisystemen in Kubernetes}
+Die Integration von verteilten Dateisystemen in Kubernetes kann mithilfe von CSI (Container Storage Interface) Treibern erfolgen.
+
+\subsubsection{YAML-Datei für ein CephFS PersistentVolume}
+\input{minted/tex/YAML-dateisystem-ceph-pv.tex}
+
+\subsubsection{YAML-Datei für ein CephFS PersistentVolumeClaim}
+\input{minted/tex/YAML-dateisystem-ceph-csi-pvc.tex}
+
+\subsection{Nützliche Links und Ressourcen}
+\begin{itemize}
+    \item \href{https://kubernetes.io/docs/concepts/storage/volumes/}{Kubernetes Volumes Dokumentation}
+    \item \href{https://kubernetes.io/docs/concepts/storage/persistent-volumes/}{Kubernetes Persistent Volumes Dokumentation}
+    \item \href{https://kubernetes.io/docs/concepts/storage/storage-classes/}{Kubernetes Storage Classes Dokumentation}
+    \item \href{https://kubernetes.io/blog/2018/04/13/local-persistent-volumes-beta/}{Kubernetes Blog: Local Persistent Volumes Beta}
+    \item \href{https://github.com/kubernetes/examples/tree/master/staging/persistent-volume-provisioning/}{Kubernetes Examples: Persistent Volume Provisioning}
+    \item \href{https://rook.io/}{Rook: Cloud-Native Storage Orchestrator for Kubernetes}
+    \item \href{https://ceph.io/}{Ceph: Distributed Storage in Kubernetes}
+    \item \href{https://docs.gluster.org}{Gluster Documentation}
+\end{itemize}
+
+
+\section{Container Storage Interface (CSI) Treiber}
+Der Container Storage Interface (CSI) ist ein Standard, der es Speichersystemen ermöglicht, sich nahtlos in Container-Orchestrierungsplattformen wie Kubernetes zu integrieren. CSI-Treiber sind Plugins, die es Kubernetes ermöglichen, verschiedene Speicherlösungen dynamisch zu verwalten und zu orchestrieren.
+
+\subsection{Vorteile von CSI-Treibern}
+\begin{itemize}
+    \item \textbf{Flexibilität}: CSI-Treiber ermöglichen die Integration einer Vielzahl von Speichersystemen, einschließlich Cloud-Speicher, verteilten Dateisystemen und traditionellen Speicherlösungen.
+    \item \textbf{Portabilität}: Anwendungen können einfacher zwischen verschiedenen Kubernetes-Umgebungen migriert werden, da die Speicherintegration standardisiert ist.
+    \item \textbf{Erweiterbarkeit}: Neue Speichertechnologien können durch die Entwicklung spezieller CSI-Treiber leicht in Kubernetes integriert werden.
+\end{itemize}
+
+\subsection{Integration von verteilten Dateisystemen in Kubernetes}
+Die Integration von verteilten Dateisystemen in Kubernetes kann mithilfe von CSI-Treibern erfolgen.
+
+\subsubsection{Integration von CephFS unter Verwendung des CSI-Treibers}
+\input{minted/tex/YAML-dateisystem-ceph-csi-pv.tex}
+\input{minted/tex/YAML-dateisystem-ceph-csi-pvc.tex}
+\noindent
+Durch die Verwendung von CSI-Treibern können verschiedene verteilte Dateisysteme nahtlos in Kubernetes integriert werden, was eine flexible und skalierbare Speicherlösung bietet.
+
+\subsection{Beispiele für CSI-Treiber}
+\begin{itemize}
+    \item \textbf{cephfs.csi.ceph.com}: Ermöglicht die Integration von CephFS in Kubernetes.
+    \item \textbf{glusterfs.csi.gluster.org}: Ermöglicht die Integration von GlusterFS.
+    \item \textbf{aws.ebs.csi.aws.com}: Ermöglicht die Integration von Amazon EBS.
+    \item \textbf{gce-pd.csi.storage.gke.io}: Ermöglicht die Integration von Google Persistent Disks.
+    \item \textbf{csi.s3.amazonaws.com}: Ermöglicht die Integration von Amazon S3.
+\end{itemize}
+
+\subsection{Best Practices für die Verwendung von CSI-Treibern}
+\begin{itemize}
+    \item Treiberkompatibilität sicherstellen
+    \item CSI-Treiber auf dem neuesten Stand halten
+    \item Performance Tests durchführen
+    \item Backup- und Wiederherstellungsstrategien, die speziell für die verwendeten CSI-Treiber optimiert sind implementieren
+\end{itemize}
+\subsection{Nützliche Links und Ressourcen}
+\begin{itemize}
+    \item \href{https://kubernetes.io/docs/concepts/storage/volumes/#csi}{Kubernetes CSI Volumes Dokumentation}
+    \item \href{https://kubernetes-csi.github.io/docs/}{Offizielle Kubernetes CSI Dokumentation}
+    \item \href{https://kubernetes.io/blog/2019/01/15/container-storage-interface-ga/}{Kubernetes Blog: Container Storage Interface (CSI) GA}
+    \item \href{https://github.com/kubernetes-csi}{Kubernetes CSI GitHub Repository}
+\end{itemize}

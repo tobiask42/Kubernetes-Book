@@ -1,0 +1,45 @@
+\begin{minted}[frame=lines, bgcolor=bg, linenos]{go}
+// Reduziertes Beispiel eines Go-basierten Controllers mit client-go
+package main
+
+import (
+    "context"
+    "fmt"
+    "time"
+
+    "k8s.io/client-go/kubernetes"
+    "k8s.io/client-go/rest"
+    "k8s.io/client-go/tools/cache"
+)
+
+func main() {
+    config, err := rest.InClusterConfig()
+    if err != nil {
+        panic(err.Error())
+    }
+    clientset, err := kubernetes.NewForConfig(config)
+    if err != nil {
+        panic(err.Error())
+    }
+
+    exampleResourceInformer := cache.NewSharedInformer(
+        // Informer Konfiguration für BeispielResource
+    )
+
+    stopCh := make(chan struct{})
+    defer close(stopCh)
+
+    go exampleResourceInformer.Run(stopCh)
+
+    for {
+        select {
+        case <-stopCh:
+            fmt.Println("Stopping controller")
+            return
+        default:
+            fmt.Println("Controller running")
+            time.Sleep(10 * time.Second)
+        }
+    }
+}
+\end{minted}

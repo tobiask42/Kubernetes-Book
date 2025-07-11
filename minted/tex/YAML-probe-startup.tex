@@ -1,0 +1,16 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: startup-example
+spec:
+  containers:
+    - name: app
+      image: your-image:latest
+      startupProbe:
+        httpGet:
+          path: /livez
+          port: 8080
+        failureThreshold: 30
+        periodSeconds: 5
+\end{minted}

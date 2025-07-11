@@ -1,0 +1,52 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rbac-demo
+\end{minted}
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: demo-sa
+  namespace: rbac-demo
+\end{minted}
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: rbac-demo
+  name: pod-reader
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+\end{minted}
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-pods
+  namespace: rbac-demo
+subjects:
+  - kind: ServiceAccount
+    name: demo-sa
+    namespace: rbac-demo
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
+\end{minted}
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-uses-sa
+  namespace: rbac-demo
+spec:
+  serviceAccountName: demo-sa
+  containers:
+    - name: curl-container
+      image: curlimages/curl:latest
+      command: ["sleep", "3600"]
+\end{minted}

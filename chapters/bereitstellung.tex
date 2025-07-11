@@ -1,0 +1,86 @@
+\chapter{Bereitstellungsstrategien}
+
+\section{Blue-Green Deployment}
+Blue-Green Deployment ist eine Methode, bei der zwei nahezu identische Umgebungen (Blue und Green) verwendet werden. Eine Umgebung dient dem aktuellen Produktionsverkehr, während die andere für die neue Version der Anwendung verwendet wird. Nach erfolgreicher Bereitstellung und Tests wird der Verkehr auf die neue Umgebung umgeschaltet.\\
+\phantom{.}\\
+\begin{tabular}{|p{0.47\textwidth}|p{0.53\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl apply -f <blue-deployment.yaml>} & Die Blue-Umgebung bereitstellen \\
+\texttt{kubectl apply -f <green-deployment.yaml>} & Die Green-Umgebung bereitstellen \\
+\texttt{kubectl get services} & Services anzeigen, um den aktuellen Traffic zu überprüfen \\
+\texttt{kubectl edit service <service-name>} & Den Service bearbeiten, um den Traffic auf die Green-Umgebung umzuleiten \\
+\texttt{kubectl delete -f <blue-deployment.yaml>} & Die Blue-Umgebung nach erfolgreicher Migration löschen \\
+\hline
+\end{tabular}
+
+\section{Canary Releases}
+Canary Releases sind eine Methode, bei der eine neue Version der Anwendung nur für einen kleinen Teil der Benutzer bereitgestellt wird, um die neue Version unter realen Bedingungen zu testen. Nach und nach wird der Traffic auf die neue Version erhöht, bis sie vollständig übernommen wird.\\
+\phantom{.}\\
+\begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl apply -f <canary-deployment.yaml>} & Die Canary-Version der Anwendung bereitstellen \\
+\texttt{kubectl get pods -l app=<app-name>} & Alle Pods der Anwendung anzeigen \\
+\texttt{kubectl scale deployment <canary-deployment> --replicas=<number>} & Die Anzahl der Replikate für die Canary-Version erhöhen oder verringern \\
+\texttt{kubectl describe service <service-name>} & Details des Services anzeigen, um die Traffic-Verteilung zu überprüfen \\
+\texttt{kubectl edit service <service-name>} & Den Service bearbeiten, um den Traffic auf die Canary-Version anzupassen \\
+\texttt{kubectl delete -f <old-deployment.yaml>} & Die alte Version der Anwendung nach erfolgreicher Migration löschen \\
+\hline
+\end{tabular}
+
+\section{Rolling Updates}
+Rolling Updates ermöglichen es, eine neue Version einer Anwendung schrittweise bereitzustellen, indem Pods der alten Version durch Pods der neuen Version ersetzt werden. Dies stellt sicher, dass zu jeder Zeit eine minimale Anzahl von Pods verfügbar ist.\\
+\phantom{.}\\
+\begin{tabular}{|p{0.6\textwidth}|p{0.4\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl set image deployment/<deployment-name> <container-name>=<new-image>} & Ein Rolling Update für ein Deployment initiieren \\
+\texttt{kubectl rollout status deployment/<deployment-name>} & Den Status des Rollouts anzeigen \\
+\texttt{kubectl rollout history deployment/<deployment-name>} & Die Rollout-Historie eines Deployments anzeigen \\
+\texttt{kubectl rollout undo deployment/<deployment-name>} & Den letzten Rollout rückgängig machen \\
+\hline
+\end{tabular}
+\newpage
+\section{A/B Testing}
+A/B Testing ist eine Methode, bei der zwei oder mehr Versionen einer Anwendung parallel bereitgestellt werden, um deren Leistung zu vergleichen. Benutzer werden zufällig auf die verschiedenen Versionen verteilt, und die Ergebnisse werden analysiert, um die beste Version zu bestimmen.\\
+\phantom{.}\\
+\begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl apply -f <version-a-deployment.yaml>} & Version A der Anwendung bereitstellen \\
+\texttt{kubectl apply -f <version-b-deployment.yaml>} & Version B der Anwendung bereitstellen \\
+\texttt{kubectl get services} & Services anzeigen, um die Traffic-Verteilung zu überprüfen \\
+\texttt{kubectl edit service <service-name>} & Den Service bearbeiten, um den Traffic zwischen Version A und Version B zu verteilen \\
+\texttt{kubectl get pods -l app=<app-name>} & Alle Pods der verschiedenen Versionen der Anwendung anzeigen \\
+\hline
+\end{tabular}
+
+\section{Strategiewahl und Best Practices}
+Die Wahl der richtigen Bereitstellungsstrategie hängt von verschiedenen Faktoren ab, darunter die Anforderungen an die Verfügbarkeit, das Risiko der neuen Version und die Fähigkeit des Teams, schnell auf Probleme zu reagieren. Hier sind einige Best Practices:
+
+\begin{itemize}
+    \item \textbf{Blue-Green Deployment}: Gut geeignet für Anwendungen, die eine nahezu sofortige Umschaltung auf die neue Version erfordern und bei denen eine vollständige Parallelumgebung verfügbar ist.
+    \item \textbf{Canary Releases}: Ideal, um neue Versionen schrittweise und kontrolliert auszurollen, insbesondere wenn das Risiko von Fehlern minimiert werden muss.
+    \item \textbf{Rolling Updates}: Standardmethode für eine kontinuierliche Bereitstellung ohne Ausfallzeiten, geeignet für die meisten Anwendungen.
+    \item \textbf{A/B Testing}: Nützlich, um verschiedene Versionen einer Anwendung unter realen Bedingungen zu vergleichen und datenbasierte Entscheidungen zu treffen.
+\end{itemize}
+
+\section{Monitoring und Rollback}
+Unabhängig von der gewählten Strategie ist es wichtig, die neue Version kontinuierlich zu überwachen und bei Bedarf schnell zurückrollen zu können. Hier sind einige zusätzliche Befehle und Hinweise für das Monitoring und Rollback:\\
+\phantom{.}\\
+\begin{tabular}{|p{0.56\textwidth}|p{0.44\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl logs <pod-name>} & Logs eines bestimmten Pods anzeigen, um Fehler zu diagnostizieren \\
+\texttt{kubectl describe pod <pod-name>} & Detailinformationen zu einem bestimmten Pod anzeigen \\
+\texttt{kubectl get events} & Aktuelle Ereignisse im Cluster anzeigen \\
+\texttt{kubectl rollout undo deployment/<deployment-name>} & Den letzten Rollout einer neuen Version rückgängig machen \\
+\texttt{kubectl delete pod <pod-name>} & Einen fehlerhaften Pod löschen, um ihn neu zu starten \\
+\hline
+\end{tabular}

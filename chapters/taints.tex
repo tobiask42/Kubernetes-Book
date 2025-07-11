@@ -1,0 +1,235 @@
+\chapter{Taints und Affinitäten}
+
+\section{Taints und Tolerations}
+Taints und Tolerations werden verwendet, um die Zuweisung von Pods zu Nodes zu steuern. Ein \enquote{Taint} ist eine Eigenschaft, die einer Node zugewiesen wird und verhindert, dass Pods auf dieser Node geplant werden, es sei denn, der Pod hat eine entsprechende Toleration. Dies hilft, bestimmte Nodes für spezielle Workloads zu reservieren oder bestimmte Pods von bestimmten Nodes fernzuhalten.\\
+
+\noindent
+\begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl taint nodes <node-name> key=value:taint-effect} & Einen Taint zu einer Node hinzufügen \\
+\texttt{kubectl taint nodes <node-name> key:NoSchedule-} & Einen Taint von einer Node entfernen \\
+\texttt{kubectl get nodes --show-labels} & Alle Nodes mit ihren Labels anzeigen \\
+\texttt{kubectl label nodes <node-name> <label-key>=<label-value>} & Ein Label zu einer Node hinzufügen \\
+\texttt{kubectl label nodes <node-name> <label-key>-} & Ein Label von einer Node entfernen \\
+\texttt{kubectl describe node <node-name>} & Details zu einer Node anzeigen, einschließlich Taints und Labels \\
+\texttt{kubectl get pods --selector=<label-key>=<label-value>} & Alle Pods anzeigen, die einem bestimmten Label entsprechen \\
+\hline
+\end{tabular}
+
+\subsection{Taint-Effekte}
+Es gibt drei Haupttypen von Taint-Effekten, die verwendet werden können:
+\begin{itemize}
+    \item \texttt{NoSchedule}: Verhindert, dass der Scheduler einen Pod auf einer Node plant, es sei denn, der Pod hat eine entsprechende Toleration.
+    \item \texttt{PreferNoSchedule}: Vermeidet im Allgemeinen, dass der Scheduler einen Pod auf einer Node plant, ist jedoch nicht strikt zwingend.
+    \item \texttt{NoExecute}: Entfernt bereits laufende Pods von der Node und verhindert, dass neue Pods geplant werden, es sei denn, sie haben eine entsprechende Toleration.
+\end{itemize}
+
+\subsection{Anwendung von Taints}
+\input{minted/tex/BASH-taints-samples.tex}
+
+\newpage
+
+\subsection{Tolerations in Pod-Spezifikationen}
+
+\subsubsection{Toleration in einem Pod}
+\input{minted/tex/YAML-toleration.tex}
+
+\subsubsection{Erklärung der Felder in Tolerations}
+\begin{itemize}
+    \item \texttt{key}: Der Schlüssel des Taints, den der Pod toleriert.
+    \item \texttt{operator}: Der Operator, der den Vergleichsmodus bestimmt (z.B. \texttt{Equal}).
+    \item \texttt{value}: Der Wert des Taints, den der Pod toleriert.
+    \item \texttt{effect}: Der Effekt des Taints, den der Pod toleriert (z.B. \texttt{NoSchedule}).
+\end{itemize}
+
+\subsection{Anwendungsfälle für Taints und Tolerations}
+\begin{itemize}
+    \item Reservieren von Nodes für spezielle Workloads, beispielsweise für hochverfügbare oder ressourcenintensive Anwendungen.
+    \item Fernhalten bestimmter Pods von Nodes, die für spezielle Zwecke verwendet werden, wie z.B. Datenbankknoten oder spezielle Hardware.
+    \item Isolierung von Workloads, um sicherzustellen, dass bestimmte Pods nicht auf denselben Nodes ausgeführt werden.
+    \item Implementierung von Node-Maintenance-Strategien, bei denen Nodes temporär für Wartungsarbeiten gesperrt werden.
+\end{itemize}
+
+\subsection{Best Practices für die Verwendung von Taints und Tolerations}
+\begin{itemize}
+    \item \texttt{NoExecute}-Taints vorsichtig verwenden, da sie laufende Pods von Nodes entfernen können.
+    \item Die Verwendung von Taints und Tolerations in dem Cluster dokumentieren, um Missverständnisse und Fehlkonfigurationen zu vermeiden.
+    \item Die Auswirkungen von Taints und Tolerations auf die Pod-Platzierung und -Verfügbarkeit überwachen, um sicherzustellen, dass Workloads wie erwartet ausgeführt werden.
+    \item Taints und Tolerations mit anderen Kubernetes-Mechanismen wie Node-Selectors und Affinity/Anti-Affinity-Regeln kombinieren, um eine feinere Steuerung der Pod-Platzierung zu erreichen.
+    \item Spezifische Schlüssel und Werte für Taints und Tolerations verwenden, um eine gezielte Steuerung zu ermöglichen und Kollisionen zu vermeiden.
+    \item Die Konfiguration von Taints und Tolerations in einer Staging-Umgebung testen, bevor sie in die Produktion übernommen wird.
+
+\end{itemize}
+
+\subsection{Weitere nützliche Befehle für Taints und Tolerations}
+Neben den grundlegenden Befehlen gibt es weitere nützliche Kommandos, die bei der Verwaltung von Taints und Tolerations hilfreich sein können:\\
+\phantom{.}\\
+\begin{tabular}{|p{0.55\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get nodes -o json | jq '.items[].spec.taints'} & Liste alle Taints auf allen Nodes im Cluster auf\\
+\texttt{kubectl describe node <node-name>} & Zeige detaillierte Informationen, einschließlich Taints, zu einer bestimmten Node an \\
+\texttt{kubectl describe pod <pod-name>} & Zeige Informationen zu einem Pod, einschließlich seiner Tolerations, an \\
+\texttt{kubectl get pod -o json | jq '.items[].spec.tolerations'} & Liste alle Tolerations von allen Pods im Cluster auf\\
+\hline
+\end{tabular}
+
+\subsection{Node für spezialisierte Workloads reservieren}
+
+\subsubsection{Einen Taint zur Node hinzufügen}
+\input{minted/tex/BASH-taint-add.tex}
+
+\subsubsection{Pod-Spezifikation mit Toleration}
+\input{minted/tex/YAML-toleration-2.tex}
+
+\subsection{Temporäre Node-Sperrung für Wartungsarbeiten}
+Wenn eine Node temporär für Wartungsarbeiten gesperrt werden soll, kann ein \texttt{NoExecute}-Taint verwendet werden, um alle Pods von der Node zu entfernen und neue Pods daran zu hindern, auf dieser Node geplant zu werden:
+
+\subsubsection{Einen \texttt{NoExecute}-Taint hinzufügen}
+\input{minted/tex/BASH-taint-add-noexecute.tex}
+
+\subsubsection{Taint nach Wartungsarbeiten entfernen}
+\input{minted/tex/BASH-taint-rm.tex}
+\newpage
+\section{Affinity und Anti-Affinity}
+Affinity und Anti-Affinity werden verwendet, um die Platzierung von Pods auf Nodes zu steuern. Sie sind Mechanismen, die es ermöglichen, Pods auf spezifischen Nodes oder in der Nähe (oder fern) von anderen Pods zu platzieren. Diese Mechanismen bieten eine feinere Steuerung der Pod-Platzierung, um verschiedene Anforderungen wie Performance-Optimierung, Ressourcenauslastung oder Redundanz zu erfüllen.\\
+
+\noindent
+\begin{tabular}{|p{0.17\textwidth}|p{0.83\textwidth}|}
+\hline
+\textbf{Attribut} & \textbf{Beschreibung} \\
+\hline
+\texttt{nodeAffinity} & Bestimmt, auf welchen Nodes ein Pod bevorzugt oder zwingend ausgeführt werden soll \\
+\texttt{podAffinity} & Bestimmt, dass Pods in der Nähe von bestimmten anderen Pods ausgeführt werden sollen \\
+\texttt{podAntiAffinity} & Bestimmt, dass Pods nicht in der Nähe von bestimmten anderen Pods ausgeführt werden sollen \\
+\hline
+\end{tabular}
+\subsection{Befehle für Affinity und Anti-Affinity}
+\begin{tabular}{|p{0.45\textwidth}|p{0.55\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl apply -f <pod-affinity.yaml>} & Ein Pod mit Affinity-Regeln anhand einer YAML-Datei erstellen \\
+\texttt{kubectl describe pod <pod-name>} & Details zu einem Pod anzeigen, einschließlich Affinity und Anti-Affinity Regeln \\
+\texttt{kubectl get pods --selector=<label-key>=<label-value>} & Alle Pods anzeigen, die einem bestimmten Label entsprechen, um Affinity zu überprüfen \\
+\texttt{kubectl edit pod <pod-name>} & Einen Pod im Editor bearbeiten, um Affinity oder Anti-Affinity Regeln hinzuzufügen oder zu ändern \\
+\texttt{kubectl delete pod <pod-name>} & Einen Pod löschen, um Affinity oder Anti-Affinity Regeln zu entfernen \\
+\texttt{kubectl get nodes --show-labels} & Alle Nodes mit ihren Labels anzeigen, um Affinity-Regeln zu planen \\
+\texttt{kubectl describe node <node-name>} & Details zu einer Node anzeigen, um zu überprüfen, ob sie den Affinity-Bedingungen entspricht \\
+\texttt{kubectl logs <pod-name>} & Logs eines Pods anzeigen, um Probleme im Zusammenhang mit Affinity oder Anti-Affinity zu debuggen \\
+\hline
+\end{tabular}
+\newpage
+\subsection{Node Affinity}
+Node Affinity ermöglicht es, Pods auf spezifischen Nodes zu platzieren, basierend auf Node-Labels. Es gibt zwei Typen von Node Affinity:
+\begin{itemize}
+    \item \texttt{requiredDuringSchedulingIgnoredDuringExecution}:\\
+    Strikte Anforderungen, die während der Planung erfüllt sein müssen, aber nach der Platzierung ignoriert werden.
+    \item \texttt{preferredDuringSchedulingIgnoredDuringExecution}:\\
+    Bevorzugte, aber nicht zwingende Anforderungen, die während der Planung berücksichtigt werden, aber nach der Platzierung ignoriert werden.
+\end{itemize}
+
+\subsubsection{Konfigurationsbeispiel für Node Affinity}
+\input{minted/tex/YAML-affinity-node.tex}
+
+\subsection{Pod Affinity}
+Pod Affinity wird verwendet, um Pods in der Nähe von anderen Pods zu platzieren, die bestimmte Kriterien erfüllen. Dies kann nützlich sein, um Pods zusammen zu gruppieren, die miteinander kommunizieren müssen.
+
+\subsubsection{Konfigurationsbeispiel für Pod Affinity}
+\input{minted/tex/YAML-affinity-pod.tex}
+
+\newpage
+\subsection{Pod Anti-Affinity}
+Pod Anti-Affinity wird verwendet, um Pods von anderen Pods fernzuhalten, die bestimmte Kriterien erfüllen. Dies kann nützlich sein, um Redundanz zu gewährleisten oder Ressourcenkonflikte zu vermeiden.
+
+\subsubsection{Pod Anti-Affinity}
+\input{minted/tex/YAML-anti-affinity-pod.tex}
+
+\subsection{Best Practices für die Verwendung von Affinity und Anti-Affinity}
+\begin{itemize}
+    \item \texttt{requiredDuringSchedulingIgnoredDuringExecution} für zwingende Platzierungsanforderungen und \texttt{preferredDuringSchedulingIgnoredDuringExecution} für bevorzugte, aber nicht zwingende Anforderungen verwenden.
+    \item Die Verwendung von Affinity und Anti-Affinity dokumentieren, um Missverständnisse und Fehlkonfigurationen zu vermeiden.
+    \item Die Auswirkungen von Affinity und Anti-Affinity auf die Pod-Platzierung und -Verfügbarkeit überwachen, um sicherzustellen, dass Workloads wie erwartet ausgeführt werden.
+    \item Affinity und Anti-Affinity mit anderen Kubernetes-Mechanismen wie Taints und Tolerations kombinieren, um eine feinere Steuerung der Pod-Platzierung zu erreichen.
+    \item Affinity- und Anti-Affinity-Konfigurationen in einer Staging-Umgebung testen, bevor du sie in die Produktion übernimmst.
+    \item Spezifische Schlüssel und Werte für Affinity- und Anti-Affinity-Regeln verwenden, um eine gezielte Steuerung zu ermöglichen und Kollisionen zu vermeiden.
+    \item Die Topologie deines Clusters, z.B. durch die Verwendung von \texttt{topologyKey} berücksichtigen, um Pods auf unterschiedliche Nodes, Zonen oder Regionen zu verteilen.
+\end{itemize}
+\newpage
+\subsection{Verteilung von Pods über verschiedene Zonen}
+Wenn sichergestellt werden soll, dass Pods über verschiedene Zonen verteilt werden, kann Pod Anti-Affinity verwendet werden, um sicherzustellen, dass Pods nicht auf derselben Zone geplant werden:
+
+\subsubsection{Konfigurationsbeispiel für Pod Anti-Affinity über Zonen}
+\input{minted/tex/YAML-anti-affinity-zones.tex}
+
+
+\subsection{Gruppierung von Pods auf derselben Node}
+Wenn sichergestellt werden soll, dass bestimmte Pods auf derselben Node ausgeführt werden, kann Pod Affinity verwendet werden:
+
+\subsubsection{Konfigurationsbeispiel für Pod Affinity auf derselben Node}
+\input{minted/tex/YAML-affinity-same-node.tex}
+
+\newpage
+\section{Node Selectors}
+Node Selectors ermöglichen es, Pods auf bestimmte Nodes im Kubernetes-Cluster zu platzieren, indem Labels verwendet werden. Dies hilft, Workloads auf spezifizierte Hardware oder geografische Standorte zu beschränken. Node Selectors sind eine einfache und effektive Methode, um Pods auf Nodes basierend auf bestimmten Kriterien zu planen, und sind besonders nützlich in Umgebungen, in denen bestimmte Workloads spezielle Ressourcen oder Konfigurationen benötigen.\\
+
+\noindent
+\begin{tabular}{
+|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get nodes --show-labels} & Alle Nodes mit ihren Labels auflisten \\
+\texttt{kubectl label node <node-name> <label-key>=<label-value>} & Ein Label zu einem Node hinzufügen \\
+\texttt{kubectl label node <node-name> <label-key>-} & Ein Label von einem Node entfernen \\
+\texttt{kubectl get pods -o wide --field-selector spec.nodeName=<node-name>} & Alle Pods auf einem bestimmten Node auflisten \\
+\texttt{kubectl describe node <node-name>} & Details zu einem bestimmten Node, einschließlich seiner Labels, anzeigen \\
+\texttt{kubectl get nodes -l <label-key>=<label-value>} & Nodes mit einem bestimmten Label selektieren \\
+\hline
+\end{tabular}
+
+\subsection{Verwendung von Node Selectors}
+Um einen Pod auf Nodes mit einem bestimmten Label zu planen, muss der Node Selector in der Pod-Spezifikation definiert werden. Hier ist ein Beispiel, wie man einen Pod auf Nodes mit dem Label \texttt{disktype=ssd} plant:
+\input{minted/tex/YAML-selector-node.tex}
+
+\subsection{Best Practices für die Verwendung von Node Selectors}
+\begin{itemize}
+    \item Verwendung von spezifischen und gut definierten Labels, um eine gezielte Steuerung der Pod-Platzierung zu ermöglichen.
+    \item Dokumentierung der Verwendung von Node Selectors und Labels, um Missverständnisse und Fehlkonfigurationen zu vermeiden.
+    \item Überwachung der Auswirkungen von Node Selectors auf die Pod-Platzierung und -Verfügbarkeit, um sicherzustellen, dass Workloads wie erwartet ausgeführt werden.
+    \item Kombinierung von Node Selectors mit anderen Kubernetes-Mechanismen wie Taints, Tolerations, und Affinity/Anti-Affinity-Regeln, um eine noch feinere Steuerung der Pod-Platzierung zu erreichen.
+    \item Testen von Node Selector-Konfigurationen in einer Staging-Umgebung, bevor sie in die Produktion übernommen werden.
+    \item Berücksichtigung der Ressourcenkapazität und -auslastung der Nodes, um sicherzustellen, dass die Platzierung von Pods die vorhandenen Ressourcen optimal nutzt.
+\end{itemize}
+
+\subsection{Weitere nützliche Befehle und Informationen}
+\begin{tabular}{|p{0.55\textwidth}|p{0.45\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get pods --selector=<label-key>=<label-value>} & Listet alle Pods auf, die einem bestimmten Label-Selector entsprechen \\
+\texttt{kubectl get nodes -o=jsonpath=} & Listet Nodes anhand eines spezifischen Labels \\
+\texttt{'\{.items[?(@.metadata.labels.<label-key>=="<label-value>")].metadata.name\}'} &  \\
+\hline
+\end{tabular}
+
+
+\subsection{Workloads auf spezifizierte Hardware beschränken}
+Soll ein Pod auf Nodes mit einer speziellen GPU-Hardware geplant werden kann den Nodes ein Label hinzugefügt werden und der Node-Selector in der Pod-Spezifikation definiert werden.\\
+\subsubsection{Ein Label zu Nodes hinzufügen}
+\input{minted/tex/BASH-node-label.tex}
+
+\subsubsection{Pod-Spezifikation mit Node Selector}
+\input{minted/tex/YAML-selector-pod.tex}
+\newpage
+\subsection{Geografische Platzierung von Workloads}
+Um sicherzustellen, dass bestimmte Workloads in einer bestimmten geografischen Region ausgeführt werden, können Nodes entsprechend gelabelt und der Node Selector in der Pod-Spezifikation verwendet werden.
+
+\subsubsection{Ein Label zu Nodes hinzufügen}
+\input{minted/tex/BASH-node-label-2.tex}
+
+\subsubsection{Pod-Spezifikation mit geografischem Node Selector}
+\input{minted/tex/YAML-node-selector-geo.tex}

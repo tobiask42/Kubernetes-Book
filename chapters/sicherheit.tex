@@ -1,0 +1,252 @@
+\chapter{Sicherheit und Zugriffskontrolle}
+
+\section{Roles und RoleBindings}
+Ermöglicht die Verwaltung von Berechtigungen innerhalb von Namespaces. Roles definieren die Berechtigungen für Ressourcen innerhalb eines Namespaces, während RoleBindings diese Rollen an Benutzer, Gruppen oder ServiceAccounts binden.\\
+
+\noindent
+\begin{tabularx}{\textwidth}{|X|X|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get roles} & Alle Roles im aktuellen Namespace auflisten \\
+\texttt{kubectl get rolebindings} & Alle RoleBindings im aktuellen Namespace auflisten \\
+\texttt{kubectl describe role <role-name>} & Details zu einer Role anzeigen \\
+\texttt{kubectl describe rolebinding <rolebinding-name>} & Details zu einer RoleBinding anzeigen \\
+\texttt{kubectl create -f role.yaml} & Rolle erstellen\\
+\texttt{kubectl apply -f role.yaml} & Rolle erstellen oder aktualisieren\\
+\texttt{kubectl create -f rolebinding.yaml} & RoleBinding erstellen\\
+\texttt{kubectl apply -f rolebinding.yaml} & RoleBinding erstellen, oder aktualisieren\\
+\texttt{kubectl delete role <role-name>} & Rolle löschen \\
+\texttt{kubectl delete rolebinding <rolebinding-name>} & RoleBinding löschen \\
+\hline
+\end{tabularx}
+
+\subsubsection{Beispielkonfiguration für eine Role}
+\input{minted/tex/YAML-role.tex}
+
+\subsubsection{Beispielkonfiguration für ein RoleBinding}
+\input{minted/tex/YAML-rolebinding.tex}
+
+\newpage
+\subsection{Anwendungsfälle für Roles und RoleBindings}
+\begin{itemize}
+    \item Beschränken des Zugriffs auf bestimmte Ressourcen innerhalb eines Namespaces.
+    \item Delegieren von Verwaltungsaufgaben an bestimmte Benutzer oder ServiceAccounts.
+    \item Implementieren von Least Privilege Prinzipien, um die Sicherheit zu erhöhen.
+\end{itemize}
+
+\subsection{Best Practices für Roles und RoleBindings}
+\begin{itemize}
+    \item spezifische Rollen mit minimalen Berechtigungen verwenden, um das Prinzip der minimalen Rechte zu gewährleisten.
+    \item alle RoleBindings und deren Zweck dokumentieren, um die Verwaltung zu erleichtern.
+    \item regelmäßig die vergebenen Berechtigungen überwachen und überprüfen, um sicherzustellen, dass sie noch notwendig sind.
+    \item Gruppen nutzen, um Berechtigungen effizienter zu verwalten.
+\end{itemize}
+
+\subsection{Weitere nützliche Befehle für Roles und RoleBindings}
+\begin{tabular}{|p{0.53\textwidth}|p{0.47\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get roles -o yaml} & YAML-Konfiguration aller Roles im aktuellen Namespace anzeigen \\
+\texttt{kubectl get rolebindings -o yaml} & YAML-Konfiguration aller RoleBindings im aktuellen Namespace anzeigen \\
+\texttt{kubectl auth can-i <verb> <resource>} & Überprüfen, ob der aktuelle Benutzer eine bestimmte Aktion auf einer Ressource ausführen kann \\
+\texttt{kubectl create role <role-name> --verb=<verb> --resource=<resource>} & Eine Role mit einem bestimmten Verb und einer Ressource erstellen \\
+\texttt{kubectl create rolebinding <rolebinding-name> --role=<role-name> --user=<user-name>} & Eine RoleBinding für eine bestimmte Role und einen Benutzer erstellen \\
+\hline
+\end{tabular}
+
+\subsection*{Nützliche Links und Ressourcen}
+\begin{itemize}
+    \item \href{https://kubernetes.io/docs/reference/access-authn-authz/rbac/}{Kubernetes RBAC Dokumentation}
+    \item \href{https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/}{Kubernetes Task: Configuring Service Accounts for Pods}
+    \item \href{https://kubernetes.io/blog/2017/10/using-rbac-generally-available-18/}{Kubernetes Blog: Using RBAC for Kubernetes Authorization}
+\end{itemize}
+
+\newpage
+
+\section{ClusterRoles und ClusterRoleBindings}
+Ermöglicht die Verwaltung von Cluster-weiten Berechtigungen. ClusterRoles definieren die Berechtigungen für Ressourcen im gesamten Cluster, während ClusterRoleBindings diese Rollen an Benutzer, Gruppen oder ServiceAccounts im gesamten Cluster binden.\\
+
+\noindent
+\begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get clusterroles} & Alle ClusterRoles auflisten \\
+\texttt{kubectl get clusterrolebindings} & Alle ClusterRoleBindings auflisten \\
+\texttt{kubectl describe clusterrole <clusterrole-name>} & Details zu einer ClusterRole anzeigen \\
+\texttt{kubectl describe clusterrolebinding <clusterrolebinding-name>} & Details zu einer ClusterRoleBinding anzeigen \\
+\texttt{kubectl create -f clusterrole.yaml} & ClusterRole erstellen\\
+\texttt{kubectl apply -f clusterrole.yaml} & ClusterRole erstellen, oder aktualisieren\\
+\texttt{kubectl create -f clusterrolebinding.yaml} & ClusterRoleBinding erstellen\\
+\texttt{kubectl apply -f clusterrolebinding.yaml} & ClusterRoleBinding erstellen oder aktualisieren\\
+\texttt{kubectl delete clusterrole <clusterrole-name>} & Eine ClusterRole löschen \\
+\texttt{kubectl delete clusterrolebinding <clusterrolebinding-name>} & Eine ClusterRoleBinding löschen \\
+\hline
+\end{tabular}
+
+\subsubsection{Beispielkonfiguration für eine ClusterRole}
+\input{minted/tex/YAML-clusterrole.tex}
+
+\subsubsection{Beispielkonfiguration für ein ClusterRoleBinding}
+\input{minted/tex/YAML-clusterrolebinding.tex}
+
+\subsection{Anwendungsfälle für ClusterRoles und ClusterRoleBindings}
+\begin{itemize}
+    \item Zuweisen von administrativen Berechtigungen für Cluster-weite Operationen.
+    \item Delegieren von Berechtigungen für spezifische Cluster-weite Aufgaben an bestimmte Benutzer oder ServiceAccounts.
+    \item Implementieren von Sicherheitsrichtlinien auf Cluster-Ebene.
+\end{itemize}
+
+\subsection{Best Practices für ClusterRoles und ClusterRoleBindings}
+\begin{itemize}
+    \item spezifische Rollen mit minimalen Berechtigungen verwenden, um das Prinzip der minimalen Rechte zu gewährleisten.
+    \item alle ClusterRoleBindings und deren Zweck dokumentieren, um die Verwaltung zu erleichtern.
+    \item regelmäßig die vergebenen Berechtigungen überwachen und überprüfen, um sicherzustellen, dass sie noch notwendig sind.
+    \item Gruppen nutzen, um Berechtigungen effizienter zu verwalten.
+    \item Namenskonventionen für ClusterRoles und ClusterRoleBindings verwenden, um ihre Zwecke klar zu kommunizieren.
+\end{itemize}
+
+\subsection{Weitere nützliche Befehle für ClusterRoles und ClusterRoleBindings}
+\begin{tabular}{
+|p{0.53\textwidth}|p{0.47\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get clusterroles -o yaml} & YAML-Konfiguration aller ClusterRoles anzeigen \\
+\texttt{kubectl get clusterrolebindings -o yaml} & YAML-Konfiguration aller ClusterRoleBindings anzeigen \\
+\texttt{kubectl auth can-i <verb> <resource> --all-namespaces} & Überprüfen, ob der aktuelle Benutzer eine bestimmte Aktion auf einer Ressource in allen Namespaces ausführen kann \\
+\texttt{kubectl create clusterrole <clusterrole-name> --verb=<verb> --resource=<resource>} & Eine ClusterRole mit einem bestimmten Verb und einer Ressource erstellen \\
+\texttt{kubectl create clusterrolebinding <clusterrolebinding-name> --clusterrole=<clusterrole-name> --user=<user-name>} & Eine ClusterRoleBinding für eine bestimmte ClusterRole und einen Benutzer erstellen \\
+\hline
+\end{tabular}
+
+\subsection*{Nützliche Links und Ressourcen}
+\begin{itemize}
+    \item \href{https://kubernetes.io/docs/reference/access-authn-authz/rbac/}{Kubernetes RBAC Dokumentation}
+    \item \href{https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/}{Kubernetes Task: Configuring Service Accounts for Pods}
+    \item \href{https://kubernetes.io/blog/2017/10/using-rbac-generally-available-18/}{Kubernetes Blog: Using RBAC for Kubernetes Authorization}
+\end{itemize}
+
+\section{ServiceAccounts}
+ServiceAccounts werden verwendet, um Pods mit bestimmten Berechtigungen auszustatten. Sie ermöglichen Pods den Zugriff auf den Kubernetes API-Server und andere Ressourcen unter Verwendung von Role-Based Access Control (RBAC).\\
+
+\noindent
+\begin{tabular}{
+|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get serviceaccounts} & Alle ServiceAccounts im aktuellen Namespace auflisten \\
+\texttt{kubectl describe serviceaccount <serviceaccount-name>} & Details zu einem ServiceAccount anzeigen \\
+\texttt{kubectl create serviceaccount <serviceaccount-name>} & Einen neuen ServiceAccount erstellen \\
+\texttt{kubectl apply -f serviceaccount.yaml} & Serviceaccount aus Datei erstellen, oder aktualisieren\\
+\texttt{kubectl delete serviceaccount <serviceaccount-name>} & Einen ServiceAccount löschen \\
+\hline
+\end{tabular}
+
+\subsubsection{Beispielkonfiguration für einen ServiceAccount}
+\input{minted/tex/YAML-serviceaccount.tex}
+
+\subsection{Anwendungsfälle für ServiceAccounts}
+\begin{itemize}
+    \item Ermöglichen von Pods, sich gegenüber dem Kubernetes API-Server zu authentifizieren.
+    \item Zuweisen spezifischer Berechtigungen zu Pods mittels RBAC.
+    \item Isolieren von Pods und deren Berechtigungen, um das Prinzip der minimalen Rechte zu gewährleisten.
+    \item Implementieren von Sicherheitsrichtlinien, um den Zugriff von Pods auf Cluster-Ressourcen zu steuern.
+\end{itemize}
+
+\subsection{Best Practices für ServiceAccounts}
+\begin{itemize}
+    \item Spezifische ServiceAccounts für verschiedene Anwendungen oder Pods erstellen, anstatt den Standard-ServiceAccount zu verwenden.
+    \item RoleBindings oder ClusterRoleBindings verwenden, um die Berechtigungen für ServiceAccounts zu steuern.
+    \item Regelmäßig die vergebenen Berechtigungen überprüfen, um sicherzustellen, dass sie noch notwendig sind.
+    \item Alle ServiceAccounts und deren Zweck dokumentieren, um die Verwaltung zu erleichtern.
+    \item Namenskonventionen für ServiceAccounts nutzen, um ihre Zwecke klar zu kommunizieren.
+\end{itemize}
+
+\subsection{Weitere nützliche Befehle für ServiceAccounts}
+\begin{tabular}{|p{0.56\textwidth}|p{0.44\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get serviceaccounts -o yaml} & YAML-Konfiguration aller ServiceAccounts im aktuellen Namespace anzeigen \\
+\texttt{kubectl patch serviceaccount <serviceaccount-name> -p <patch-data>} & Einen Patch auf einen ServiceAccount anwenden \\
+\texttt{kubectl get secret <secret-name> -o yaml} & Das Secret eines ServiceAccounts anzeigen \\
+\texttt{kubectl describe secret <secret-name>} & Details zu einem Secret eines ServiceAccounts anzeigen \\
+\texttt{kubectl create rolebinding <rolebinding-name> --role=<role-name> --serviceaccount=<namespace>:<serviceaccount-name>} & Eine RoleBinding für einen bestimmten ServiceAccount erstellen \\
+\texttt{kubectl create clusterrolebinding <clusterrolebinding-name> --clusterrole=<clusterrole-name> --serviceaccount=<namespace>:<serviceaccount-name>} & Eine ClusterRoleBinding für einen bestimmten ServiceAccount erstellen \\
+\hline
+\end{tabular}
+\newpage
+\subsection{Komplettbeispiel}
+\input{minted/tex/YAML-sicherheit-komplettbeispiel.tex}
+\subsection*{Nützliche Links und Ressourcen}
+\begin{itemize}
+    \item \href{https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/}{Kubernetes Task: Configuring Service Accounts for Pods}
+    \item \href{https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/}{Kubernetes ServiceAccounts Administration}
+    \item \href{https://kubernetes.io/blog/2016/08/security-best-practices-kubernetes-deployment/}{Kubernetes Blog: Security Best Practices for Kubernetes Deployment}
+\end{itemize}
+
+
+\newpage
+
+\section{Network Policies}
+Network Policies ermöglichen die Kontrolle des Datenverkehrs zwischen Pods und anderen Netzwerkendpunkten auf Basis von Label-Selektoren und Regeln. Sie bieten eine Möglichkeit, den ein- und ausgehenden Datenverkehr zu regulieren, um die Sicherheit und Isolation im Cluster zu erhöhen. \\
+
+\noindent
+\begin{tabular}{
+|p{0.45\textwidth}|p{0.55\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get networkpolicies} & Alle Network Policies im aktuellen Namespace auflisten \\
+\texttt{kubectl describe networkpolicy <policy-name>} & Details zu einer bestimmten Network Policy anzeigen \\
+\texttt{kubectl create -f <networkpolicy.yaml>} & Eine neue Network Policy anhand einer YAML-Datei erstellen \\
+\texttt{kubectl apply -f <networkpolicy.yaml>} & Eine Network Policy erstellen, oder aktualisieren\\
+\texttt{kubectl delete networkpolicy <policy-name>} & Eine Network Policy löschen \\
+\texttt{kubectl edit networkpolicy <policy-name>} & Eine Network Policy im Editor bearbeiten \\
+\texttt{kubectl get networkpolicy <policy-name> -o yaml} & Eine Network Policy im YAML-Format anzeigen \\
+\hline
+\end{tabular}
+
+\subsubsection{Beispielkonfiguration für eine Network Policy}
+\input{minted/tex/YAML-network-policy.tex}
+\newpage
+\subsection{Anwendungsfälle für Network Policies}
+\begin{itemize}
+    \item Isolieren von Pods, um sicherzustellen, dass nur autorisierter Datenverkehr zugelassen wird.
+    \item Schutz sensibler Datenbanken, indem der Zugriff nur auf spezifische Pods beschränkt wird.
+    \item Implementieren von Sicherheitsrichtlinien, um unautorisierten Datenverkehr zu verhindern.
+    \item Erzwingen von Kommunikationsmustern zwischen verschiedenen Anwendungskomponenten.
+\end{itemize}
+
+\subsection{Best Practices für Network Policies}
+\begin{itemize}
+    \item Beginne mit restriktiven Policies und erweitere schrittweise die erlaubten Verbindungen.
+    \item Nutze Label-Selektoren, um granularere Kontrollen über den Datenverkehr zu erlangen.
+    \item Überprüfe und teste regelmäßig die Network Policies, um sicherzustellen, dass sie die gewünschten Sicherheitsanforderungen erfüllen.
+    \item Dokumentiere alle Network Policies und deren Zweck, um die Verwaltung zu erleichtern.
+    \item Nutze Namespaces, um Network Policies auf bestimmte Bereiche des Clusters zu beschränken.
+\end{itemize}
+
+\subsection{Weitere nützliche Befehle für Network Policies}
+\begin{tabular}{|p{0.53\textwidth}|p{0.47\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get networkpolicies -o yaml} & YAML-Konfiguration aller Network Policies im aktuellen Namespace anzeigen \\
+\texttt{kubectl patch networkpolicy <policy-name> -p <patch-data>} & Einen Patch auf eine Network Policy anwenden \\
+\texttt{kubectl label pod <pod-name> <label-key>=<label-value>} & Ein Label zu einem Pod hinzufügen, um die Network Policy anzuwenden \\
+\texttt{kubectl annotate networkpolicy <policy-name> <annotation-key>=<annotation-value>} & Eine Annotation zu einer Network Policy hinzufügen \\
+\texttt{kubectl get pods --selector=<label-selector>} & Alle Pods mit einem bestimmten Label-Selektor auflisten \\
+\hline
+\end{tabular}
+
+\subsection{Nützliche Links und Ressourcen}
+\begin{itemize}
+    \item \href{https://kubernetes.io/docs/concepts/services-networking/network-policies/}{Kubernetes Network Policies Dokumentation}
+    \item \href{https://kubernetes.io/docs/tasks/administer-cluster/declare-network-policy/}{Kubernetes Task: Declare Network Policy}
+    \item \href{https://github.com/ahmetb/kubernetes-network-policy-recipes}{Kubernetes Network Policy Recipes auf GitHub}
+\end{itemize}

@@ -1,0 +1,7 @@
+\begin{minted}[frame=lines, bgcolor=bg]{bash}
+# Operator-Image erstellen und in ein Container-Registry pushen
+make docker-build docker-push IMG=example/my-operator:v0.1.0
+
+# Deployment Manifeste anwenden
+make deploy IMG=example/my-operator:v0.1.0
+\end{minted}

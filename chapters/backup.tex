@@ -1,0 +1,60 @@
+\chapter{Backup und Wiederherstellung}
+
+\section{Backup-Strategien}
+Es gibt verschiedene Strategien, um Backups in Kubernetes durchzuführen:
+\begin{itemize}
+    \item \textbf{ETCD-Backup}: Sicherung der ETCD-Datenbank, die den Zustand des gesamten Kubernetes-Clusters speichert.
+    \item \textbf{Persistent Volume (PV) Backup}: Sicherung der Daten, die in Persistent Volumes gespeichert sind.
+    \item \textbf{Anwendungs-Backup}: Sicherung der Anwendungsdaten und Konfigurationen.
+\end{itemize}
+
+\section{ETCD-Backup}
+ETCD ist das Herzstück eines Kubernetes-Clusters. Ein Backup der ETCD-Datenbank stellt sicher, dass der Clusterzustand und die Konfigurationen wiederhergestellt werden können.\\
+\phantom{.}\\
+\begin{tabular}{|p{0.6\textwidth}|p{0.4\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{ETCDCTL\_API=3 etcdctl snapshot save <snapshot.db>} & Ein ETCD-Snapshot erstellen \\
+\texttt{ETCDCTL\_API=3 etcdctl snapshot restore <snapshot.db>} & Ein ETCD-Snapshot wiederherstellen \\
+\texttt{ETCDCTL\_API=3 etcdctl --write-out=table snapshot status <snapshot.db>} & Den Status eines ETCD-Snapshots überprüfen \\
+\hline
+\end{tabular}
+
+\section{Persistent Volume (PV) Backup}
+Daten, die in Persistent Volumes gespeichert sind, müssen regelmäßig gesichert werden. Die Methoden können je nach Storage-Provider variieren.\\
+\phantom{.}\\
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get pv} & Alle Persistent Volumes im Cluster auflisten \\
+\texttt{kubectl describe pv <pv-name>} & Details eines bestimmten Persistent Volumes anzeigen \\
+\texttt{<storage-provider-specific-backup-command>} & Backup eines Persistent Volumes durchführen \\
+\hline
+\end{tabular}
+
+\section{Anwendungs-Backup}
+Anwendungsdaten und -konfigurationen können mit Tools wie Velero gesichert werden. Velero ist ein beliebtes Open-Source-Tool für Backup und Wiederherstellung von Kubernetes-Clustern.\\
+\phantom{.}\\
+\begin{tabular}{|p{0.6\textwidth}|p{0.4\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{velero install --provider <provider> --bucket <bucket> --secret-file <credentials>} & Velero im Cluster installieren \\
+\texttt{velero backup create <backup-name>} & Ein Backup des gesamten Clusters erstellen \\
+\texttt{velero backup describe <backup-name>} & Details eines bestimmten Backups anzeigen \\
+\texttt{velero backup delete <backup-name>} & Ein Backup löschen \\
+\texttt{velero restore create --from-backup <backup-name>} & Ein Backup wiederherstellen \\
+\texttt{velero restore describe <restore-name>} & Details einer Wiederherstellung anzeigen \\
+\hline
+\end{tabular}
+\newpage
+\section{Best Practices für Backup und Wiederherstellung}
+\begin{itemize}
+    \item \textbf{Regelmäßige Backups}: Planung und Automatisierung von regelmäßigen Backups
+    \item \textbf{Backup-Überprüfung}: Regelmäßiges Testen der Backups
+    \item \textbf{Offsite-Backups}: Speichern der Backups an Externen Orten
+    \item \textbf{Sicherheitsmaßnahmen}: Schutz von Backups durch Verschlüsselung und Zugriffskontrollen, um Datenmissbrauch zu verhindern
+    \item \textbf{Dokumentation und Schulung}: Backup- und Wiederherstellungsverfahren dokumentieren und Team regelmäßig schulen
+\end{itemize}

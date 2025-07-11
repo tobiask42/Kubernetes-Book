@@ -1,0 +1,23 @@
+\begin{minted}[frame=lines, bgcolor=bg]{bash}
+#!/bin/bash
+
+# Setzen des Kubernetes-Kontexts
+kubectl config use-context dev-context
+
+# Überprüfen des aktuellen Kontexts
+current_context=$(kubectl config current-context)
+echo "Aktueller Kontext: $current_context"
+
+# Ausführen von Kubernetes-Befehlen im aktuellen Kontext
+kubectl get pods -n my-namespace
+
+# Wechseln zum Produktions-Kontext
+kubectl config use-context prod-context
+
+# Überprüfen des aktuellen Kontexts
+current_context=$(kubectl config current-context)
+echo "Aktueller Kontext: $current_context"
+
+# Ausführen von Kubernetes-Befehlen im Produktions-Kontext
+kubectl get pods -n my-namespace
+\end{minted}

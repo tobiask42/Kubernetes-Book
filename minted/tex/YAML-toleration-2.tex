@@ -1,0 +1,15 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: db-pod
+spec:
+  tolerations:
+    - key: dedicated
+      operator: Equal
+      value: db
+      effect: NoSchedule
+  containers:
+    - name: postgres
+      image: postgres:latest
+\end{minted}

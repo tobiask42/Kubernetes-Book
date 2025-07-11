@@ -1,0 +1,314 @@
+\chapter{Workloads und Ressourcen}
+
+\section{DaemonSets}
+Stellen sicher, dass eine Kopie eines Pods auf jeder Node (oder einer ausgewählten Gruppe von Nodes) im Cluster läuft. \\
+
+\noindent
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get daemonsets} & Alle DaemonSets auflisten \\
+\texttt{kubectl describe daemonset <daemonset-name>} & Details zu einem DaemonSet anzeigen \\
+\texttt{kubectl create -f <filename>} & DaemonSet aus einer Datei erstellen\\
+\texttt{kubectl apply -f <filename>} & DaemonSet aus einer Datei erstellen, oder aktualisieren\\
+\texttt{kubectl delete daemonset <daemonset-name>} & Ein DaemonSet löschen \\
+\hline
+\end{tabular}
+\subsubsection{YAML-Datei für ein DaemonSet}
+\input{minted/tex/YAML-daemonset.tex}
+
+\subsection{Anwendungsfälle für DaemonSets}
+\begin{itemize}
+    \item Protokollierung: Ein Protokollierungs-Agent muss auf jeder Node laufen, um die Logs von Anwendungen zu sammeln.
+    \item Überwachung: Überwachungs-Agents sammeln Metriken von Nodes und Pods und senden sie an ein zentrales Überwachungssystem.
+    \item Netzwerk-Dienste: Bereitstellung von Netzwerkdiensten wie DNS oder CNI-Plugins, die auf jeder Node laufen müssen.
+\end{itemize}
+\newpage
+\subsection{Best Practices für DaemonSets}
+\begin{itemize}
+    \item Ressourcenanforderungen und limits setzen, um die Stabilität des Clusters zu gewährleisten.
+    \item Node-Selector verwenden, wenn DaemonSets nur auf bestimmten Nodes ausgeführt werden sollen
+    \item PodAntiAffinity verwenden, um sicherzustellen dass DaemonSet-Pods nicht auf denselben Nodes wie andere kritische Pods laufen.
+    \item Rolling Updates verwenden, um eine reibungslose Aktualisierung der DaemonSet-Pods ohne Ausfallzeiten zu gewährleisten.
+\end{itemize}
+\subsection{Weitere nützliche Befehle für DaemonSets}
+\begin{tabular}{|p{0.53\textwidth}|p{0.47\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl rollout status daemonset/<daemonset-name>} & Den Rollout-Status eines DaemonSets anzeigen \\
+\texttt{kubectl edit daemonset <daemonset-name>} & Ein DaemonSet direkt im Editor bearbeiten \\
+\texttt{kubectl scale --replicas=<number> daemonset <daemonset-name>} & Die Anzahl der Pods in einem DaemonSet ändern \\
+\texttt{kubectl get daemonset <daemonset-name> -o yaml} & Die vollständige YAML-Konfiguration eines DaemonSets anzeigen \\
+\texttt{kubectl patch daemonset <daemonset-name> -p <patch-data>} & Einen Patch auf ein DaemonSet anwenden \\
+\hline
+\end{tabular}
+
+\subsection{Nützliche Links und Ressourcen}
+\begin{itemize}
+    \item \href{https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/}{Kubernetes DaemonSet Dokumentation}
+    \item \href{https://kubernetes.io/docs/tasks/manage-daemon/}{Kubernetes Tasks für DaemonSets}
+\end{itemize}
+
+
+\newpage
+\section{StatefulSets}
+\label{sec:statefulsets}
+Verwalten den Zustand und die Identität von Pods, insbesondere für zustandsbehaftete Anwendungen. \\
+
+\noindent
+\begin{tabular}{
+|l|l|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get statefulsets} & Alle StatefulSets auflisten \\
+\texttt{kubectl describe statefulset <statefulset-name>} & Details zu einem StatefulSet anzeigen \\
+\texttt{kubectl apply -f <dateiname>} & StatefulSet aus Datei erstellen\\
+\texttt{kubectl delete statefulset <statefulset-name>} & Ein StatefulSet löschen \\
+\hline
+\end{tabular}
+
+\subsubsection{Beispielkonfiguration für ein StatefulSet}
+\input{minted/tex/YAML-statefulset.tex}
+
+\newpage
+\subsection{Anwendungsfälle für StatefulSets}
+\begin{itemize}
+    \item Datenbanken: StatefulSets bieten stabile Netzwerk-IDs und persistente Speicher, die für Datenbanken erforderlich sind.
+    \item Verteilte Dateisysteme: Verteilte Dateisysteme wie HDFS (siehe \ref{subsec:verteilte-dateisysteme}) benötigen stabile IDs und persistente Speicher.
+    \item Clustered Anwendungen: Anwendungen, die auf Clustering angewiesen sind, benötigen stabile Netzwerk-IDs.
+\end{itemize}
+\subsection{Best Practices für StatefulSets}
+\begin{itemize}
+    \item Headless Services (siehe \ref{subsec:headless-service}) verwenden, um DNS-Namen für individuelle Pods zu ermöglichen
+    \item Ressourcenanforderungen und -limits setzen, um die Stabilität des Clusters zu gewährleisten.
+    \item PersistentVolumes verwenden, um sicherzustellen, dass der Speicher nach Pod-Neustarts erhalten bleibt.
+    \item PodManagementPolicy verwenden, um die Verwaltung der Pods feiner zu steuern.
+\end{itemize}
+\subsection{Weitere nützliche Befehle für StatefulSets}
+\begin{tabular}{|p{0.7\textwidth}|p{0.3\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl rollout status statefulset/<statefulset-name>} & Rollout-Status anzeigen \\
+\texttt{kubectl edit statefulset <statefulset-name>} & StatefulSet bearbeiten \\
+\texttt{kubectl scale --replicas=<number> statefulset <statefulset-name>} & Anzahl der Pods ändern \\
+\texttt{kubectl get statefulset <statefulset-name> -o yaml} & Konfiguration anzeigen \\
+\texttt{kubectl patch statefulset <statefulset-name> -p <patch-data>} & Patch anwenden \\
+\hline
+\end{tabular}
+
+\subsection{Nützliche Links und Ressourcen}
+\begin{itemize}
+    \item \href{https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/}{Kubernetes StatefulSet Dokumentation}
+    \item \href{https://kubernetes.io/docs/tasks/run-application/scale-stateful-set/}{Kubernetes Task: Skalieren von StatefulSets}
+    \item \href{https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/}{Kubernetes Tutorial: Basic StatefulSet}
+\end{itemize}
+
+
+
+\section{ReplicaSets}
+ReplicaSets stellen sicher, dass eine definierte Anzahl von Pod-Replikaten zu jeder Zeit läuft. Sie sind der Nachfolger von ReplicationControllers und bieten zusätzliche Selektionsmöglichkeiten. \\
+
+\noindent
+\begin{tabular}{|p{0.7\textwidth}|p{0.3\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get replicasets} & ReplicaSets auflisten \\
+\texttt{kubectl describe replicaset <replicaset-name>} & Details anzeigen \\
+\texttt{kubectl create -f <replicaset.yaml>} & ReplicaSet aus Datei erstellen \\
+\texttt{kubectl delete replicaset <replicaset-name>} & ReplicaSet löschen \\
+\texttt{kubectl scale replicaset <replicaset-name> --replicas=<number>} & Anzahl der Pods skalieren \\
+\texttt{kubectl get pods --selector=<label>=<value>} & Zugeordnete Pods anzeigen \\
+\texttt{kubectl edit replicaset <replicaset-name>} & ReplicaSet bearbeiten \\
+\texttt{kubectl patch replicaset <replicaset-name> -p <patch-data>} & ReplicaSet patchen \\
+\hline
+\end{tabular}
+\newpage
+\subsubsection{YAML-Datei für ein ReplicaSet}
+\input{minted/tex/YAML-ReplicaSet.tex}
+
+\subsection{Anwendungsfälle für ReplicaSets}
+\begin{itemize}
+    \item Sicherstellen der Hochverfügbarkeit: ReplicaSets stellen sicher, dass eine bestimmte Anzahl von Pod-Replikaten immer läuft, um Ausfallzeiten zu minimieren.
+    \item Lastverteilung: Durch das Erstellen mehrerer Replikate kann die Last auf mehrere Pods verteilt werden.
+    \item Skalierung: Einfaches horizontales Skalieren von Anwendungen durch Ändern der Anzahl der Replikate.
+\end{itemize}
+
+\subsection{Best Practices für ReplicaSets}
+\begin{itemize}
+    \item Labels und Selektoren verwenden, um sicherzustellen, dass nur die gewünschten Pods vom ReplicaSet verwaltet werden.
+    \item Ressourcenanforderungen und -limits setzen, um die Stabilität und Effizienz des Clusters zu gewährleisten.
+    \item ReplicaSets regelmäßig überwachen, um sicherzustellen, dass sie wie erwartet funktionieren und die gewünschte Anzahl von Pods läuft.
+    \item den Befehl \enquote{\texttt{kubectl rollout}} verwenden, um Änderungen und Updates an ReplicaSets zu überwachen und zu kontrollieren.
+\end{itemize}
+
+\subsection{Weitere nützliche Befehle für ReplicaSets}
+\begin{tabular}{|p{0.53\textwidth}|p{0.47\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl rollout status replicaset/<replicaset-name>} & Den Rollout-Status eines ReplicaSets anzeigen \\
+\texttt{kubectl rollout history replicaset/<replicaset-name>} & Die Rollout-Historie eines ReplicaSets anzeigen \\
+\texttt{kubectl set image replicaset/<replicaset-name> <container-name>=<new-image>} & Das Image eines Containers in einem ReplicaSet aktualisieren \\
+\texttt{kubectl get rs -o wide} & Detaillierte Informationen zu allen ReplicaSets anzeigen \\
+\texttt{kubectl get pods -l <label>=<value>} & Pods anzeigen, die einem bestimmten ReplicaSet zugeordnet sind \\
+\texttt{kubectl delete pod --force --grace-period=0 <pod-name>} & Einen Pod sofort löschen, damit das ReplicaSet ihn neu erstellen kann \\
+\texttt{kubectl scale replicaset nginx-replicaset --replicas=5} & Skalierung eines ReplicaSets über einen Konsolenbefehl\\
+\hline
+\end{tabular}
+\subsubsection{YAML-Datei für die Skalierung eines ReplicaSets}
+\input{minted/tex/YAML-replicaset-skalieren.tex}
+
+\subsection{Fehlerbehebung bei ReplicaSets}
+\begin{itemize}
+    \item \textbf{Pod startet nicht:} Die Logs des Pods mit \enquote{\texttt{kubectl logs <pod-name>}} überprüfen, um mögliche Fehlerursachen zu identifizieren.
+    \item \textbf{Nicht genügend Ressourcen:} Sicherstellen, dass genug Ressourcen im Cluster verfügbar sind, oder Ressourcenanforderungen des ReplicaSets anpassen
+    \item \textbf{Konflikte bei Labels:} Die Label-Selektoren überprüfen, um sicherzustellen, dass keine Konflikte mit anderen ReplicaSets oder Workloads bestehen.
+    \item \textbf{Unzureichende Replikate:} \enquote{\texttt{kubectl get rs}} und \enquote{\texttt{kubectl describe rs <replicaset-name>}} verwenden, um den Status und eventuelle Probleme zu überprüfen.
+\end{itemize}
+
+\subsection{Nützliche Links und Ressourcen}
+\begin{itemize}
+    \item \href{https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/}{Kubernetes ReplicaSet Dokumentation}
+\end{itemize}
+
+
+\section{Jobs}
+Ermöglichen die einmalige Ausführung von Aufgaben, bis sie erfolgreich abgeschlossen sind. \\
+
+\noindent
+\begin{tabular}{
+|l|l|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get jobs} & Alle Jobs auflisten \\
+\texttt{kubectl describe job <job-name>} & Details zu Job anzeigen \\
+\texttt{kubectl create job -f <job.yaml>} & Job erstellen\\
+\texttt{kubectl apply job -f <job.yaml>} & Job erstellen, oder aktualisieren\\
+\texttt{kubectl delete job <job-name>} & Job löschen \\
+\hline
+\end{tabular}
+
+\subsubsection{YAML-Datei für einen Job}
+\input{minted/tex/YAML-job.tex}
+
+\subsection{Anwendungsfälle für Jobs}
+\begin{itemize}
+    \item Datenverarbeitung: Ausführen von einmaligen Datenverarbeitungsaufgaben oder Batch-Jobs.
+    \item Migrationen: Durchführen von Datenbank- oder Schema-Migrationen.
+    \item Wartungsaufgaben: Periodische Wartungsaufgaben, die einmalig ausgeführt werden müssen.
+\end{itemize}
+
+\subsection{Best Practices für Jobs}
+\begin{itemize}
+    \item eine \enquote{\texttt{restartPolicy}} von \enquote{\texttt{Never}} oder \enquote{\texttt{OnFailure}} verwenden, um sicherzustellen, dass fehlgeschlagene Jobs nicht endlos neu gestartet werden.
+    \item \enquote{\texttt{backoffLimit}} verwenden, um die maximale Anzahl von Wiederholungsversuchen für einen fehlgeschlagenen Job zu begrenzen.
+    \item den Status von Jobs regelmäßig überwachen, um sicherzustellen, dass sie wie erwartet abgeschlossen werden.
+    \item Labels und Annotations verwenden, um Jobs besser zu organisieren und zu identifizieren.
+\end{itemize}
+
+\subsection{Weitere nützliche Befehle für Jobs}
+\begin{tabular}{|p{0.53\textwidth}|p{0.47\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get job <job-name> -o yaml} & Die vollständige YAML-Konfiguration eines Jobs anzeigen \\
+\texttt{kubectl logs job/<job-name>} & Logs eines Jobs anzeigen \\
+\texttt{kubectl get pods --selector=job-name=<job-name>} & Die Pods anzeigen, die zu einem bestimmten Job gehören \\
+\texttt{kubectl wait --for=condition=complete job/<job-name>} & Warten, bis ein Job abgeschlossen ist \\
+\texttt{kubectl patch job <job-name> -p <patch-data>} & Einen Patch auf einen Job anwenden \\
+\hline
+\end{tabular}
+
+\subsection{Fehlerbehebung bei Jobs}
+\begin{itemize}
+    \item \textbf{Job startet nicht:} Die Logs des Jobs mit \texttt{kubectl logs job/<job-name>} überprüfen, um mögliche Fehlerursachen zu identifizieren.
+    \item \textbf{Pod des Jobs bleibt hängen:} Den Status und die Logs des Pods, der dem Job zugeordnet ist überprüfen.
+    \item \textbf{Job wird zu oft wiederholt:} Sicherstellen, dass die \texttt{backoffLimit} korrekt gesetzt ist, um unnötige Wiederholungen zu vermeiden.
+    \item \textbf{Job läuft zu lange:} \texttt{activeDeadlineSeconds} verwenden, um die maximale Laufzeit eines Jobs zu begrenzen.
+\end{itemize}
+
+\subsection{Nützliche Links und Ressourcen}
+\begin{itemize}
+    \item \href{https://kubernetes.io/docs/concepts/workloads/controllers/job/}{Kubernetes Job Dokumentation}
+    \item \href{https://kubernetes.io/docs/tasks/job/}{Kubernetes Tasks für Jobs}
+\end{itemize}
+
+
+
+\section{CronJobs}
+Ermöglicht die zeitgesteuerte Ausführung von Jobs basierend auf Cron-Syntax. CronJobs sind nützlich für wiederkehrende Aufgaben wie regelmäßige Backups, Batch-Verarbeitungen oder andere zeitgesteuerte Prozesse. Sie bieten eine Möglichkeit, Jobs zu bestimmten Zeiten oder in regelmäßigen Intervallen automatisch auszuführen.\\
+
+\noindent
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get cronjobs} & Alle CronJobs auflisten \\
+\texttt{kubectl describe cronjob <cronjob-name>} & Details zu einem CronJob anzeigen \\
+\texttt{kubectl create -f cronjob.yaml} & CronJob erstellen\\
+\texttt{kubectl apply -f cronjob.yaml} & CronJob erstellen oder aktualisieren\\
+\texttt{kubectl delete cronjob <cronjob-name>} & Einen CronJob löschen \\
+\hline
+\end{tabular}
+\subsubsection{Grundlagen eines CronJobs}
+Ein CronJob erstellt auf Basis eines vordefinierten Zeitplans automatisch Jobs. Der Zeitplan wird in der Cron-Syntax angegeben, die aus fünf Feldern besteht, die die Minute, Stunde, Tag des Monats, Monat und Tag der Woche definieren.
+\newpage
+\subsubsection{YAML-Syntax für CronJobs}
+\input{minted/tex/YAML-cronjob.tex}
+
+\subsection{Anwendungsfälle für CronJobs}
+\begin{itemize}
+    \item Regelmäßige Backups: Automatisierung von Datenbank- oder Dateisystem-Backups.
+    \item Batch-Verarbeitung: Durchführung von periodischen Datenverarbeitungsaufgaben.
+    \item Wartungsaufgaben: Automatisierte Wartungsprozesse wie Log-Rotation oder Cleanup-Skripte.
+    \item Monitoring und Updates: Regelmäßige Überprüfungen und Aktualisierungen von Systemzuständen.
+\end{itemize}
+
+\subsection{Best Practices für CronJobs}
+\begin{itemize}
+    \item eine eindeutige \enquote{\texttt{schedule}} verwenden, um sicherzustellen, dass CronJobs nicht gleichzeitig ausgeführt werden.
+    \item eine geeignete \enquote{\texttt{concurrencyPolicy}} setzen, um die gleichzeitige Ausführung von Jobs zu steuern (z.B. \enquote{\texttt{Forbid}} oder \enquote{\texttt{Replace}}).
+    \item \enquote{\texttt{successfulJobsHistoryLimit}} und \enquote{\texttt{failedJobsHistoryLimit}} verwenden, um die Anzahl der gespeicherten erfolgreichen und fehlgeschlagenen Jobs zu begrenzen.
+    \item CronJobs regelmäßig überwachen, um sicherzustellen, dass sie wie erwartet ausgeführt werden.
+    \item Ressourcenanforderungen und -limits setzen, um die Stabilität des Clusters zu gewährleisten.
+\end{itemize}
+
+\subsection{Weitere nützliche Befehle für CronJobs}
+\begin{tabular}{|p{0.65\textwidth}|p{0.35\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get cronjob <cronjob-name> -o yaml} & Die vollständige YAML-Konfiguration eines CronJobs anzeigen \\
+\texttt{kubectl logs job/\$(kubectl get jobs --selector=cronjob-name=<cronjob-name> -o jsonpath="{.items[0].metadata.name}")} & Logs des letzten Jobs eines CronJobs anzeigen \\
+\texttt{kubectl create job --from=cronjob/<cronjob-name> <job-name>} & Manuelles Erstellen eines Jobs aus einem CronJob \\
+\texttt{kubectl get jobs --selector=cronjob-name=<cronjob-name>} & Alle Jobs eines bestimmten CronJobs auflisten \\
+\texttt{kubectl patch cronjob <cronjob-name> -p <patch-data>} & Einen Patch auf einen CronJob anwenden \\
+\texttt{kubectl delete job --selector=cronjob-name=<cronjob-name>} & Alle Jobs eines bestimmten CronJobs löschen \\
+\hline
+\end{tabular}
+
+\subsection{Fehlerbehebung bei CronJobs}
+\begin{itemize}
+    \item \textbf{Job startet nicht:} Logs des CronJobs und des erstellten Jobs mit folgendem Befehl überprüfen, um mögliche Fehlerursachen zu identifizieren:\\
+    \texttt{kubectl logs job/\$(kubectl get jobs --selector=cronjob-name=<cronjob-name> -o\\jsonpath="{.items[0].metadata.name}")}
+    \item \textbf{CronJob wird nicht ausgeführt:} sicherstellen, dass der Zeitplan \enquote{\texttt{schedule}} korrekt ist und keine Syntaxfehler enthält. Zeit und Datumseinstellungen des Clusters überprüfen.
+    \item \textbf{Jobs bleiben hängen:} Die Pods, die von den Jobs erstellt wurden überprüfen, um zu sehen, ob sie in einem Fehlerzustand sind. \enquote{\texttt{kubectl describe pod <pod-name>}} für detaillierte Informationen verwenden.
+    \item \textbf{Mehrere Instanzen eines Jobs:} \enquote{\texttt{concurrencyPolicy}} auf \enquote{\texttt{Forbid}} oder \enquote{\texttt{Replace}} setzen, um die gleichzeitige Ausführung mehrerer Instanzen eines Jobs zu verhindern.
+    \item \textbf{CronJob führt Jobs zu häufig aus:}Zeitplan \enquote{\texttt{schedule}} überprüfen und korrigieren, um sicherzustellen, dass er den gewünschten Ausführungsintervall widerspiegelt.
+\end{itemize}
+\newpage
+\subsection{Erweiterte Konfigurationsoptionen für CronJobs}
+\subsubsection{Erweiterte YAML-Syntax für CronJobs}
+\input{minted/tex/YAML-cronjob-erweitert.tex}
+
+\subsection{Nützliche Links und Ressourcen}
+\begin{itemize}
+    \item \href{https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/}{Kubernetes CronJob Dokumentation}
+    \item \href{https://crontab.guru/}{Cron Expression Generator \& Explainer}
+\end{itemize}

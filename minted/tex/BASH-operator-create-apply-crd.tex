@@ -1,0 +1,7 @@
+\begin{minted}[frame=lines, bgcolor=bg]{bash}
+# Generiere die Manifeste
+make manifests
+
+# Wende die CRD auf den Cluster an
+kubectl apply -f config/crd/bases
+\end{minted}

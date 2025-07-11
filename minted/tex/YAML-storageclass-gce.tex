@@ -1,0 +1,10 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: standard
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-standard
+  replication-type: none
+\end{minted}

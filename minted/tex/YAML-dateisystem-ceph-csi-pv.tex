@@ -1,0 +1,18 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: cephfs-pv
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteMany
+  csi:
+    driver: cephfs.csi.ceph.com
+    volumeHandle: my-cephfs-volume
+    volumeAttributes:
+      clusterID: my-cluster-id
+      fsName: my-cephfs
+      pool: my-pool
+\end{minted}

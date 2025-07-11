@@ -1,0 +1,157 @@
+\chapter{CI/CD Integration}
+\section{Einführung in CI/CD}
+CI/CD umfasst eine Reihe von Prozessen und Tools, die das Bauen, Testen und Bereitstellen von Anwendungen automatisieren. Diese Praktiken helfen, die Qualität des Codes zu verbessern, Fehler frühzeitig zu erkennen und die Bereitstellungsgeschwindigkeit zu erhöhen.\\
+Es steht für \enquote{Continuous Integration} und \enquote{Continuous Delivery} oder \enquote{Continuous Deployment}.
+\subsection{Continuous Integration (CI)}
+Continuous Integration (CI) ist eine Softwareentwicklungspraxis, bei der Entwickler regelmäßig ihre Codeänderungen in ein zentrales Repository integrieren. Dies geschieht in der Regel mehrmals täglich. Jede Integration wird automatisch durch Builds und automatisierte Tests überprüft. Ziel ist es, Integrationsprobleme frühzeitig zu erkennen und zu beheben.\\
+\textbf{Wichtige Aspekte von CI}:
+\begin{itemize}
+    \item \textbf{Regelmäßige Code-Commits}: Entwickler committen ihren Code häufig, um Integration und Testen zu erleichtern.
+    \item \textbf{Automatisierte Builds}: Jeder Commit löst einen automatisierten Build-Prozess aus, um sicherzustellen, dass der neue Code kompiliert und integrierbar ist.
+    \item \textbf{Automatisierte Tests}: Nach dem Build werden automatisierte Tests ausgeführt, um sicherzustellen, dass der neue Code keine bestehenden Funktionalitäten bricht.
+    \item \textbf{Schnelles Feedback}: Entwickler erhalten schnell Feedback zu ihren Änderungen, was die Fehlerbehebung beschleunigt.
+\end{itemize}
+
+\subsection{Continuous Delivery (CD)}
+Continuous Delivery (CD) baut auf CI auf und stellt sicher, dass die Software jederzeit in einem zustellbaren Zustand ist. Nach jedem erfolgreichen Build und Test wird der Code automatisch in eine Staging-Umgebung bereitgestellt, wo er weiter getestet werden kann. Dies ermöglicht eine schnelle und zuverlässige Bereitstellung von Software in der Produktionsumgebung, sobald diese freigegeben wird.\\
+\textbf{Wichtige Aspekte von CD}:
+\begin{itemize}
+    \item \textbf{Automatisierte Bereitstellung}: Der Code wird automatisch in verschiedene Umgebungen (z.B. Staging, Testing) bereitgestellt.
+    \item \textbf{Manuelle Freigabe}: Bevor der Code in die Produktion geht, kann eine manuelle Freigabe erforderlich sein, um zusätzliche Überprüfungen durchzuführen.
+    \item \textbf{Wiederholbarkeit und Zuverlässigkeit}: Der Bereitstellungsprozess ist standardisiert und kann jederzeit reproduziert werden.
+    \item \textbf{Kontinuierliches Testen}: Nach jeder Bereitstellung werden weitere Tests durchgeführt, um sicherzustellen, dass der Code in der neuen Umgebung funktioniert.
+\end{itemize}
+\newpage
+\subsection{Continuous Deployment (CD)}
+Continuous Deployment (CD) geht einen Schritt weiter als Continuous Delivery. Hier wird der Code nach jedem erfolgreichen Build und Test automatisch in die Produktionsumgebung bereitgestellt, ohne dass eine manuelle Freigabe erforderlich ist. Dies ermöglicht eine sehr schnelle Bereitstellung von neuen Funktionen und Bugfixes, erfordert jedoch ein hohes Maß an Testautomatisierung und Überwachungsmechanismen.\\
+\textbf{Wichtige Aspekte von Continuous Deployment}:
+\begin{itemize}
+    \item \textbf{Automatisierte Produktionsbereitstellung}: Jede Codeänderung, die alle Tests besteht, wird automatisch in die Produktion übernommen.
+    \item \textbf{Umfassende Testabdeckung}: Alle Tests, einschließlich Unit-, Integrations- und End-to-End-Tests, müssen automatisiert und zuverlässig sein.
+    \item \textbf{Überwachung und Rollback}: Ein robustes Monitoring-System ist erforderlich, um Probleme in der Produktion schnell zu erkennen und bei Bedarf Rollbacks durchzuführen.
+    \item \textbf{Feature Toggles}: Feature-Toggles können verwendet werden, um neue Funktionen bei Bedarf zu aktivieren oder zu deaktivieren, ohne dass ein erneuter Deployment erforderlich ist.
+\end{itemize}
+
+\section{Beliebte CI/CD-Tools}
+Es gibt mehrere Tools, die sich nahtlos in Kubernetes integrieren lassen:
+\begin{itemize}
+    \item \textbf{Jenkins}: Ein weit verbreitetes Open-Source CI/CD-Tool, das sich gut in Kubernetes integrieren lässt.
+    \item \textbf{GitLab CI}: Ein integriertes CI/CD-Tool, das direkt in GitLab verfügbar ist.
+    \item \textbf{Argo CD}: Ein deklaratives GitOps-Tool für Kubernetes.
+    \item \textbf{Tekton}: Ein Kubernetes-natives CI/CD-Tool.
+\end{itemize}
+
+\section{Einrichtung einer CI/CD-Pipeline mit Jenkins}
+Jenkins kann verwendet werden, um eine vollständige CI/CD-Pipeline für Kubernetes einzurichten.
+
+\subsection{Jenkins-Installation auf Kubernetes}
+\noindent
+\begin{tabular}{
+|l|l|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl apply -f jenkins-deployment.yaml} & Jenkins im Kubernetes-Cluster bereitstellen \\
+\texttt{kubectl get pods -l app=jenkins} & Jenkins-Pods anzeigen \\
+\texttt{kubectl port-forward <jenkins-pod> 8080:8080} & Jenkins-Dashboard zugänglich machen \\
+\hline
+\end{tabular}
+
+
+\subsection{Erstellung einer Jenkins-Pipeline}
+\noindent
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Schritt} & \textbf{Beschreibung} \\
+\hline
+\texttt{pipeline \{} & Beginn der Pipeline-Definition \\
+\texttt{agent any} & Verwenden eines beliebigen verfügbaren Agents \\
+\texttt{stages \{} & Beginn der Stufen-Definition \\
+\texttt{stage('Build') \{} & Build-Stufe definieren \\
+\texttt{steps \{} & Schritte der Build-Stufe \\
+\texttt{sh 'kubectl apply -f deployment.yaml'} & Kubernetes-Deployment anwenden \\
+\texttt{\}} & Ende der Build-Stufe \\
+\texttt{stage('Test') \{} & Test-Stufe definieren \\
+\texttt{steps \{} & Schritte der Test-Stufe \\
+\texttt{sh 'kubectl get pods'} & Pods im Cluster anzeigen \\
+\texttt{\}} & Ende der Test-Stufe \\
+\texttt{\}} & Ende der Stufen-Definition \\
+\texttt{\}} & Ende der Pipeline-Definition \\
+\hline
+\end{tabular}
+
+\section{Einrichtung einer CI/CD-Pipeline mit GitLab CI}
+GitLab CI bietet eine integrierte Lösung für CI/CD.
+
+\subsection{GitLab Runner Installation}
+\noindent
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl apply -f gitlab-runner.yaml} & GitLab Runner im Kubernetes-Cluster bereitstellen \\
+\texttt{kubectl get pods -l app=gitlab-runner} & GitLab Runner-Pods anzeigen \\
+\hline
+\end{tabular}
+
+\subsection{Erstellung einer GitLab CI/CD-Pipeline}
+\noindent
+\input{minted/tex/GITLAB-pipeline}
+
+\section{Einrichtung einer CI/CD-Pipeline mit Argo CD}
+Argo CD verwendet eine deklarative Methode für CI/CD, indem es den Zustand des Clusters mit dem Zustand im Git-Repository synchronisiert.
+
+\subsection{Argo CD-Installation}
+\noindent
+\begin{tabular}{|p{0.6\textwidth}|p{0.4\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl create namespace argocd} & Namespace für Argo CD erstellen \\
+\texttt{kubectl apply -n argocd -f} & Argo CD im Cluster installieren \\
+\texttt{https://raw.githubusercontent.com/argoproj/}& \\
+\texttt{argo-cd/stable/manifests/install.yaml}& \\
+\texttt{kubectl get pods -n argocd} & Argo CD-Pods anzeigen \\
+\texttt{kubectl port-forward svc/argocd-server -n argocd 8080:443} & Argo CD-Dashboard zugänglich machen \\
+\hline
+\end{tabular}
+\newpage
+\subsection{Erstellung einer Argo CD-Applikation}
+\input{minted/tex/YAML-argo-cd.tex}
+
+\section{Einrichtung einer CI/CD-Pipeline mit Tekton}
+Tekton ist ein Kubernetes-natives CI/CD-Tool, das es ermöglicht, CI/CD-Pipelines direkt in Kubernetes zu definieren und auszuführen.
+
+\subsection{Tekton-Installation}
+\noindent
+\begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl apply --filename https://storage.googleapis.com/} & Tekton Pipelines im Cluster installieren \\
+\texttt{tekton-releases/pipeline/latest/release.yaml} & \\
+\texttt{kubectl get pods -n tekton-pipelines} & Tekton Pipelines-Pods anzeigen \\
+\hline
+\end{tabular}
+
+\subsection{Erstellung einer Tekton-Pipeline}
+\input{minted/tex/YAML-tekton-pipeline.tex}
+\newpage
+
+\subsection{Definieren der Tekton-Tasks}
+Tekton Build Task:\\
+\input{minted/tex/YAML-tekton-task-define.tex}
+
+\noindent
+Tekton Deploy Task:\\
+\input{minted/tex/YAML-tekton-task-deploy.tex}
+
+\section{Best Practices für CI/CD in Kubernetes}
+\begin{itemize}
+    \item \textbf{Automatisierte Tests}: Unit-Tests, Integrationstests und End-to-End-Tests in CI/CD-Pipeline integrieren, um die Codequalität sicherzustellen
+    \item \textbf{Sicherheitsüberprüfungen}: Sicherheitsüberprüfungen durchführen, um Schwachstellen und Sicherheitsrisiken frühzeitig zu erkennen
+    \item \textbf{Ressourcenoptimierung}: Sicherstellen dass die CI/CD-Pipeline Ressourcen effizient nutzt, um Kosten zu minimieren und die Leistung zu maximieren
+    \item \textbf{Monitoring und Alerts}: Monitoring und Alerts implementieren, um Probleme in der Pipeline frühzeitig zu erkennen und schnell darauf reagieren zu können.
+    \item \textbf{Rollback-Strategien}: Rollback-Strategien einplanen, für den Fall, dass ein Deployment fehlschlägt, um die Auswirkungen auf die Produktion zu minimieren
+    \item \textbf{Dokumentation und Schulung}: CI/CD-Pipelines dokumentieren und Team regelmäßig schulen, um sicherzustellen, dass alle Mitglieder die Prozesse und Tools verstehen und effektiv nutzen können
+\end{itemize}

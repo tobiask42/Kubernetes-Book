@@ -1,0 +1,22 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-replicaset
+spec:
+  replicas: 5 # Skalierung auf 5 Replikate
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+
+\end{minted}

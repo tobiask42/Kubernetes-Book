@@ -1,0 +1,38 @@
+\documentclass[a4paper,10pt,listof=entryprefix]{scrreport}
+\usepackage[a4paper,margin=0pt,head=0pt,footskip=0pt]{geometry}
+\usepackage{graphicx}
+\usepackage{eso-pic}
+\usepackage{xcolor}
+\usepackage[ngerman]{babel}
+\usepackage{lmodern}
+\usepackage{fontspec}
+\setmainfont{Fira Sans}
+
+
+\AddToShipoutPictureBG*{
+\put(-5,-5){
+    \includegraphics[width=1.01\paperwidth,height=1.01\paperheight]{kubernetes_cover_image.png}
+}
+}
+
+\begin{document}
+
+\begin{titlepage}
+  \color{white}
+  \vspace*{6cm}
+
+  \hspace*{2cm}
+  \begin{minipage}{0.75\textwidth}
+    {\fontsize{20}{22}\selectfont Tobias Koch\par}
+    \vspace{1.5cm}
+
+    {\fontsize{83}{70}\selectfont\bfseries Kubernetes\par}
+    \vspace{0.5cm}
+
+    {\fontsize{24}{28}\selectfont Technische Übersicht und Best Practices\par}
+  \end{minipage}
+
+  \vfill
+\end{titlepage}
+
+\end{document}

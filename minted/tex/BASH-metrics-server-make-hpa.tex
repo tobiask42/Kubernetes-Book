@@ -1,0 +1,4 @@
+\begin{minted}[frame=lines, bgcolor=bg, breaklines]{bash}
+# Erstelle einen HPA für eine Deployment
+kubectl autoscale deployment <deployment-name> --cpu-percent=50 --min=1 --max=10
+\end{minted}

@@ -1,0 +1,8 @@
+\begin{minted}[frame=lines, bgcolor=bg]{bash}
+# Benutzerdefinierte Ressource erstellen
+kubectl apply -f config/samples/cache_v1alpha1_memcached.yaml
+
+# Status des Operators und der Ressourcen überprüfen
+kubectl get memcached
+kubectl describe memcached example-memcached
+\end{minted}

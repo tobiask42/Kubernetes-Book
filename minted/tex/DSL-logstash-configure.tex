@@ -1,0 +1,20 @@
+  \begin{minted}[frame=lines, bgcolor=bg]{yaml}
+input {
+  file {
+    path => "/var/log/containers/*.log"
+    type => "kubernetes"
+  }
+}
+
+filter {
+  json {
+    source => "message"
+  }
+}
+
+output {
+  elasticsearch {
+    hosts => ["http://elasticsearch:9200"]
+  }
+}
+  \end{minted}

@@ -1,0 +1,24 @@
+\begin{minted}[frame=lines, bgcolor=bg, breaklines]{yaml}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: erweiterter-cronjob
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 4
+      template:
+        spec:
+          containers:
+            - name: beispiel-container
+              image: busybox
+              args:
+                - /bin/sh
+                - -c
+                - echo "Dies ist ein erweiterter CronJob"
+          restartPolicy: OnFailure
+\end{minted}

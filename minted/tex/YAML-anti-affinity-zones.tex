@@ -1,0 +1,17 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-with-zone-anti-affinity
+spec:
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        labelSelector:
+          matchLabels:
+            app: my-app
+        topologyKey: 'failure-domain.beta.kubernetes.io/zone'
+  containers:
+    - name: my-container
+      image: my-image
+\end{minted}

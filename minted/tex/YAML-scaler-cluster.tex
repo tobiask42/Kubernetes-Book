@@ -1,0 +1,11 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: autoscaling.k8s.io/v1
+kind: ClusterAutoscaler
+metadata:
+  name: beispiel-cluster-autoscaler
+spec:
+  scaleDown:
+    enabled: true
+    unneededTime: 10m
+    utilizationThreshold: 0.5
+\end{minted}

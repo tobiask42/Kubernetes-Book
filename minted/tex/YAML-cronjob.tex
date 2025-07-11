@@ -1,0 +1,21 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: beispiel-cronjob
+spec:
+  schedule: '0 0 * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: beispiel-container
+              image: beispiel-image
+              args:
+                - /bin/sh
+                - -c
+                - echo "Dies ist ein Beispiel-CronJob"
+          restartPolicy: OnFailure
+
+\end{minted}

@@ -1,0 +1,16 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+    - name: my-container
+      image: my-image
+      env:
+        - name: CONFIG_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: my-config
+              key: key1
+\end{minted}

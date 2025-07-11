@@ -1,0 +1,14 @@
+\begin{minted}[frame=lines, bgcolor=bg, breaklines]{yaml}
+apiVersion: v1
+kind: Service
+metadata:
+  name: beispiel-headless-service
+spec:
+  clusterIP: None
+  selector:
+    app: beispiel-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+\end{minted}

@@ -1,0 +1,11 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: "default"
+  name: "beispiel-role"
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get","list","watch"]
+\end{minted}

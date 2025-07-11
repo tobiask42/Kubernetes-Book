@@ -1,0 +1,12 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-task
+spec:
+  steps:
+    - name: build
+      image: golang:1.13
+      script: |
+        go build -o my-app .
+\end{minted}

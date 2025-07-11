@@ -1,0 +1,12 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-in-us-west1
+spec:
+  nodeSelector:
+    region: us-west1
+  containers:
+    - name: nginx
+      image: nginx
+\end{minted}

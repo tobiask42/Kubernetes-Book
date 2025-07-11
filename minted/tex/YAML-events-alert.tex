@@ -1,0 +1,14 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+# Beispielregel für Alertmanager
+groups:
+  - name: kubernetes-events
+    rules:
+      - alert: HighErrorRate
+        expr: 'rate(kube_event_total{reason="Failed"}[5m]) > 5'
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High error rate detected in Kubernetes events"
+          description: "More than 5 failed events in 5 minutes."
+\end{minted}

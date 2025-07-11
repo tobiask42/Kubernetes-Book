@@ -1,0 +1,17 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: liveness-example-http
+spec:
+  containers:
+    - name: app
+      image: your-image:latest
+      livenessProbe:
+        httpGet:
+          path: /livez
+          port: 8080
+        failureThreshold: 1
+        initialDelaySeconds: 3
+        periodSeconds: 10
+\end{minted}

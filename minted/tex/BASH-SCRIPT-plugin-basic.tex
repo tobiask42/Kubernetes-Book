@@ -1,0 +1,6 @@
+\begin{minted}[frame=lines, bgcolor=bg, breaklines]{bash}
+#!/bin/bash
+
+# Datei als kubectl-nodes.sh speichern und ausführbar machen
+kubectl get nodes -o custom-columns=NAME:.metadata.name,STATUS:.status.conditions [-1].type
+\end{minted}

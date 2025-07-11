@@ -1,0 +1,339 @@
+\chapter{Erweiterungen und Anpassungen}
+
+\section{Plugins für Kubectl}
+Kubectl-Plugins erweitern die Funktionalität des Standard-Kubectl-Befehlszeilenwerkzeugs. Sie ermöglichen benutzerdefinierte Befehle und Automatisierungen, die speziell auf die Bedürfnisse eines Clusters oder eines Teams zugeschnitten sind. \\
+
+\noindent
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl plugin list} & Alle installierten Kubectl-Plugins auflisten \\
+\texttt{kubectl plugin <plugin-name>} & Einen spezifischen Plugin-Befehl ausführen \\
+\texttt{kubectl krew install <plugin-name>} & Ein Plugin mithilfe von Krew installieren \\
+\texttt{kubectl krew uninstall <plugin-name>} & Ein Plugin mithilfe von Krew deinstallieren \\
+\texttt{kubectl krew list} & Alle Plugins anzeigen, die mit Krew installiert wurden \\
+\texttt{kubectl krew update} & Die Krew-Plugin-Datenbank aktualisieren \\
+\texttt{kubectl krew search <plugin-name>} & Nach Plugins in der Krew-Datenbank suchen \\
+\hline
+\end{tabular}
+
+\subsection{Krew: Der Plugin-Manager für Kubectl}
+Krew ist ein Plugin-Manager für Kubectl, der die Installation und Verwaltung von Plugins vereinfacht. Mit Krew können Plugins aus einer zentralen Plugin-Datenbank durchsucht, installiert, aktualisiert und deinstalliert werden.
+
+\subsubsection{Installation von Krew}
+Um Krew zu installieren, kann das folgende Skript verwendet werden:
+\input{minted/tex/BASH-SCRIPT-krew-installation.tex}
+
+\subsubsection{Verwalten von Plugins mit Krew}
+Mit Krew können verschiedene Verwaltungsaufgaben für Plugins durchgeführt werden:
+\input{minted/tex/BASH-krew-verwaltung.tex}
+
+\subsection{Beliebte Kubectl-Plugins}
+Hier sind einige beliebte Kubectl-Plugins, die häufig verwendet werden:
+
+\begin{itemize}
+    \item \texttt{kubectl neat}: Entfernt unnötige Felder aus der Ausgabe von Kubectl-Befehlen
+    \item \texttt{kubectl ctx}: Ermöglicht das schnelle Wechseln zwischen Kubernetes-Kontexten
+    \item \texttt{kubectl ns}: Ermöglicht das schnelle Wechseln zwischen Namespaces
+    \item \texttt{kubectl tree}: Zeigt eine hierarchische Ansicht von Kubernetes-Ressourcen
+    \item \texttt{kubectl view-secret}: Zeigt den Inhalt von Secrets in Klartext an
+\end{itemize}
+
+\subsection{Erstellen eigener Kubectl-Plugins}
+Eigene Kubectl-Plugins können erstellt werden, um spezifische Anforderungen zu erfüllen. Ein Kubectl-Plugin ist im Grunde ein ausführbares Skript oder Programm, das im Pfad verfügbar ist und mit \texttt{kubectl-<plugin-name>} benannt ist.
+
+Hier ist ein Beispiel für ein einfaches Kubectl-Plugin, das in Bash geschrieben ist und eine Liste der Nodes im Cluster ausgibt:
+\input{minted/tex/BASH-SCRIPT-plugin-basic.tex}
+
+Um dieses Skript als Kubectl-Plugin zu verwenden, sind folgende Schritte notwendig:
+
+\begin{enumerate}
+    \item Das Skript als \texttt{kubectl-nodes} speichern.
+    \item Die Datei ausführbar machen:\\
+    \texttt{chmod +x kubectl-nodes}
+    \item Das Skript in ein Verzeichnis legen, das im \texttt{PATH} enthalten ist, oder den \texttt{PATH} entsprechend anpassen:\\
+    \texttt{export PATH=\$PATH:/pfad/zum/skript}
+\end{enumerate}
+
+Nach diesen Schritten kann das Plugin mit folgendem Befehl ausgeführt werden:\\
+\texttt{kubectl nodes}
+
+\subsection{Sicherheitsaspekte bei der Nutzung von Plugins}
+Beim Einsatz von Kubectl-Plugins sind einige Sicherheitsaspekte zu beachten:
+
+\begin{itemize}
+    \item Nur Plugins aus vertrauenswürdigen Quellen installieren, um das Risiko von Malware oder bösartigem Code zu minimieren.
+    \item Die Skripte und ausführbaren Dateien der Plugins regelmäßig überprüfen, um sicherzustellen, dass sie keine unerwünschten Änderungen enthalten.
+    \item Die Berechtigungen der Plugin-Skripte und -Dateien streng kontrollieren, um unbefugten Zugriff zu verhindern.
+    \item Sicherheitsupdates für installierte Plugins beachten und diese regelmäßig aktualisieren.
+\end{itemize}
+
+\section{Custom Resource Definitions (CRDs)}
+\label{sec:crd}
+Custom Resource Definitions (CRDs) ermöglichen die Erweiterung von Kubernetes um benutzerdefinierte Ressourcen. Sie sind eine Möglichkeit, um eigene API-Objekte zu definieren und zu verwalten, die über die Standard-Ressourcen von Kubernetes hinausgehen.\\
+
+\noindent
+\begin{tabular}{
+|p{0.45\textwidth}|p{0.55\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get crds} & Alle Custom Resource Definitions auflisten \\
+\texttt{kubectl describe crd <crd-name>} & Details zu einer Custom Resource Definition anzeigen \\
+\texttt{kubectl create -f <crd.yaml>} & Custom Resource Definition erstellen\\
+\texttt{kubectl apply -f <crd.yaml>} & Custom Resource Definition erstellen, oder updaten\\
+\texttt{kubectl delete crd <crd-name>} & Eine Custom Resource Definition löschen \\
+\hline
+\end{tabular}
+
+\subsubsection{YAML-Datei für eine Custom Resource Definition}
+\input{minted/tex/YAML-crd.tex}
+
+\newpage
+\subsection{Anwendungsfälle für Custom Resource Definitions}
+\begin{itemize}
+    \item Definieren und Verwalten benutzerdefinierter Ressourcen, die spezifische Anforderungen erfüllen.
+    \item Erweiterung der Kubernetes-API um projekt- oder domänenspezifische Funktionalitäten.
+    \item Automatisierung und Verwaltung komplexer Anwendungslogik und -konfigurationen.
+    \item Integration von Drittanbieter-Tools und -Services in Kubernetes.
+\end{itemize}
+
+\subsection{Best Practices für Custom Resource Definitions}
+\begin{itemize}
+    \item Vermeide Namenskonflikte durch die Verwendung eindeutiger Gruppen- und Ressourcennamen.
+    \item Verwende Versionskontrolle für CRDs, um die Abwärtskompatibilität sicherzustellen.
+    \item Dokumentiere die Struktur und das Schema der CRDs klar und umfassend.
+    \item Überprüfe und teste CRDs gründlich, bevor sie in der Produktion verwendet werden.
+    \item Verwende Validierungs- und Konvertierungs-Webhook-Server, um die Konsistenz und Integrität der benutzerdefinierten Ressourcen sicherzustellen.
+\end{itemize}
+
+\subsection{Weitere nützliche Befehle für Custom Resource Definitions}
+\begin{tabular}{|p{0.53\textwidth}|p{0.47\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get crd <crd-name> -o yaml} & YAML-Konfiguration einer Custom Resource Definition anzeigen \\
+\texttt{kubectl edit crd <crd-name>} & Eine Custom Resource Definition im Editor bearbeiten \\
+\texttt{kubectl patch crd <crd-name> -p <patch-data>} & Einen Patch auf eine Custom Resource Definition anwenden \\
+\texttt{kubectl get <crd-name>} & Alle benutzerdefinierten Ressourcen für eine bestimmte CRD auflisten \\
+\texttt{kubectl describe <crd-name> <resource-name>} & Details zu einer bestimmten benutzerdefinierten Ressource anzeigen \\
+\texttt{kubectl delete <crd-name> <resource-name>} & Eine benutzerdefinierte Ressource löschen \\
+\hline
+\end{tabular}
+
+\subsection*{Nützliche Links und Ressourcen}
+\begin{itemize}
+    \item \href{https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/}{Kubernetes Custom Resource Definitions Dokumentation}
+    \item \href{https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/}{Kubernetes Konzepte: Custom Resources}
+    \item \href{https://github.com/kubernetes/sample-controller}{Beispiel-Controller für Custom Resources auf GitHub}
+\end{itemize}
+\newpage
+\subsection{Erstellen und Verwalten einer benutzerdefinierten Ressource}
+Beispiel, bei dem eine benutzerdefinierte Ressource namens \texttt{BeispielResource} erstellt und verwaltet wird.
+
+\subsubsection{YAML-Datei für die benutzerdefinierte Ressource}
+\input{minted/tex/YAML-crd-sample.tex}
+
+\subsubsection{Erstellen einer benutzerdefinierten Ressource aus einer YAML-Datei}
+\input{minted/tex/BASH-crd-apply.tex}
+
+\subsubsection{Auflisten und Anzeigen der benutzerdefinierten Ressourcen}
+\input{minted/tex/BASH-crd-get-describe.tex}
+
+\subsubsection{Löschen einer benutzerdefinierten Ressource}
+\input{minted/tex/BASH-crd-delete.tex}
+\newpage
+\subsection{Controller für Custom Resources}
+Um die Funktionalität von Custom Resources vollständig zu nutzen, kann ein benutzerdefinierter Controller entwickelt werden, der die Lebenszyklen der benutzerdefinierten Ressourcen verwaltet. Ein Controller überwacht die API-Server nach Änderungen an der benutzerdefinierten Ressource und führt entsprechende Aktionen aus.
+
+\subsubsection{Beispiel-Controller für \texttt{BeispielResource}}
+Ein Beispiel-Controller kann in Go geschrieben werden und verwendet das \href{https://github.com/kubernetes/client-go}{client-go} Paket von Kubernetes. Der Grundlegende Code für einen solchen Controller würde wie folgt aussehen:
+\input{minted/tex/GO-crd-controller-reduziert.tex}
+\newpage
+\noindent
+Der komplette Code für den funktionstüchtigen Controller sieht wie folgt aus:
+\input{minted/tex/GO-crd-controller.tex}
+
+\newpage
+\section{Helm}
+Helm ist ein Paketmanager für Kubernetes, der das Verwalten von Kubernetes-Anwendungen vereinfacht. Mit Helm können Anwendungen als Charts (Pakete mit vorkonfigurierten Kubernetes-Ressourcen) installiert, aktualisiert und verwaltet werden.\\
+
+\noindent
+\begin{tabular}{
+|p{0.45\textwidth}|p{0.55\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{helm list} & Alle installierten Helm-Releases auflisten \\
+\texttt{helm install <release-name> <chart>} & Ein neues Helm-Chart installieren \\
+\texttt{helm upgrade <release-name> <chart>} & Ein Helm-Release aktualisieren \\
+\texttt{helm delete <release-name>} & Ein Helm-Release löschen \\
+\texttt{helm repo add <repo-name> <repo-url>} & Ein Helm-Repository hinzufügen \\
+\texttt{helm repo update} & Alle Helm-Repositories aktualisieren \\
+\hline
+\end{tabular}
+\subsubsection{Helm Installieren}
+\texttt{sudo snap install helm --classic}
+
+\subsubsection{Helm-Chart-Struktur}
+Ein Helm-Chart ist ein Paket, das alle notwendigen Konfigurationsdateien enthält, um eine Kubernetes-Anwendung zu deployen. Die typische Struktur eines Helm-Charts sieht wie folgt aus:
+\input{minted/tex/TEXT-helm-chart.tex}
+
+\subsubsection{Erstellen eines neuen Helm-Charts}
+Um ein neues Helm-Chart zu erstellen, verwendet man den folgenden Befehl:
+\input{minted/tex/BASH-helm-chart-create.tex}
+
+\subsubsection{Anpassen von Werten in einem Helm-Chart}
+Die Werte in einem Helm-Chart können durch Erstellen einer eigenen \texttt{values.yaml}-Datei überschrieben werden. Diese Datei enthält die benutzerdefinierten Konfigurationen für das Chart.
+\input{minted/tex/YAML-helm-chart-values.tex}
+
+\subsubsection{Installieren eines Helm-Charts mit benutzerdefinierten Werten}
+Um ein Helm-Chart mit benutzerdefinierten Werten zu installieren, verwendet man den folgenden Befehl:
+\input{minted/tex/BASH-helm-chart-install.tex}
+\newpage
+\subsection{Anwendungsfälle für Helm}
+\begin{itemize}
+    \item Vereinfachung des Deployments und der Verwaltung von Kubernetes-Anwendungen.
+    \item Bereitstellung und Aktualisierung von Anwendungen mit minimalem Aufwand.
+    \item Verwaltung von Abhängigkeiten zwischen verschiedenen Kubernetes-Ressourcen.
+    \item Wiederverwendbarkeit und gemeinsame Nutzung von Konfigurationen und Best Practices.
+    \item Erleichterung der Zusammenarbeit in Teams durch standardisierte Charts.
+\end{itemize}
+
+\subsection{Best Practices für die Nutzung von Helm}
+\begin{itemize}
+    \item Versioniere Helm-Charts sorgfältig, um die Rückverfolgbarkeit und Reproduzierbarkeit zu gewährleisten.
+    \item Verwende \texttt{values.yaml}-Dateien, um Konfigurationen zu abstrahieren und flexibel zu gestalten.
+    \item Nutze Helm-Repositorys, um Charts zu teilen und wiederzuverwenden.
+    \item Teste Charts gründlich in einer Staging-Umgebung, bevor sie in der Produktion verwendet werden.
+    \item Dokumentiere die Verwendung und Konfiguration von Charts klar und umfassend.
+\end{itemize}
+
+\subsection{Weitere nützliche Befehle für Helm}
+\begin{tabular}{
+|p{0.53\textwidth}|p{0.47\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{helm search hub <keyword>} & Suche nach Charts im Helm Hub \\
+\texttt{helm show values <chart>} & Zeige die Standardwerte eines Charts an \\
+\texttt{helm show chart <chart>} & Zeige die Metadaten eines Charts an \\
+\texttt{helm show readme <chart>} & Zeige die README-Datei eines Charts an \\
+\texttt{helm dependency update} & Aktualisiere die Abhängigkeiten eines Charts \\
+\texttt{helm rollback <release-name> <revision>} & Mache eine bestimmte Revision eines Releases rückgängig \\
+\texttt{helm history <release-name>} & Zeige die Versionshistorie eines Releases an \\
+\hline
+\end{tabular}
+
+\subsection{Nützliche Links und Ressourcen}
+\begin{itemize}
+    \item \href{https://helm.sh/docs/}{Offizielle Helm-Dokumentation}
+    \item \href{https://artifacthub.io/}{Artifact Hub für Helm-Charts}
+    \item \href{https://helm.sh/blog/}{Helm Blog für Neuigkeiten und Updates}
+    \item \href{https://github.com/helm/helm}{Helm GitHub Repository}
+    \item \href{https://helm.sh/docs/chart_best_practices/}{Best Practices für Helm-Charts}
+\end{itemize}
+\newpage
+\subsection{Erstellen und Verwalten eines Helm-Charts}
+
+\subsubsection{Erstellen eines neuen Helm-Charts}
+\input{minted/tex/BASH-helm-chart-create.tex}
+
+\subsubsection{Installieren des Helm-Charts}
+\input{minted/tex/BASH-helm-install-nofile.tex}
+
+\subsubsection{Überprüfen des Helm-Releases}
+\input{minted/tex/BASH-helm-check.tex}
+
+\subsubsection{Anpassen der \texttt{values.yaml}-Datei}
+\input{minted/tex/YAML-helm-values-sample.tex}
+
+
+\subsubsection{Aktualisieren des Helm-Releases}
+Nach bearbeitung der \texttt{values.yaml}-Datei:
+\input{minted/tex/BASH-helm-upgrade.tex}
+
+\subsubsection{Löschen des Helm-Releases}
+\input{minted/tex/BASH-helm-delete.tex}
+
+\newpage
+
+\section{Operators}
+Operators sind Kubernetes-Controller, die speziell dafür entwickelt wurden, komplexe Anwendungen und Zustandsmaschinen zu verwalten. Sie nutzen benutzerdefinierte Ressourcen (Custom Resources), um Anwendungen und deren Betriebsaufgaben zu automatisieren. Operators erweitern die Fähigkeiten von Kubernetes, indem sie Anwendungslogik und Betriebswissen in den Cluster einbringen.\\
+
+\noindent
+\begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get operators} & Alle Operators im Cluster auflisten (wenn CRD für Operators vorhanden) \\
+\texttt{kubectl get crds} & Alle Custom Resource Definitions (CRDs) im Cluster auflisten \\
+\texttt{kubectl get <custom-resource>} & Alle Instanzen einer bestimmten benutzerdefinierten Ressource auflisten \\
+\texttt{kubectl describe <custom-resource> <resource-name>} & Details zu einer bestimmten benutzerdefinierten Ressource anzeigen \\
+\texttt{kubectl create -f <custom-resource.yaml>} & Eine neue benutzerdefinierte Ressource anhand einer YAML-Datei erstellen \\
+\texttt{kubectl delete <custom-resource> <resource-name>} & Eine bestimmte benutzerdefinierte Ressource löschen \\
+\texttt{kubectl edit <custom-resource> <resource-name>} & Eine benutzerdefinierte Ressource im Editor bearbeiten \\
+\texttt{kubectl get <custom-resource> <resource-name> -o yaml} & Eine benutzerdefinierte Ressource im YAML-Format anzeigen \\
+\texttt{kubectl logs <operator-pod-name>} & Logs eines Operator-Pods anzeigen, um den Status und Fehler zu überprüfen \\
+\texttt{kubectl get pods -l name=<operator-name>} & Alle Pods eines bestimmten Operators auflisten \\
+\texttt{kubectl describe pod <operator-pod-name>} & Details zu einem spezifischen Operator-Pod anzeigen \\
+\texttt{kubectl apply -f <operator-deployment.yaml>} & Einen Operator aus einer YAML-Datei bereitstellen \\
+\texttt{kubectl delete -f <operator-deployment.yaml>} & Einen Operator entfernen, der aus einer YAML-Datei bereitgestellt wurde \\
+\hline
+\end{tabular}
+
+\subsection{Anwendungsfälle für Operators}
+\begin{itemize}
+    \item Automatisierung des Lebenszyklusmanagements von stateful Anwendungen wie Datenbanken und Message Queues.
+    \item Implementierung von komplexen Geschäftslogiken und Betriebsabläufen als Kubernetes-Ressourcen.
+    \item Vereinfachung der Verwaltung und Skalierung von Anwendungen durch die Automatisierung wiederkehrender Aufgaben.
+    \item Sicherstellung der Einhaltung von Best Practices und Unternehmensrichtlinien durch codierte Betriebslogik.
+\end{itemize}
+
+\subsection{Best Practices für die Entwicklung und Nutzung von Operators}
+\begin{itemize}
+    \item Beginne mit klar definierten Anwendungsanforderungen und identifiziere, welche Betriebsaufgaben automatisiert werden können.
+    \item Verwende geeignete Frameworks wie \texttt{Operator SDK} oder \texttt{Kubebuilder} zur Entwicklung von Operators.
+    \item Implementiere umfassende Tests für den Operator, um sicherzustellen, dass er unter verschiedenen Szenarien korrekt funktioniert.
+    \item Dokumentiere die benutzerdefinierten Ressourcen und deren Nutzung klar und umfassend.
+    \item Überwache und logge die Aktivitäten des Operators, um Probleme frühzeitig zu erkennen und zu beheben.
+    \item Verwalte die Versionierung des Operators sorgfältig, um Kompatibilitätsprobleme zu vermeiden.
+\end{itemize}
+
+\subsection{Frameworks und Tools zur Entwicklung von Operators}
+Es gibt verschiedene Frameworks und Tools, die die Entwicklung von Operators erleichtern:
+\begin{itemize}
+    \item \href{https://sdk.operatorframework.io/}{Operator SDK}: Ein Framework zur schnellen Entwicklung von Kubernetes Operators in Go, Ansible oder Helm.
+    \item \href{https://book.kubebuilder.io/}{Kubebuilder}: Ein Framework zur Entwicklung von Kubernetes APIs und Controllers mit CRDs.
+    \item \href{https://metacontroller.github.io/metacontroller/}{Metacontroller}: Ein Controller, der es ermöglicht, benutzerdefinierte Controller durch Konfiguration und Scripts zu erstellen.
+\end{itemize}
+
+\subsection{Erstellen eines einfachen Operators mit Operator SDK}
+\href{https://sdk.operatorframework.io/docs/installation/#install-from-github-release}{Anleitung für neueste Version}
+
+\subsubsection{Installation des Operator SDK}
+\input{minted/tex/BASH-operator-sdk-install.tex}
+
+\subsubsection{Erstellen eines neuen Operator-Projekts}
+\input{minted/tex/BASH-operator-sdk-init.tex}
+
+\subsubsection{Definieren der benutzerdefinierten Ressource (CRD)}
+\input{minted/tex/BASH-operator-sdk-define-crd.tex}
+Die Datei \texttt{api/v1alpha1/memcached\_types.go} bearbeiten, um das Schema der benutzerdefinierten Ressource zu definieren:
+\input{minted/tex/GO-operator-sdk-crd-scheme.tex}
+\newpage
+\subsubsection{Implementieren des Controllers}
+Die Datei \texttt{controllers/memcached\_controller.go} bearbeiten, um die Geschäftslogik des Controllers zu implementieren:
+\input{minted/tex/GO-operator-sdk-crd-implement.tex}
+
+\subsubsection{Erstellen und Anwenden der CRD}
+\input{minted/tex/BASH-operator-create-apply-crd.tex}
+
+\subsubsection{Bereitstellen des Operators}
+\input{minted/tex/BASH-operator-deploy.tex}
+
+\subsubsection{Verwalten der benutzerdefinierten Ressource}
+Instanz der benutzerdefinierten Ressource erstellen, um den Operator zu testen:
+\input{minted/tex/YAML-operator-manage.tex}
+\input{minted/tex/BASH-operator-manage.tex}

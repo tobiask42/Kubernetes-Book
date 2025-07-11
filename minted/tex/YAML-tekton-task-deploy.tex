@@ -1,0 +1,12 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: deploy-task
+spec:
+  steps:
+    - name: deploy
+      image: bitnami/kubectl
+      script: |
+        kubectl apply -f deployment.yaml
+\end{minted}

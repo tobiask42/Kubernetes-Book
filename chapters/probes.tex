@@ -1,0 +1,103 @@
+\chapter{Probes}
+Bei Kubernetes werden Probes genutzt um herauszufinden ob ein Container läuft, bereit oder gestartet ist. Um diese Probes nutzen zu können müssen API-Endpunkte in der containerisierten Applikation definiert werden.
+Die Konvention ist es den Endpunkt für die Liveness Probe \enquote{livez} zu nennen und den Endpunkt für die Readiness Probe \enquote{readyz}.
+Die Startup Probe verwendet üblicherweise denselben Endpunkt wie die Liveness Probe. Die Bezeichnung \enquote{healthz} ist sein Kubernetes v1.16 veraltet.
+\section{Python FastAPI-Endpunkte}
+Um die Beispiele zu illustrieren wird FastAPI genutzt. Dafür müssen zuerst das \enquote{FastAPI} und \enquote{Response} Objekt importiert werden. \enquote{time} wird in diesem Fall genutzt um eine Prüfung zu simulieren.
+\subsubsection{Python Code für FastAPI}
+\input{minted/tex/PYTHON-fastapi-imports}
+\section{Parameter für Probes}
+\noindent
+In der YAML-Datei gibt es folgende Felder, die für Probes definiert werden können:\\
+\begin{tabular}{|p{0.35\textwidth}|p{0.65\textwidth}|}
+\hline
+\textbf{Feld} & \textbf{Beschreibung} \\
+\hline
+\texttt{initialDelaySeconds} & Anzahl der Sekunden nach dem Start des Containers, bevor die Startup-, Liveness- oder Readiness-Probe gestartet wird. Falls eine Startup-Probe definiert ist, beginnen die Verzögerungen der Liveness- und Readiness-Probes erst nach deren erfolgreichem Abschluss. Wenn \texttt{periodSeconds} größer ist als \texttt{initialDelaySeconds}, wird dieser Wert ignoriert. Standardwert: \texttt{0}, Minimum: \texttt{0}. \\
+\hline
+\texttt{periodSeconds} & Intervall (in Sekunden), in dem die Probe durchgeführt wird. Standardwert: \texttt{10}, Minimum: \texttt{1}. Solange ein Container nicht bereit ist, kann die Readiness-Probe häufiger als konfiguriert ausgeführt werden, um den Pod schneller bereitzustellen. \\
+\hline
+\texttt{timeoutSeconds} & Zeitlimit (in Sekunden), nach dem eine Probe als fehlgeschlagen gilt. Standardwert: \texttt{1}, Minimum: \texttt{1}. \\
+\hline
+\texttt{successThreshold} & Minimale Anzahl aufeinanderfolgender Erfolge, die erforderlich sind, damit eine zuvor fehlgeschlagene Probe als erfolgreich gilt. Standardwert: \texttt{1}, Minimum: \texttt{1}. Für Liveness- und Startup-Probes muss der Wert \texttt{1} sein. \\
+\hline
+\texttt{failureThreshold} & Anzahl aufeinanderfolgender Fehler, nach denen Kubernetes den Container als nicht bereit/nicht gesund betrachtet. Standardwert: \texttt{3}, Minimum: \texttt{1}. Bei Liveness- und Startup-Probes wird der Container nach Überschreitung neugestartet. Bei Readiness-Probes wird der Container weiter betrieben, jedoch als nicht bereit markiert. \\
+\hline
+\texttt{terminationGracePeriodSeconds} & Gibt an, wie lange der kubelet nach dem Auslösen des Shutdowns wartet, bevor der Container erzwungen beendet wird. Standardmäßig wird der pod-spezifische Wert übernommen (Standard: \texttt{30}). Minimum: \texttt{1}. \\
+\hline
+\end{tabular}
+\\
+\section{Liveness Probe}
+\subsubsection{Python Code für livez-Endpunkt}
+Die Funktion livez besteht aus einem Endpunkt der den Statuscode 200 \enquote{ok} zurückgibt, um zu zeigen dass alles wie erwartet funktioniert.
+Kubernetes akzeptiert hier alle Codes von 200-399. Schlägt der Aufruf fehl wird der Container neu gestartet, sobald der failureThreshold erreicht wurde.
+Dabei wartet die Liveness Probe nicht auf einen Erfolg durch andere Probes.
+\input{minted/tex/PYTHON-endpoint-livez}
+\subsubsection{Konfiguration für Liveness HTTP Probe}
+Die Liveness probe wird konfiguriert indem man einen Endpunkt, hier \enquote{livez} und einen Port über den der Endpunkt läuft festlegt.
+Es wird ein initialDelay festlegt, vor dem keine Prüfung erfolgt und danach wird periodisch der Endpunkt erneut aufgerufen, um sicherzustellen dass die API weiterhin läuft.\\
+Eine HTTP-Liveness Probe kann auch einen benannten Port verwenden.\\
+\input{minted/tex/YAML-probe-liveness}
+\subsubsection{Konfiguration für eine Liveness TCP Probe}
+Der Probe-Typ `tcpSocket` prüft, ob ein TCP-Handshake am angegebenen Port erfolgreich ist. Da kein Protokoll-Austausch erfolgt kann diese Variante auch für Dienste wie Redis, PostgreSQL oder eigene Binärprotokolle verwendet werden.
+\input{minted/tex/YAML-probe-liveness-tcp.tex}
+\subsubsection{Konfiguration für eine Liveness gRPC Probe}
+Implementiert die Applikation das gRPC Health Checking Protocol kann auch eine gRPC Probe verwendet werden.
+\input{minted/tex/YAML-probe-liveness-grpc.tex}
+Dabei muss Folgendes beachtet werden:
+\begin{itemize}
+    \item Der Port muss explizit gesetzt werden und es muss die Portnummer verwendet werden.
+    \item Der `service`-Parameter wird zur Unterscheidung zwischen Liveness und Readiness genutzt
+    \item Ein gRPC-Endpunkt kann für mehrere Probe-Typen genutzt werden
+    \item Es gibt keine Authentifizierung und keine Fehlermeldungscodes
+    \item Ein Fehler jeglicher Art führt zu einem Fehlschlag
+    \item Fehlkonfigurationen führen sofort zu einem Fehler
+    \item Der Dienst muss auf der Pod-IP lauschen
+    \item Falls das Feature-Gate `ExecProbeTimeout=false` ist ignoriert `grpc-health-probe` das `timeoutSeconds`-Limit
+\end{itemize}
+\newpage
+\section{Readiness Probe}
+\subsubsection{Python Code für readyz-Endpunkt}
+Die Funktion readyz prüft ob die API bereit ist. Zum Beispiel könnte sie testen ob ein Zugriff auf eine Datenbank möglich ist. Ist dies der Fall wird auch hier der Statuscode 200 zurückgegeben.
+Ansonsten wird der Statuscode 503 \enquote{Service Unavailable} zurückgegeben. Kubernetes akzeptiert alle Codes von 400 bis 599 als Fehlschlag.\\
+Je nach Resultat wird die Node
+\input{minted/tex/PYTHON-endpoint-readyz}
+\subsubsection{Konfiguration für Readiness Probe}
+Die Readiness Probe verwendet das gleiche Prinzip mit Endpunkt, initialDelay und periodSeconds, wie die Liveness Probe.
+\input{minted/tex/YAML-probe-readiness}
+\newpage
+\section{Startup Probe}
+Die Startup Probe funktioniert genauso wie eine Liveness Probe, mit dem Unterschied dass sie die Ausführung von Readiness und Lifeness Probes verhindert, bis der Start erfolgreich war.\\
+Sie wird genauso wie eine Liveness Probe konfiguriert, es ist also üblich den `/livez` Endpunkt zu verwenden, jedoch können auch hier TCP oder gRPC verwendet werden.
+\subsubsection{Beispielkonfiguration einer Startup Probe}
+Diese Startup Probe ist so definiert dass alle 5 Sekunden der `livez` Endpunkt aufgerufen wird. Nach 30 Fehlschlägen, also 150 Sekunden, gilt der Start als gescheitert.
+\input{minted/tex/YAML-probe-startup.tex}
+\section{Best Practices für Probes}
+\begin{itemize}
+    \item \textbf{Initiale Verzögerung konfigurieren}, um ausreichend Startzeit zu bieten.
+    
+    \item \textbf{Angemessene Timeout-Werte setzen}, um kurzzeitige Verzögerungen oder Lastspitzen nicht fälschlich als Fehler zu interpretieren (\texttt{timeoutSeconds} typischerweise 2-5 Sekunden).
+    
+    \item \textbf{Leichtgewichtige Endpunkte verwenden}, um den Overhead der Probe möglichst gering zu halten.
+    
+    \item \textbf{Readiness-Probes für Abhängigkeiten nutzen}, anstatt die Anwendung durch Liveness-Probes neu zu starten, wenn externe Dienste nicht erreichbar sind.
+    
+    \item \textbf{Auf Readiness-Probes nicht verzichten}, wenn die Anwendung komplexe Initialisierungsschritte durchläuft oder auf externe Komponenten angewiesen ist.
+    
+    \item \textbf{Startup-Probes bei langer Initialisierungszeit einsetzen}.
+    
+    \item \textbf{TCP-Probes gezielt einsetzen}, da sie lediglich die Port-Erreichbarkeit prüfen und keine Aussage über die tatsächliche Funktionsfähigkeit des Dienstes treffen.
+    
+    \item \textbf{gRPC-Probes nur verwenden}, wenn das gRPC Health Check Protocol implementiert ist. Andernfalls auf HTTP-Probes oder benutzerdefinierte Mechanismen ausweichen.
+    
+    \item \textbf{Parameter wie \texttt{failureThreshold} und \texttt{periodSeconds} anpassen}, um das Verhalten der Probe an die Stabilität und Antwortzeit des Dienstes anzupassen.
+    
+    \item \textbf{Probes in Testumgebungen validieren}, um Fehlkonfigurationen und unerwartetes Verhalten frühzeitig zu erkennen.
+\end{itemize}
+
+
+\subsubsection{Nützliche Links und Ressourcen}
+Kubernetes Dokumentation:\\
+\url{https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/}\\
+mdn web docs: \url{https://developer.mozilla.org/de/docs/Web/HTTP/Reference/Status}\\
+FastAPI: \url{https://fastapi.tiangolo.com/}

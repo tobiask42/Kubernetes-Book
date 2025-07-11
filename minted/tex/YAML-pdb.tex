@@ -1,0 +1,12 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: beispiel-pdb
+  namespace: default
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: beispiel-app
+\end{minted}

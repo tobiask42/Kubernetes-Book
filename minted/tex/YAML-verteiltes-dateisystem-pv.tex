@@ -1,0 +1,14 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: hdfs-pv
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteMany
+  hdfs:
+    namenode: "hdfs://namenode.example.com:8020"
+    path: "/data"
+\end{minted}

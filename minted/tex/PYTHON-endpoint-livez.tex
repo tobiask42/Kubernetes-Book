@@ -1,0 +1,5 @@
+\begin{minted}[frame=lines, bgcolor=bg]{python}
+@app.get("/livez", response_class=PlainTextResponse)
+async def livez():
+    return PlainTextResponse(content="ok", status_code=200)
+\end{minted}

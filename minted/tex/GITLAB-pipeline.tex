@@ -1,0 +1,21 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  script:
+    - kubectl apply -f deployment.yaml
+
+test:
+  stage: test
+  script:
+    - kubectl get pods
+
+deploy:
+  stage: deploy
+  script:
+    - kubectl apply -f service.yaml
+\end{minted}

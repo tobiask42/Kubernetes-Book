@@ -1,0 +1,13 @@
+\begin{minted}[frame=lines, bgcolor=bg]{bash}
+# Füge einen NoSchedule Taint zu einer Node hinzu
+kubectl taint nodes node1 key=value:NoSchedule
+
+# Füge einen PreferNoSchedule Taint zu einer Node hinzu
+kubectl taint nodes node1 key=value:PreferNoSchedule
+
+# Füge einen NoExecute Taint zu einer Node hinzu
+kubectl taint nodes node1 key=value:NoExecute
+
+# Entferne einen Taint von einer Node
+kubectl taint nodes node1 key:NoSchedule-
+\end{minted}

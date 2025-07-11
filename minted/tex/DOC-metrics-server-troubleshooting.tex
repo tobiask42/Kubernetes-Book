@@ -1,0 +1,45 @@
+\noindent
+Bei Problemen mit dem Metrics Server, können folgende Schritte zur Fehlerbehebung helfen:
+
+\begin{itemize}
+    \item Überprüfe die Logs des Metrics Server Pods:
+    \begin{minted}[frame=lines, bgcolor=bg]{bash}
+    kubectl logs -n kube-system <metrics-server-pod-name>
+    \end{minted}
+    
+    \item Stelle sicher, dass der Metrics Server die erforderlichen Berechtigungen hat:
+    \begin{minted}[frame=lines, bgcolor=bg]{bash}
+    kubectl describe clusterrole system:metrics-server
+    \end{minted}
+    
+    \item Überprüfe, ob der Metrics Server die Metriken korrekt sammelt und verarbeitet:
+    \begin{minted}[frame=lines, bgcolor=bg]{bash}
+    kubectl get --raw "/apis/metrics.k8s.io/v1beta1/nodes"
+    \kubectl get --raw "/apis/metrics.k8s.io/v1beta1/pods"
+    \end{minted}
+
+    \item Vergewissere dich, dass der Metrics Server auf allen Nodes im Cluster zugreifen kann:
+    \begin{minted}[frame=lines, bgcolor=bg]{bash}
+    kubectl get nodes
+    \end{minted}
+
+    \item Überprüfe die Netzwerkverbindung und Firewall-Einstellungen, um sicherzustellen, dass der Metrics Server die Nodes erreichen kann:
+    \begin{minted}[frame=lines, bgcolor=bg]{bash}
+    kubectl get svc -n kube-system metrics-server
+    \end{minted}
+
+    \item Überprüfe, ob der Metrics Server die richtigen Ressourcenlimits und -anforderungen hat:
+    \begin{minted}[frame=lines, bgcolor=bg]{bash}
+    kubectl describe pod <metrics-server-pod-name> -n kube-system
+    \end{minted}
+    
+    \item Stelle sicher, dass der Metrics Server korrekt konfiguriert ist, um Metriken von den Nodes zu sammeln. Überprüfe die Konfigurationsdateien und Argumente des Metrics Server:
+    \begin{minted}[frame=lines, bgcolor=bg]{bash}
+    kubectl describe deployment metrics-server -n kube-system
+    \end{minted}
+    
+    \item Überprüfe, ob alle Abhängigkeiten des Metrics Server erfüllt sind, wie z.B. die API-Server- und Kubelet-Konfiguration:
+    \begin{minted}[frame=lines, bgcolor=bg]{bash}
+    kubectl get apiservices
+    \end{minted}
+\end{itemize}

@@ -1,0 +1,113 @@
+\chapter{Skalierung und Autoscaling}
+
+\section{Autoscalers}
+Kubernetes unterstützt verschiedene Mechanismen zur automatischen Skalierung von Workloads und Infrastruktur. Diese Skalierungsarten lassen sich in drei Hauptkategorien unterteilen:
+\begin{itemize}
+    \item \textbf{Horizontal Pod Autoscaler (HPA):} Skalierung der Anzahl von Pods.
+    \item \textbf{Vertical Pod Autoscaler (VPA):} Anpassung der Ressourcenlimits von Pods.
+    \item \textbf{Cluster Autoscaler:} Skalierung der Anzahl der Nodes im Cluster.
+\end{itemize}
+
+
+\subsection{Horizontal Pod Autoscalers (HPA)}
+Der HPA skaliert die Anzahl von Pods in einem Deployment, StatefulSet oder ReplicaSet basierend auf Metriken wie CPU-Auslastung oder benutzerdefinierten Indikatoren. \\
+
+\noindent
+\begin{tabular}{|p{0.53\textwidth}|p{0.47\textwidth}|}
+\hline
+\texttt{kubectl get hpa} & Liste aller HPAs \\
+\texttt{kubectl autoscale deployment <deployment-name>} & Deployment automatisch skalieren \\
+\texttt{kubectl describe hpa <hpa-name>} & Details eines HPAs anzeigen \\
+\texttt{kubectl delete hpa <hpa-name>} & HPA löschen \\
+\texttt{kubectl edit hpa <hpa-name>} & HPA bearbeiten \\
+\texttt{kubectl scale --replicas=<number> deployment <deployment-name>} & Manuelle Skalierung der Pods \\
+\hline
+\end{tabular}
+\phantom{.}\\
+\noindent
+\subsubsection{Beispielkonfiguration eines Horizontal Pod Autoscalers}
+\input{minted/tex/YAML-scaler-hpa}
+\newpage
+\subsection{Vertical Pod Autoscalers (VPA)}
+Automatische Anpassung der Ressourcenanforderungen (CPU und Speicher) von Pods anhand der tatsächlichen Nutzung über die Zeit. \\
+
+\noindent
+\begin{tabular}{|p{0.53\textwidth}|p{0.47\textwidth}|}
+\hline
+\texttt{kubectl get vpa} & Liste aller VPAs \\
+\texttt{kubectl describe vpa <vpa-name>} & Details eines VPAs anzeigen \\
+\texttt{kubectl delete vpa <vpa-name>} & VPA löschen \\
+\texttt{kubectl apply -f <vpa-config.yaml>} & VPA aus YAML erstellen \\
+\texttt{kubectl edit vpa <vpa-name>} & VPA bearbeiten \\
+\texttt{kubectl get vpa -o yaml} & YAML-Ausgabe aller VPAs \\
+\texttt{kubectl patch vpa <vpa-name> --patch '<json-patch>'} & VPA patchen \\
+\hline
+\end{tabular}
+\subsubsection{Beispielkonfiguration eines Vertical Pod Autoscalers:}
+\input{minted/tex/YAML-scaler-vpa.tex}
+
+
+\subsection{Cluster Autoscalers}
+Der Cluster Autoscaler erhöht oder reduziert automatisch die Anzahl der Nodes im Cluster, je nach Ressourcenbedarf der Pods. Nicht schedulbare Pods oder unterausgelastete Nodes sind typische Trigger. \\
+
+\noindent
+\begin{tabular}{|p{0.53\textwidth}|p{0.47\textwidth}|}
+\hline
+\texttt{kubectl get cluster-autoscaler} & Liste aller Cluster Autoscaler \\
+\texttt{kubectl describe cluster-autoscaler <autoscaler-name>} & Details anzeigen \\
+\texttt{kubectl delete cluster-autoscaler <autoscaler-name>} & Löschen eines Autoscalers \\
+\texttt{kubectl apply -f <autoscaler-config.yaml>} & Autoscaler konfigurieren \\
+\texttt{kubectl edit cluster-autoscaler <autoscaler-name>} & Autoscaler bearbeiten \\
+\texttt{kubectl get cluster-autoscaler -o yaml} & YAML-Ausgabe \\
+\texttt{kubectl patch cluster-autoscaler <autoscaler-name> --patch '<json-patch>'} & Patch anwenden \\
+\hline
+\end{tabular}
+\subsubsection{Beispielkonfiguration eines Cluster Autoscalers:}
+\input{minted/tex/YAML-scaler-cluster.tex}
+
+\section{Manuelle Skalierung}
+Die manuelle Skalierung erlaubt es, die Anzahl der Replikate eines Deployments, StatefulSets, ReplicaSets oder ReplicationControllers unabhängig von automatischen Mechanismen anzupassen.\\
+
+\noindent
+\begin{tabular}{|p{0.53\textwidth}|p{0.47\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl scale deployment <deployment-name> --replicas=<number>} & Replikate eines Deployments setzen \\
+\texttt{kubectl scale statefulset <statefulset-name> --replicas=<number>} & Replikate eines StatefulSets setzen \\
+\texttt{kubectl scale rc <replication-controller-name> --replicas=<number>} & Replikate eines ReplicationControllers setzen \\
+\texttt{kubectl scale replicaset <replicaset-name> --replicas=<number>} & Replikate eines ReplicaSets setzen \\
+\texttt{kubectl get deployment <deployment-name> -o=jsonpath='{.spec.replicas}'} & Aktuelle Replikate eines Deployments anzeigen \\
+\texttt{kubectl get statefulset <statefulset-name> -o=jsonpath='{.spec.replicas}'} & Aktuelle Replikate eines StatefulSets anzeigen \\
+\texttt{kubectl get rc <replication-controller-name> -o=jsonpath='{.spec.replicas}'} & Aktuelle Replikate eines ReplicationControllers anzeigen \\
+\texttt{kubectl get replicaset <replicaset-name> -o=jsonpath='{.spec.replicas}'} & Aktuelle Replikate eines ReplicaSets anzeigen  \\
+\hline
+\end{tabular}
+\phantom{.}\\
+Eine umfangreiche Erklärung zu jsonpath befindet sich bei \ref{subsec:use-json-path}
+
+\begin{quote}
+\textbf{Achtung:} Die manuelle Skalierung überschreibt temporär Einstellungen eines \texttt{HorizontalPodAutoscaler}. Bei aktiver automatischer Skalierung kann sich die manuell gesetzte Replikazahl daher wieder ändern.
+\end{quote}
+
+\subsection{Best Practices für die Skalierung}
+\begin{itemize}
+  \item \textbf{Ressourcenanforderungen definieren:} \texttt{resources.requests} und \texttt{resources.limits} für alle Pods angeben, um fundierte Entscheidungen durch Autoscaler zu ermöglichen.
+
+  \item \textbf{Metriken überwachen:} CPU- und Speicherauslastung regelmäßig prüfen und gegebenenfalls benutzerdefinierte Metriken einbinden (z.\,B. via Prometheus Adapter).
+
+  \item \textbf{Initiale Replikazahl festlegen:} Eine Ausgangsgröße wählen, die eine schnelle Verfügbarkeit sicherstellt, ohne erst bei Lastanstieg skalieren zu müssen.
+
+  \item \textbf{HPA und VPA nicht kombinieren:} HPA und VPA nicht gleichzeitig auf dieselben Deployments anwenden, da sich ihre Wirkungen überschneiden können.
+
+  \item \textbf{Cluster-Autoscaler begrenzen:} Minimal- und Maximalanzahl an Nodes setzen, um unkontrolliertes Skalieren oder Ressourcenmangel zu vermeiden.
+
+  \item \textbf{Cooldown-Zeiten konfigurieren:} Eine sinnvolle Downscale-Stabilisierung (z.\,B. mit \texttt{--horizontal-pod-autoscaler-downscale-stabilization}) einstellen, um häufiges Hin- und Herschalten zu verhindern.
+
+  \item \textbf{Skalierungsverhalten testen:} Änderungen an Skalierungsregeln in einer Testumgebung prüfen, bevor sie produktiv eingesetzt werden.
+\end{itemize}
+
+\subsubsection*{Weitere Ressourcen}
+HPA:  
+\url{https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/}\\
+Autoscaling Workloads: \url{https://kubernetes.io/docs/concepts/workloads/autoscaling/}

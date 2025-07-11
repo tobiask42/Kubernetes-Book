@@ -1,0 +1,60 @@
+\chapter{Netzwerk}
+
+\section{Ingress}
+Verwaltet den externen Zugriff auf Services, meist über HTTP und HTTPS. \\
+
+\noindent
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get ingress} & Alle Ingress-Ressourcen auflisten \\
+\texttt{kubectl describe ingress <ingress-name>} & Details zu einer Ingress-Ressource anzeigen \\
+\texttt{kubectl delete ingress <ingress-name>} & Eine Ingress-Ressource löschen \\
+\hline
+\end{tabular}
+
+\section{NetworkPolicies}
+Ermöglicht die Verwaltung des Netzwerkverkehrs zwischen Pods.\\
+
+\noindent
+\begin{tabular}{|p{0.6\textwidth}|p{0.4\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get networkpolicies} & Alle NetworkPolicies im aktuellen Namespace auflisten \\
+\texttt{kubectl describe networkpolicy <networkpolicy-name>} & Details zu einer NetworkPolicy anzeigen \\
+\texttt{kubectl delete networkpolicy <networkpolicy-name>} & Eine NetworkPolicy löschen \\
+\hline
+\end{tabular}
+
+\section{Port Forwarding}
+Ermöglicht den Zugriff auf einen Service innerhalb des Clusters von einem lokalen Rechner.\\
+
+\noindent
+\begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl port-forward <pod-name> <local-port>:<pod-port>} & Eine lokale Portweiterleitung zu einem Pod einrichten \\
+\texttt{kubectl port-forward service/<service-name> <local-port>:<service-port>} & Eine lokale Portweiterleitung zu einem Service einrichten \\
+\hline
+\end{tabular}
+
+\section{DNS und Service Discovery}
+Kubernetes verwendet DNS und Service Discovery, um die Kommunikation zwischen Diensten im Cluster zu erleichtern. Jeder Service erhält einen DNS-Namen, der zur Auflösung der Service-IP verwendet werden kann. \\
+
+\noindent
+\begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get services} & Alle Services im aktuellen Namespace auflisten \\
+\texttt{kubectl describe service <service-name>} & Details zu einem bestimmten Service anzeigen \\
+\texttt{kubectl get endpoints <service-name>} & Endpunkte eines bestimmten Services anzeigen \\
+\texttt{kubectl exec <pod-name> -- nslookup <service-name>} & DNS-Namensauflösung für einen Service innerhalb eines Pods testen \\
+\texttt{kubectl exec <pod-name> -- dig <service-name>} & Detaillierte DNS-Abfrage für einen Service innerhalb eines Pods durchführen \\
+\texttt{kubectl get svc -o wide} & Services mit erweiterten Informationen, einschließlich Cluster-IP, auflisten \\
+\texttt{kubectl logs <kube-dns-pod-name> -n kube-system} & Logs des kube-dns Pods anzeigen, um DNS-Probleme zu debuggen \\
+\hline
+\end{tabular}

@@ -1,0 +1,10 @@
+\begin{minted}[frame=lines, bgcolor=bg]{python}
+@app.get("/readyz", response_class=PlainTextResponse)
+async def readyz():
+    current_time: float = time.time()-start_time
+    # Beispielhafte Prüfung (Platzhalter für echte Verfügbarkeitslogik)
+    if current_time < 10:
+        return PlainTextResponse(content=f"error: {current_time}", status_code=503)
+    else:
+        return PlainTextResponse(content="ok", status_code=200)
+\end{minted}

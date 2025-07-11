@@ -1,0 +1,102 @@
+\chapter{Kompendium}
+\label{chap:kompendium}
+
+Dieses Kapitel enthält eine kompakte Übersicht nützlicher Befehle, Werkzeuge und Konfigurationen für den Kubernetes-Alltag.  
+Die Tabellen sind so aufgebaut, dass Befehle direkt verwendet oder angepasst werden können.
+
+\section*{Hinweis}
+Ziel ist es, typische Aufgaben schnell umzusetzen.
+
+\section{Grundbefehle}
+\begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl run <name>} & Erstellt und startet einen neuen Pod \\
+\texttt{kubectl get <resource>} & Zeigt eine Liste der Ressourcen an \\
+\texttt{kubectl describe <resource> <name>} & Zeigt detaillierte Informationen über eine Ressource \\
+\texttt{kubectl create -f <file.yaml>} & Erstellt Ressourcen aus einer Konfigurationsdatei \\
+\texttt{kubectl apply -f <file.yaml>} & Aktualisiert eine Ressource aus einer Konfigurationsdatei \\
+\texttt{kubectl delete <resource> <name>} & Löscht eine Ressource \\
+\texttt{kubectl logs <pod-name>} & Zeigt die Logs eines Pods \\
+\texttt{kubectl exec -it <pod-name> -- <command>} & Führt einen Befehl in einem laufenden Pod aus \\
+\texttt{kubectl expose <resource> --port=<port>} & Erstellt einen neuen Service \\
+\texttt{kubectl proxy} & Startet einen lokalen Proxy zum API-Server \\
+\hline
+\end{tabular}
+
+\section{Allgemeine Befehle}
+\begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl version} & Version von kubectl anzeigen \\
+\texttt{kubectl get nodes} & Alle Knoten im Cluster auflisten \\
+\texttt{kubectl cluster-info} & Cluster-Informationen anzeigen \\
+\texttt{kubectl config view} & Konfiguration anzeigen \\
+\texttt{kubectl create} & Erstellt eine Ressource \\
+\texttt{kubectl delete} & Löscht eine Ressource \\
+\hline
+\end{tabular}
+
+\section{Pods}
+\begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get pods} & Alle Pods im Standard-Namespace auflisten \\
+\texttt{kubectl get pods -n <namespace>} & Alle Pods in einem bestimmten Namespace auflisten \\
+\texttt{kubectl get pods -o wide} & Alle Pods mit Details auflisten \\
+\texttt{kubectl describe pod <pod-name>} & Details zu einem bestimmten Pod anzeigen \\
+\texttt{kubectl logs <pod-name>} & Logs eines Pods anzeigen \\
+\texttt{kubectl delete pod <pod-name>} & Einen Pod löschen \\
+\hline
+\end{tabular}
+
+\section{Deployments}
+\begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get deployments} & Alle Deployments auflisten \\
+\texttt{kubectl describe deployment <deployment-name>} & Details zu einem Deployment anzeigen \\
+\texttt{kubectl delete deployment <deployment-name>} & Ein Deployment löschen \\
+\texttt{kubectl rollout restart deployment <deployment-name>} & Deployment neu starten \\
+\hline
+\end{tabular}
+
+\section{Services}
+\begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung}\\
+\hline
+\texttt{kubectl get services} & Alle Services auflisten \\
+\texttt{kubectl describe service <service-name>} & Details zu einem Service anzeigen \\
+\texttt{kubectl delete service <service-name>} & Einen Service löschen \\
+\hline
+\end{tabular}
+
+\section{Namespaces}
+\begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl get namespaces} & Alle Namespaces auflisten \\
+\texttt{kubectl describe namespace <namespace-name>} & Details zu einem Namespace anzeigen \\
+\texttt{kubectl create namespace <namespace-name>} & Neuen Namespace erstellen \\
+\texttt{kubectl delete namespace <namespace-name>} & Einen Namespace löschen \\
+\hline
+\end{tabular}
+
+\section{Konfiguration}
+\begin{tabular}{|p{0.5\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{Befehl} & \textbf{Beschreibung} \\
+\hline
+\texttt{kubectl config get-contexts} & Alle Kontexte auflisten \\
+\texttt{kubectl config current-context} & Aktuellen Kontext anzeigen \\
+\texttt{kubectl config use-context <context-name>} & Kontext wechseln \\
+\texttt{kubectl config get-clusters} & Alle in der kubeconfig definierten Cluster anzeigen \\
+\texttt{kubectl config get-contexts} & Alle Kontexte anzeigen \\
+\hline
+\end{tabular}

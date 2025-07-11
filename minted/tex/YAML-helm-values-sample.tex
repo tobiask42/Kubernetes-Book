@@ -1,0 +1,10 @@
+\begin{minted}[frame=lines, bgcolor=bg]{yaml}
+replicaCount: 3
+image:
+  repository: nginx
+  tag: 1.19.2
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 80
+\end{minted}
