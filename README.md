@@ -56,7 +56,7 @@ Die Gliederung erfolgt modular in Kapiteldateien (`chapters/`) sowie Beispielcod
 ## Technisches
 
 - Formatierung mit `latexmk`, `minted`, `xelatex`
-- Schriftarten: `Fira Code` (Monospace), `Roboto` (Text)
+- Schriftarten: `Fira Code` (Monospace)
 - Quellcode-Snippets liegen in separaten Dateien im Ordner `minted/`
 - Temporäre Dateien wie `_minted/` und `*.aux`, `*.log` sind via `.gitignore` ausgeschlossen
 
