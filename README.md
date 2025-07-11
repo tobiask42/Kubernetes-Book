@@ -21,8 +21,6 @@ Das Dokument behandelt u.a.:
 
 Der Fokus liegt auf Klarheit, Best Practices und praktischer Anwendbarkeit.
 
-Das Werk basiert auf Praktikumsnotizen, die ich angefertigt habe als ich den Umgang mit Kubernetes erlernt habe.
-
 Feedback, Fragen und Verbesserungsvorschläge sind willkommen. Ich bin über mein Kontaktformular unter [https://tobias-koch.dev/de/contact](https://tobias-koch.dev/de/contact) erreichbar.
 
 ---
