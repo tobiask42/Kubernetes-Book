@@ -8,7 +8,9 @@
 
 ## Projektbeschreibung
 
-Dies ist ein umfassendes, auf Deutsch verfasstes Nachschlagewerk zu Kubernetes, das sich an DevOps-Enthusiasten, Admins, Studierende und alle richtet, die in die technische Tiefe von Kubernetes eintauchen wollen.  
+Dies ist ein umfassendes, auf Deutsch verfasstes Nachschlagewerk zu Kubernetes, das sich an Administratoren, Entwickler, Studierende und alle richtet, die sich technisch fundiert mit Kubernetes beschäftigen möchten.
+
+Entstanden ist das Dokument im Rahmen meiner eigenen vertieften Einarbeitung. Ziel war es, das Thema systematisch, praxisorientiert und mit einem klaren Fokus auf Best Practices aufzubereiten.
 
 Das Dokument behandelt u.a.:
 
