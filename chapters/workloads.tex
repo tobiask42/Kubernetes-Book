@@ -46,15 +46,16 @@ Stellen sicher, dass eine Kopie eines Pods auf jeder Node (oder einer ausgewähl
 \end{tabular}
 
 \subsection{Nützliche Links und Ressourcen}
-\begin{itemize}
-    \item \href{https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/}{Kubernetes DaemonSet Dokumentation}
-    \item \href{https://kubernetes.io/docs/tasks/manage-daemon/}{Kubernetes Tasks für DaemonSets}
-\end{itemize}
 
+Kubernetes DaemonSet Dokumentation:\\
+\url{https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/}\\
+Kubernetes Tasks für DaemonSets:\\
+\url{https://kubernetes.io/docs/tasks/manage-daemon/}\\
 
 \newpage
 \section{StatefulSets}
 \label{sec:statefulsets}
+
 Verwalten den Zustand und die Identität von Pods, insbesondere für zustandsbehaftete Anwendungen. \\
 
 \noindent
@@ -101,11 +102,12 @@ Verwalten den Zustand und die Identität von Pods, insbesondere für zustandsbeh
 \end{tabular}
 
 \subsection{Nützliche Links und Ressourcen}
-\begin{itemize}
-    \item \href{https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/}{Kubernetes StatefulSet Dokumentation}
-    \item \href{https://kubernetes.io/docs/tasks/run-application/scale-stateful-set/}{Kubernetes Task: Skalieren von StatefulSets}
-    \item \href{https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/}{Kubernetes Tutorial: Basic StatefulSet}
-\end{itemize}
+Kubernetes StatefulSet Dokumentation:\\
+\url{https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/}\\
+Kubernetes Task: Skalieren von StatefulSets:\\
+\url{https://kubernetes.io/docs/tasks/run-application/scale-stateful-set/}\\
+Kubernetes Tutorial: Basic StatefulSet:\\
+\url{https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/}\\
 
 
 
@@ -172,9 +174,8 @@ ReplicaSets stellen sicher, dass eine definierte Anzahl von Pod-Replikaten zu je
 \end{itemize}
 
 \subsection{Nützliche Links und Ressourcen}
-\begin{itemize}
-    \item \href{https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/}{Kubernetes ReplicaSet Dokumentation}
-\end{itemize}
+Kubernetes ReplicaSet Dokumentation:\\
+\url{https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/}\\
 
 
 \section{Jobs}
@@ -234,10 +235,11 @@ Ermöglichen die einmalige Ausführung von Aufgaben, bis sie erfolgreich abgesch
 \end{itemize}
 
 \subsection{Nützliche Links und Ressourcen}
-\begin{itemize}
-    \item \href{https://kubernetes.io/docs/concepts/workloads/controllers/job/}{Kubernetes Job Dokumentation}
-    \item \href{https://kubernetes.io/docs/tasks/job/}{Kubernetes Tasks für Jobs}
-\end{itemize}
+Kubernetes Job Dokumentation:\\
+\url{https://kubernetes.io/docs/concepts/workloads/controllers/job/}\\
+Kubernetes Tasks für Jobs:\\
+\url{https://kubernetes.io/docs/tasks/job/}\\
+
 
 
 
@@ -280,16 +282,16 @@ Ein CronJob erstellt auf Basis eines vordefinierten Zeitplans automatisch Jobs. 
 \end{itemize}
 
 \subsection{Weitere nützliche Befehle für CronJobs}
-\begin{tabular}{|p{0.65\textwidth}|p{0.35\textwidth}|}
+\begin{tabular}{|p{0.78\textwidth}|p{0.23\textwidth}|}
 \hline
 \textbf{Befehl} & \textbf{Beschreibung} \\
 \hline
-\texttt{kubectl get cronjob <cronjob-name> -o yaml} & Die vollständige YAML-Konfiguration eines CronJobs anzeigen \\
-\texttt{kubectl logs job/\$(kubectl get jobs --selector=cronjob-name=<cronjob-name> -o jsonpath="{.items[0].metadata.name}")} & Logs des letzten Jobs eines CronJobs anzeigen \\
-\texttt{kubectl create job --from=cronjob/<cronjob-name> <job-name>} & Manuelles Erstellen eines Jobs aus einem CronJob \\
-\texttt{kubectl get jobs --selector=cronjob-name=<cronjob-name>} & Alle Jobs eines bestimmten CronJobs auflisten \\
-\texttt{kubectl patch cronjob <cronjob-name> -p <patch-data>} & Einen Patch auf einen CronJob anwenden \\
-\texttt{kubectl delete job --selector=cronjob-name=<cronjob-name>} & Alle Jobs eines bestimmten CronJobs löschen \\
+\texttt{kubectl get cronjob <cronjob-name> -o yaml} & Konfiguration anzeigen \\
+\texttt{kubectl logs job/\$(kubectl get jobs --selector=cronjob-name=<cronjob-name> -o jsonpath="{.items[0].metadata.name}")} & Logs anzeigen \\
+\texttt{kubectl create job --from=cronjob/<cronjob-name> <job-name>} & Erstellen eines Jobs \\
+\texttt{kubectl get jobs --selector=cronjob-name=<cronjob-name>} & Jobs auflisten \\
+\texttt{kubectl patch cronjob <cronjob-name> -p <patch-data>} & Patch anwenden \\
+\texttt{kubectl delete job --selector=cronjob-name=<cronjob-name>} & Alle Jobs löschen \\
 \hline
 \end{tabular}
 
@@ -308,7 +310,7 @@ Ein CronJob erstellt auf Basis eines vordefinierten Zeitplans automatisch Jobs. 
 \input{minted/tex/YAML-cronjob-erweitert.tex}
 
 \subsection{Nützliche Links und Ressourcen}
-\begin{itemize}
-    \item \href{https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/}{Kubernetes CronJob Dokumentation}
-    \item \href{https://crontab.guru/}{Cron Expression Generator \& Explainer}
-\end{itemize}
+Kubernetes CronJob Dokumentation:\\
+\url{https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/}\\
+Cron Expression Generator \& Explainer:\\
+\url{https://crontab.guru/}\\

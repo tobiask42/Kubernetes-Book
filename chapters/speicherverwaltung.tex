@@ -152,16 +152,16 @@ Die Integration von verteilten Dateisystemen in Kubernetes kann mithilfe von CSI
 \input{minted/tex/YAML-dateisystem-ceph-csi-pvc.tex}
 
 \subsection{Nützliche Links und Ressourcen}
-\begin{itemize}
-    \item \href{https://kubernetes.io/docs/concepts/storage/volumes/}{Kubernetes Volumes Dokumentation}
-    \item \href{https://kubernetes.io/docs/concepts/storage/persistent-volumes/}{Kubernetes Persistent Volumes Dokumentation}
-    \item \href{https://kubernetes.io/docs/concepts/storage/storage-classes/}{Kubernetes Storage Classes Dokumentation}
-    \item \href{https://kubernetes.io/blog/2018/04/13/local-persistent-volumes-beta/}{Kubernetes Blog: Local Persistent Volumes Beta}
-    \item \href{https://github.com/kubernetes/examples/tree/master/staging/persistent-volume-provisioning/}{Kubernetes Examples: Persistent Volume Provisioning}
-    \item \href{https://rook.io/}{Rook: Cloud-Native Storage Orchestrator for Kubernetes}
-    \item \href{https://ceph.io/}{Ceph: Distributed Storage in Kubernetes}
-    \item \href{https://docs.gluster.org}{Gluster Documentation}
-\end{itemize}
+Volumes: \url{https://kubernetes.io/docs/concepts/storage/volumes/}\\
+Persistent Volumes: \url{https://kubernetes.io/docs/concepts/storage/persistent-volumes/}\\
+Storage Classes: \url{https://kubernetes.io/docs/concepts/storage/storage-classes/}\\
+Local Persistent Volumes \\
+\url{https://kubernetes.io/blog/2018/04/13/local-persistent-volumes-beta/}\\
+Persistent Volume Provisioning: \\
+\url{https://github.com/kubernetes/examples/tree/master/staging/persistent-volume-provisioning/}\\
+Rook: Cloud-Native Storage Orchestrator for Kubernetes: \url{https://rook.io/}\\
+Ceph: Distributed Storage in Kubernetes: \url{https://ceph.io/}\\
+Gluster Documentation: \url{https://docs.gluster.org}
 
 
 \section{Container Storage Interface (CSI) Treiber}
@@ -182,7 +182,7 @@ Die Integration von verteilten Dateisystemen in Kubernetes kann mithilfe von CSI
 \input{minted/tex/YAML-dateisystem-ceph-csi-pvc.tex}
 \noindent
 Durch die Verwendung von CSI-Treibern können verschiedene verteilte Dateisysteme nahtlos in Kubernetes integriert werden, was eine flexible und skalierbare Speicherlösung bietet.
-
+\newpage
 \subsection{Beispiele für CSI-Treiber}
 \begin{itemize}
     \item \textbf{cephfs.csi.ceph.com}: Ermöglicht die Integration von CephFS in Kubernetes.
@@ -200,9 +200,11 @@ Durch die Verwendung von CSI-Treibern können verschiedene verteilte Dateisystem
     \item Backup- und Wiederherstellungsstrategien, die speziell für die verwendeten CSI-Treiber optimiert sind implementieren
 \end{itemize}
 \subsection{Nützliche Links und Ressourcen}
-\begin{itemize}
-    \item \href{https://kubernetes.io/docs/concepts/storage/volumes/#csi}{Kubernetes CSI Volumes Dokumentation}
-    \item \href{https://kubernetes-csi.github.io/docs/}{Offizielle Kubernetes CSI Dokumentation}
-    \item \href{https://kubernetes.io/blog/2019/01/15/container-storage-interface-ga/}{Kubernetes Blog: Container Storage Interface (CSI) GA}
-    \item \href{https://github.com/kubernetes-csi}{Kubernetes CSI GitHub Repository}
-\end{itemize}
+Kubernetes CSI Volumes Dokumentation:\\
+\url{https://kubernetes.io/docs/concepts/storage/volumes/#csi}\\
+Offizielle Kubernetes CSI Dokumentation:\\
+\url{https://kubernetes-csi.github.io/docs/}\\
+Kubernetes Blog: Container Storage Interface (CSI) GA:\\  
+\url{https://kubernetes.io/blog/2019/01/15/container-storage-interface-ga/}\\
+Kubernetes CSI GitHub Repository:\\
+\url{https://github.com/kubernetes-csi}\\
