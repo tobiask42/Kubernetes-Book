@@ -17,7 +17,7 @@ ETCD ist das Herzstück eines Kubernetes-Clusters. Ein Backup der ETCD-Datenbank
 \hline
 \texttt{ETCDCTL\_API=3 etcdctl snapshot save <snapshot.db>} & Ein ETCD-Snapshot erstellen \\
 \texttt{ETCDCTL\_API=3 etcdctl snapshot restore <snapshot.db>} & Ein ETCD-Snapshot wiederherstellen \\
-\texttt{ETCDCTL\_API=3 etcdctl --write-out=table snapshot status <snapshot.db>} & Den Status eines ETCD-Snapshots überprüfen \\
+\texttt{ETCDCTL\_API=3 etcdctl {-}{-}write-out=table snapshot status <snapshot.db>} & Den Status eines ETCD-Snapshots überprüfen \\
 \hline
 \end{tabular}
 
@@ -41,11 +41,11 @@ Anwendungsdaten und -konfigurationen können mit Tools wie Velero gesichert werd
 \hline
 \textbf{Befehl} & \textbf{Beschreibung} \\
 \hline
-\texttt{velero install --provider <provider> --bucket <bucket> --secret-file <credentials>} & Velero im Cluster installieren \\
+\texttt{velero install {-}{-}provider <provider> {-}{-}bucket <bucket> {-}{-}secret-file <credentials>} & Velero im Cluster installieren \\
 \texttt{velero backup create <backup-name>} & Ein Backup des gesamten Clusters erstellen \\
 \texttt{velero backup describe <backup-name>} & Details eines bestimmten Backups anzeigen \\
 \texttt{velero backup delete <backup-name>} & Ein Backup löschen \\
-\texttt{velero restore create --from-backup <backup-name>} & Ein Backup wiederherstellen \\
+\texttt{velero restore create {-}{-}from-backup <backup-name>} & Ein Backup wiederherstellen \\
 \texttt{velero restore describe <restore-name>} & Details einer Wiederherstellung anzeigen \\
 \hline
 \end{tabular}

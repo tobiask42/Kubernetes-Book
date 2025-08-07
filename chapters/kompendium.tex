@@ -19,8 +19,8 @@ Ziel ist es, typische Aufgaben schnell umzusetzen.
 \texttt{kubectl apply -f <file.yaml>} & Aktualisiert eine Ressource aus einer Konfigurationsdatei \\
 \texttt{kubectl delete <resource> <name>} & Löscht eine Ressource \\
 \texttt{kubectl logs <pod-name>} & Zeigt die Logs eines Pods \\
-\texttt{kubectl exec -it <pod-name> -- <command>} & Führt einen Befehl in einem laufenden Pod aus \\
-\texttt{kubectl expose <resource> --port=<port>} & Erstellt einen neuen Service \\
+\texttt{kubectl exec -it <pod-name> {-}{-} <command>} & Führt einen Befehl in einem laufenden Pod aus \\
+\texttt{kubectl expose <resource> {-}{-}port=<port>} & Erstellt einen neuen Service \\
 \texttt{kubectl proxy} & Startet einen lokalen Proxy zum API-Server \\
 \hline
 \end{tabular}

@@ -51,8 +51,8 @@ Ermöglicht die Verwaltung von Berechtigungen innerhalb von Namespaces. Roles de
 \texttt{kubectl get roles -o yaml} & Konfiguration aller Roles \\
 \texttt{kubectl get rolebindings -o yaml} & Konfiguration aller RoleBindings \\
 \texttt{kubectl auth can-i <verb> <resource>} & Berechtigung Prüfen \\
-\texttt{kubectl create role <role-name> --verb=<verb> --resource=<resource>} & Role erstellen \\
-\texttt{kubectl create rolebinding <rolebinding-name> --role=<role-name> --user=<user-name>} & RoleBinding erstellen \\
+\texttt{kubectl create role <role-name> {-}{-}verb=<verb> {-}{-}resource=<resource>} & Role erstellen \\
+\texttt{kubectl create rolebinding <rolebinding-name> {-}{-}role=<role-name> {-}{-}user=<user-name>} & RoleBinding erstellen \\
 \hline
 \end{tabular}
 
@@ -117,9 +117,9 @@ Ermöglicht die Verwaltung von Cluster-weiten Berechtigungen. ClusterRoles defin
 \hline
 \texttt{kubectl get clusterroles -o yaml} & Konfiguration aller ClusterRoles \\
 \texttt{kubectl get clusterrolebindings -o yaml} & Konfiguration aller ClusterRoleBindings \\
-\texttt{kubectl auth can-i <verb> <resource> --all-namespaces} & Rechte prüfen \\
-\texttt{kubectl create clusterrole <clusterrole-name> --verb=<verb> --resource=<resource>} & ClusterRole erstellen \\
-\texttt{kubectl create clusterrolebinding <clusterrolebinding-name> --clusterrole=<clusterrole-name> --user=<user-name>} & ClusterRoleBinding erstellen \\
+\texttt{kubectl auth can-i <verb> <resource> {-}{-}all-namespaces} & Rechte prüfen \\
+\texttt{kubectl create clusterrole <clusterrole-name> {-}{-}verb=<verb> {-}{-}resource=<resource>} & ClusterRole erstellen \\
+\texttt{kubectl create clusterrolebinding <clusterrolebinding-name> {-}{-}clusterrole=<clusterrole-name> {-}{-}user=<user-name>} & ClusterRoleBinding erstellen \\
 \hline
 \end{tabular}
 
@@ -169,18 +169,27 @@ ServiceAccounts werden verwendet, um Pods mit bestimmten Berechtigungen auszusta
 
 %TODO: Fix Table
 \subsection{Weitere nützliche Befehle für ServiceAccounts}
-\begin{tabular}{|p{0.69\textwidth}|p{0.3\textwidth}|}
+\begin{tabular}{|p{0.72\textwidth}|p{0.28\textwidth}|}
 \hline
 \textbf{Befehl} & \textbf{Beschreibung} \\
 \hline
-\texttt{kubectl get serviceaccounts -o yaml} & Konfiguration anzeigen \\
-\texttt{kubectl patch serviceaccount <serviceaccount-name> -p <patch-data>} & Patch anwenden \\
-\texttt{kubectl get secret <secret-name> -o yaml} & Secret anzeigen \\
-\texttt{kubectl describe secret <secret-name>} & Details zu Secret\\
-\texttt{kubectl create rolebinding <rolebinding-name> --role=<role-name> --serviceaccount=<namespace>:<serviceaccount-name>} & RoleBinding erstellen \\
-\texttt{kubectl create clusterrolebinding <clusterrolebinding-name> --clusterrole=<clusterrole-name> --serviceaccount=<namespace>:<serviceaccount-name>} & ClusterRoleBinding erstellen \\
+\parbox[t]{\linewidth}{\raggedright\texttt{kubectl get serviceaccounts -o yaml}} & Konfiguration anzeigen \\
+\parbox[t]{\linewidth}{\raggedright\texttt{kubectl patch serviceaccount <serviceaccount-name> -p <patch-data>}} & Patch anwenden \\
+\parbox[t]{\linewidth}{\raggedright\texttt{kubectl get secret <secret-name> -o yaml}} & Secret anzeigen \\
+\parbox[t]{\linewidth}{\raggedright\texttt{kubectl describe secret <secret-name>}} & Details zu Secret \\
+\parbox[t]{\linewidth}{\raggedright
+\texttt{kubectl create rolebinding <rolebinding-name>}\\
+\texttt{{-}{-}role=<role-name>}\\
+\texttt{{-}{-}serviceaccount=<namespace>:<serviceaccount-name>}} & RoleBinding erstellen \\
+\parbox[t]{\linewidth}{\raggedright
+\texttt{kubectl create clusterrolebinding <clusterrolebinding-name>}\\
+\texttt{{-}{-}clusterrole=<clusterrole-name>}\\
+\texttt{{-}{-}serviceaccount=<namespace>:<serviceaccount-name>}} & ClusterRoleBinding erstellen \\
 \hline
 \end{tabular}
+
+
+
 \newpage
 \subsection{Komplettbeispiel}
 \input{minted/tex/YAML-sicherheit-komplettbeispiel.tex}
@@ -244,7 +253,7 @@ Network Policies ermöglichen die Kontrolle des Datenverkehrs zwischen Pods und 
 \texttt{kubectl patch networkpolicy <policy-name> -p <patch-data>} & Einen Patch auf eine Network Policy anwenden \\
 \texttt{kubectl label pod <pod-name> <label-key>=<label-value>} & Ein Label zu einem Pod hinzufügen, um die Network Policy anzuwenden \\
 \texttt{kubectl annotate networkpolicy <policy-name> <annotation-key>=<annotation-value>} & Eine Annotation zu einer Network Policy hinzufügen \\
-\texttt{kubectl get pods --selector=<label-selector>} & Alle Pods mit einem bestimmten Label-Selektor auflisten \\
+\texttt{kubectl get pods {-}{-}selector=<label-selector>} & Alle Pods mit einem bestimmten Label-Selektor auflisten \\
 \hline
 \end{tabular}
 

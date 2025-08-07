@@ -24,7 +24,7 @@ Canary Releases sind eine Methode, bei der eine neue Version der Anwendung nur f
 \hline
 \texttt{kubectl apply -f <canary-deployment.yaml>} & Die Canary-Version der Anwendung bereitstellen \\
 \texttt{kubectl get pods -l app=<app-name>} & Alle Pods der Anwendung anzeigen \\
-\texttt{kubectl scale deployment <canary-deployment> --replicas=<number>} & Die Anzahl der Replikate für die Canary-Version erhöhen oder verringern \\
+\texttt{kubectl scale deployment <canary-deployment> {-}{-}replicas=<number>} & Die Anzahl der Replikate für die Canary-Version erhöhen oder verringern \\
 \texttt{kubectl describe service <service-name>} & Details des Services anzeigen, um die Traffic-Verteilung zu überprüfen \\
 \texttt{kubectl edit service <service-name>} & Den Service bearbeiten, um den Traffic auf die Canary-Version anzupassen \\
 \texttt{kubectl delete -f <old-deployment.yaml>} & Die alte Version der Anwendung nach erfolgreicher Migration löschen \\

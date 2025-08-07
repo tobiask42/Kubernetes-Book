@@ -20,7 +20,7 @@ Der HPA skaliert die Anzahl von Pods in einem Deployment, StatefulSet oder Repli
 \texttt{kubectl describe hpa <hpa-name>} & Details eines HPAs anzeigen \\
 \texttt{kubectl delete hpa <hpa-name>} & HPA löschen \\
 \texttt{kubectl edit hpa <hpa-name>} & HPA bearbeiten \\
-\texttt{kubectl scale --replicas=<number> deployment <deployment-name>} & Manuelle Skalierung der Pods \\
+\texttt{kubectl scale {-}{-}replicas=<number> deployment <deployment-name>} & Manuelle Skalierung der Pods \\
 \hline
 \end{tabular}
 \phantom{.}\\
@@ -40,7 +40,7 @@ Automatische Anpassung der Ressourcenanforderungen (CPU und Speicher) von Pods a
 \texttt{kubectl apply -f <vpa-config.yaml>} & VPA aus YAML erstellen \\
 \texttt{kubectl edit vpa <vpa-name>} & VPA bearbeiten \\
 \texttt{kubectl get vpa -o yaml} & YAML-Ausgabe aller VPAs \\
-\texttt{kubectl patch vpa <vpa-name> --patch '<json-patch>'} & VPA patchen \\
+\texttt{kubectl patch vpa <vpa-name> {-}{-}patch '<json-patch>'} & VPA patchen \\
 \hline
 \end{tabular}
 \subsubsection{Beispielkonfiguration eines Vertical Pod Autoscalers:}
@@ -59,7 +59,7 @@ Der Cluster Autoscaler erhöht oder reduziert automatisch die Anzahl der Nodes i
 \texttt{kubectl apply -f <autoscaler-config.yaml>} & Autoscaler konfigurieren \\
 \texttt{kubectl edit cluster-autoscaler <autoscaler-name>} & Autoscaler bearbeiten \\
 \texttt{kubectl get cluster-autoscaler -o yaml} & YAML-Ausgabe \\
-\texttt{kubectl patch cluster-autoscaler <autoscaler-name> --patch '<json-patch>'} & Patch anwenden \\
+\texttt{kubectl patch cluster-autoscaler <autoscaler-name> {-}{-}patch '<json-patch>'} & Patch anwenden \\
 \hline
 \end{tabular}
 \subsubsection{Beispielkonfiguration eines Cluster Autoscalers:}
@@ -73,10 +73,10 @@ Die manuelle Skalierung erlaubt es, die Anzahl der Replikate eines Deployments, 
 \hline
 \textbf{Befehl} & \textbf{Beschreibung} \\
 \hline
-\texttt{kubectl scale deployment <deployment-name> --replicas=<number>} & Replikate eines Deployments setzen \\
-\texttt{kubectl scale statefulset <statefulset-name> --replicas=<number>} & Replikate eines StatefulSets setzen \\
-\texttt{kubectl scale rc <replication-controller-name> --replicas=<number>} & Replikate eines ReplicationControllers setzen \\
-\texttt{kubectl scale replicaset <replicaset-name> --replicas=<number>} & Replikate eines ReplicaSets setzen \\
+\texttt{kubectl scale deployment <deployment-name> {-}{-}replicas=<number>} & Replikate eines Deployments setzen \\
+\texttt{kubectl scale statefulset <statefulset-name> {-}{-}replicas=<number>} & Replikate eines StatefulSets setzen \\
+\texttt{kubectl scale rc <replication-controller-name> {-}{-}replicas=<number>} & Replikate eines ReplicationControllers setzen \\
+\texttt{kubectl scale replicaset <replicaset-name> {-}{-}replicas=<number>} & Replikate eines ReplicaSets setzen \\
 \texttt{kubectl get deployment <deployment-name> -o=jsonpath='{.spec.replicas}'} & Aktuelle Replikate eines Deployments anzeigen \\
 \texttt{kubectl get statefulset <statefulset-name> -o=jsonpath='{.spec.replicas}'} & Aktuelle Replikate eines StatefulSets anzeigen \\
 \texttt{kubectl get rc <replication-controller-name> -o=jsonpath='{.spec.replicas}'} & Aktuelle Replikate eines ReplicationControllers anzeigen \\
@@ -102,7 +102,7 @@ Eine umfangreiche Erklärung zu jsonpath befindet sich bei \ref{subsec:use-json-
 
   \item \textbf{Cluster-Autoscaler begrenzen:} Minimal- und Maximalanzahl an Nodes setzen, um unkontrolliertes Skalieren oder Ressourcenmangel zu vermeiden.
 
-  \item \textbf{Cooldown-Zeiten konfigurieren:} Eine sinnvolle Downscale-Stabilisierung (z.\,B. mit \texttt{--horizontal-pod-autoscaler-downscale-stabilization}) einstellen, um häufiges Hin- und Herschalten zu verhindern.
+  \item \textbf{Cooldown-Zeiten konfigurieren:} Eine sinnvolle Downscale-Stabilisierung (z.\,B. mit \texttt{{-}{-}horizontal-pod-autoscaler-downscale-stabilization}) einstellen, um häufiges Hin- und Herschalten zu verhindern.
 
   \item \textbf{Skalierungsverhalten testen:} Änderungen an Skalierungsregeln in einer Testumgebung prüfen, bevor sie produktiv eingesetzt werden.
 \end{itemize}

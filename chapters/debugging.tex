@@ -10,9 +10,9 @@ Events ermöglichen die Überwachung von Ereignissen im Kubernetes-Cluster.\\
 \hline
 \texttt{kubectl get events} & Alle Events im aktuellen Namespace auflisten \\
 \texttt{kubectl describe event <event-name>} & Details zu einem Event anzeigen \\
-\texttt{kubectl get events --sort-by=.metadata.creationTimestamp} & Events nach Erstellungszeitpunkt sortieren \\
+\texttt{kubectl get events {-}{-}sort-by=.metadata.creationTimestamp} & Events nach Erstellungszeitpunkt sortieren \\
 \texttt{kubectl get events -n <namespace>} & Alle Events in einem bestimmten Namespace auflisten \\
-\texttt{kubectl get events --field-selector involvedObject.name=<resource-name>} & Events für eine bestimmte Ressource filtern \\
+\texttt{kubectl get events {-}{-}field-selector involvedObject.name=<resource-name>} & Events für eine bestimmte Ressource filtern \\
 \hline
 \end{tabular}
 
@@ -85,8 +85,8 @@ Befehle zur Überwachung und Fehlerbehebung von Anwendungen.\\
 \texttt{kubectl logs <pod-name>} & Logs eines Pods anzeigen \\
 \texttt{kubectl logs <pod-name> -c <container-name>} & Logs eines bestimmten Containers in einem Pod anzeigen \\
 \texttt{kubectl logs -f <pod-name>} & Live-Logs eines Pods verfolgen \\
-\texttt{kubectl exec -it <pod-name> -- /bin/sh} & Eine interaktive Shell in einem Pod starten \\
-\texttt{kubectl exec <pod-name> -- <command>} & Einen Befehl ausführen, ohne eine Shell zu starten \\
+\texttt{kubectl exec -it <pod-name> {-}{-} /bin/sh} & Eine interaktive Shell in einem Pod starten \\
+\texttt{kubectl exec <pod-name> {-}{-} <command>} & Einen Befehl ausführen, ohne eine Shell zu starten \\
 \texttt{kubectl describe pod <pod-name>} & Detaillierte Informationen über einen Pod anzeigen \\
 \texttt{kubectl get pods -o wide} & Status aller Pods in einem Namespace anzeigen\\
 \texttt{kubectl get pod <pod-name> -o yaml} & gibt den Status eines Pods im YAML-Format aus\\
@@ -144,13 +144,13 @@ Der Metrics Server sammelt und aggregiert Echtzeitmetriken von Pods und Nodes im
 \hline
 \textbf{Befehl} & \textbf{Beschreibung} \\
 \hline
-\texttt{kubectl get --raw "/apis/metrics.k8s.io/v1beta1/nodes"} & Metriken aller Nodes im Cluster anzeigen \\
-\texttt{kubectl get --raw "/apis/metrics.k8s.io/v1beta1/pods"} & Metriken aller Pods im Cluster anzeigen \\
+\texttt{kubectl get {-}{-}raw "/apis/metrics.k8s.io/v1beta1/nodes"} & Metriken aller Nodes im Cluster anzeigen \\
+\texttt{kubectl get {-}{-}raw "/apis/metrics.k8s.io/v1beta1/pods"} & Metriken aller Pods im Cluster anzeigen \\
 \texttt{kubectl top nodes} & Ressourcenverbrauch (CPU/Memory) aller Nodes anzeigen \\
 \texttt{kubectl top pods} & Ressourcenverbrauch (CPU/Memory) aller Pods im aktuellen Namespace anzeigen \\
 \texttt{kubectl top pod <pod-name>} & Ressourcenverbrauch eines bestimmten Pods anzeigen \\
-\texttt{kubectl top pod <pod-name> --containers} & Ressourcenverbrauch der Container innerhalb eines bestimmten Pods anzeigen \\
-\texttt{kubectl top pod --all-namespaces} & Ressourcenverbrauch aller Pods in allen Namespaces anzeigen \\
+\texttt{kubectl top pod <pod-name> {-}{-}containers} & Ressourcenverbrauch der Container innerhalb eines bestimmten Pods anzeigen \\
+\texttt{kubectl top pod {-}{-}all-namespaces} & Ressourcenverbrauch aller Pods in allen Namespaces anzeigen \\
 \hline
 \end{tabular}
 \subsection{Verwendungszwecke}
@@ -184,10 +184,10 @@ Nach der Installation kann der Status des Metrics Servers überprüft werden:
 Abhängig von der Cluster-Einrichtung müssen möglicherweise auch die an den Metrics Server-Container übergebenen Flags geändert werden. Die nützlichsten Flags:
 
 \begin{itemize}
-    \item \enquote{texttt{--kubelet-preferred-address-types}} - Die Priorität der Knotentypen, die verwendet werden, wenn eine Adresse für die Verbindung zu einem bestimmten Knoten ermittelt wird (Standard: [Hostname, InternalDNS, InternalIP, ExternalDNS, ExternalIP])
-    \item \enquote{texttt{--kubelet-insecure-tls}} - Die CA der von Kubelets präsentierten Servier-Zertifikate nicht überprüfen. Nur für Testzwecke.
-    \item \enquote{texttt{--requestheader-client-ca-file}} - Ein Root-Zertifikat-Bundle zur Überprüfung von Client-Zertifikaten bei eingehenden Anfragen angeben.
-    \item \enquote{texttt{--node-selector}} - Kann vervollständigen, um die Metriken von den angegebenen Knoten basierend auf Labels zu erfassen
+    \item \enquote{texttt{{-}{-}kubelet-preferred-address-types}} - Die Priorität der Knotentypen, die verwendet werden, wenn eine Adresse für die Verbindung zu einem bestimmten Knoten ermittelt wird (Standard: [Hostname, InternalDNS, InternalIP, ExternalDNS, ExternalIP])
+    \item \enquote{texttt{{-}{-}kubelet-insecure-tls}} - Die CA der von Kubelets präsentierten Servier-Zertifikate nicht überprüfen. Nur für Testzwecke.
+    \item \enquote{texttt{{-}{-}requestheader-client-ca-file}} - Ein Root-Zertifikat-Bundle zur Überprüfung von Client-Zertifikaten bei eingehenden Anfragen angeben.
+    \item \enquote{texttt{{-}{-}node-selector}} - Kann vervollständigen, um die Metriken von den angegebenen Knoten basierend auf Labels zu erfassen
 \end{itemize}
 
 Eine vollständige Liste der Konfigurations-Flags des Metrics Servers wird ausgegeben, indem folgender Befehl ausgeführt wird:
@@ -251,7 +251,7 @@ Falls Probleme mit dem Metrics Server auftreten, können folgende Schritte zur F
 \begin{enumerate}
     \item \texttt{helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/}
     \item  \texttt{helm repo update}
-    \item \texttt{helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard}
+    \item \texttt{helm upgrade {-}{-}install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard {-}{-}create-namespace {-}{-}namespace kubernetes-dashboard}
     \item \texttt{kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443 \# Pod muss laufen (Start dauert eventuell etwas)}
 \end{enumerate}
 Das Dashboard ist in diesem Fall unter \enquote{\texttt{https://localhost:8443}} erreichbar, es kann aber auch ein anderer Port verwendet werden.
@@ -259,7 +259,7 @@ Das Dashboard ist in diesem Fall unter \enquote{\texttt{https://localhost:8443}}
 Um auf das Dashboard zugreifen zu können muss ein BearerToken erstellt werden
 \begin{enumerate}
     \item \textbf{ServiceAccount erstellen:}\\ \texttt{kubectl create serviceaccount dashboard-admin-sa -n kubernetes-dashboard}
-    \item \textbf{ClusterRoleBindung erstellen:}\\ \texttt{kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:dashboard-admin-sa}
+    \item \textbf{ClusterRoleBindung erstellen:}\\ \texttt{kubectl create clusterrolebinding dashboard-admin-sa {-}{-}clusterrole=cluster-admin {-}{-}serviceaccount=kubernetes-dashboard:dashboard-admin-sa}
     \item \textbf{BearerToken generieren:}\\ \texttt{kubectl -n kubernetes-dashboard create token dashboard-admin-sa}
 \end{enumerate}
 Zum Login wird das BearerToken bei der Seite des Dashboards im Browser eingesetzt.
@@ -278,7 +278,7 @@ Prometheus ist ein Open-Source-Monitoring-System und eine Zeitreihen-Datenbank, 
 \begin{enumerate}
     \item \texttt{helm repo add prometheus-community https://prometheus-community.github.io/helm-charts}
     \item \texttt{helm repo update}
-    \item \texttt{helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace}
+    \item \texttt{helm install prometheus prometheus-community/kube-prometheus-stack {-}{-}namespace monitoring {-}{-}create-namespace}
     \item \texttt{kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090 \# Pod muss laufen}
 \end{enumerate}
 
@@ -300,22 +300,22 @@ Für Grafana muss Prometheus, oder eine andere Datenquelle installiert sein.
 \begin{enumerate}
     \item \texttt{helm repo add grafana https://grafana.github.io/helm-charts}
     \item \texttt{helm repo update}
-    \item \texttt{helm install grafana grafana/grafana --namespace monitoring}
+    \item \texttt{helm install grafana grafana/grafana {-}{-}namespace monitoring}
 \end{enumerate}
 \textbf{Passwort generieren:}
 \begin{verbatim}
-    kubectl get secret --namespace monitoring grafana -o
-    jsonpath="{.data.admin-password}" | base64 --decode ; echo
+    kubectl get secret {-}{-}namespace monitoring grafana -o
+    jsonpath="{.data.admin-password}" | base64 {-}{-}decode ; echo
 \end{verbatim}
 \textbf{Umgebungsvariable setzen}
 \begin{verbatim}
-    export POD_NAME=$(kubectl get pods --namespace monitoring -l
+    export POD_NAME=$(kubectl get pods {-}{-}namespace monitoring -l
     "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=grafana"
     -o jsonpath="{.items[0].metadata.name}")
 \end{verbatim}
 \textbf{Auf Pod starten}
 \begin{verbatim}
-    kubectl --namespace monitoring port-forward $POD_NAME 3000
+    kubectl {-}{-}namespace monitoring port-forward $POD_NAME 3000
 \end{verbatim}
 In diesem Fall ist Grafana im Browser unter \enquote{127.0.0.1:3000} unter dem  Nutzernamen \enquote{admin} erreichbar.
 
@@ -352,7 +352,7 @@ Kapacitor ist die Echtzeit-Datenverarbeitungs- und Alarmierungskomponente des TI
     \item \textbf{Telegraf installieren:}
     \begin{verbatim}
     wget -q https://repos.influxdata.com/influxdata-archive_compat.key
-    echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c influxdata-archive_compat.key' | sha256sum -c && cat influxdata-archive_compat.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
+    echo '393e8779c89ac8d958f81f942f9ad7fb82a25e133faddaf92e15b16e6ac9ce4c influxdata-archive_compat.key' | sha256sum -c && cat influxdata-archive_compat.key | gpg {-}{-}dearmor | sudo tee /etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg > /dev/null
     echo 'deb [signed-by=/etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg] https://repos.influxdata.com/debian stable main' | sudo tee /etc/apt/sources.list.d/influxdata.list
     sudo apt-get update && sudo apt-get install telegraf
     

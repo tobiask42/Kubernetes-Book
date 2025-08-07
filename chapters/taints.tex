@@ -10,11 +10,11 @@ Taints und Tolerations werden verwendet, um die Zuweisung von Pods zu Nodes zu s
 \hline
 \texttt{kubectl taint nodes <node-name> key=value:taint-effect} & Einen Taint zu einer Node hinzufügen \\
 \texttt{kubectl taint nodes <node-name> key:NoSchedule-} & Einen Taint von einer Node entfernen \\
-\texttt{kubectl get nodes --show-labels} & Alle Nodes mit ihren Labels anzeigen \\
+\texttt{kubectl get nodes {-}{-}show-labels} & Alle Nodes mit ihren Labels anzeigen \\
 \texttt{kubectl label nodes <node-name> <label-key>=<label-value>} & Ein Label zu einer Node hinzufügen \\
 \texttt{kubectl label nodes <node-name> <label-key>-} & Ein Label von einer Node entfernen \\
 \texttt{kubectl describe node <node-name>} & Details zu einer Node anzeigen, einschließlich Taints und Labels \\
-\texttt{kubectl get pods --selector=<label-key>=<label-value>} & Alle Pods anzeigen, die einem bestimmten Label entsprechen \\
+\texttt{kubectl get pods {-}{-}selector=<label-key>=<label-value>} & Alle Pods anzeigen, die einem bestimmten Label entsprechen \\
 \hline
 \end{tabular}
 
@@ -114,10 +114,10 @@ Affinity und Anti-Affinity werden verwendet, um die Platzierung von Pods auf Nod
 \hline
 \texttt{kubectl apply -f <pod-affinity.yaml>} & Ein Pod mit Affinity-Regeln anhand einer YAML-Datei erstellen \\
 \texttt{kubectl describe pod <pod-name>} & Details zu einem Pod anzeigen, einschließlich Affinity und Anti-Affinity Regeln \\
-\texttt{kubectl get pods --selector=<label-key>=<label-value>} & Alle Pods anzeigen, die einem bestimmten Label entsprechen, um Affinity zu überprüfen \\
+\texttt{kubectl get pods {-}{-}selector=<label-key>=<label-value>} & Alle Pods anzeigen, die einem bestimmten Label entsprechen, um Affinity zu überprüfen \\
 \texttt{kubectl edit pod <pod-name>} & Einen Pod im Editor bearbeiten, um Affinity oder Anti-Affinity Regeln hinzuzufügen oder zu ändern \\
 \texttt{kubectl delete pod <pod-name>} & Einen Pod löschen, um Affinity oder Anti-Affinity Regeln zu entfernen \\
-\texttt{kubectl get nodes --show-labels} & Alle Nodes mit ihren Labels anzeigen, um Affinity-Regeln zu planen \\
+\texttt{kubectl get nodes {-}{-}show-labels} & Alle Nodes mit ihren Labels anzeigen, um Affinity-Regeln zu planen \\
 \texttt{kubectl describe node <node-name>} & Details zu einer Node anzeigen, um zu überprüfen, ob sie den Affinity-Bedingungen entspricht \\
 \texttt{kubectl logs <pod-name>} & Logs eines Pods anzeigen, um Probleme im Zusammenhang mit Affinity oder Anti-Affinity zu debuggen \\
 \hline
@@ -182,10 +182,10 @@ Node Selectors ermöglichen es, Pods auf bestimmte Nodes im Kubernetes-Cluster z
 \hline
 \textbf{Befehl} & \textbf{Beschreibung} \\
 \hline
-\texttt{kubectl get nodes --show-labels} & Alle Nodes mit ihren Labels auflisten \\
+\texttt{kubectl get nodes {-}{-}show-labels} & Alle Nodes mit ihren Labels auflisten \\
 \texttt{kubectl label node <node-name> <label-key>=<label-value>} & Ein Label zu einem Node hinzufügen \\
 \texttt{kubectl label node <node-name> <label-key>-} & Ein Label von einem Node entfernen \\
-\texttt{kubectl get pods -o wide --field-selector spec.nodeName=<node-name>} & Alle Pods auf einem bestimmten Node auflisten \\
+\texttt{kubectl get pods -o wide {-}{-}field-selector spec.nodeName=<node-name>} & Alle Pods auf einem bestimmten Node auflisten \\
 \texttt{kubectl describe node <node-name>} & Details zu einem bestimmten Node, einschließlich seiner Labels, anzeigen \\
 \texttt{kubectl get nodes -l <label-key>=<label-value>} & Nodes mit einem bestimmten Label selektieren \\
 \hline
@@ -210,7 +210,7 @@ Um einen Pod auf Nodes mit einem bestimmten Label zu planen, muss der Node Selec
 \hline
 \textbf{Befehl} & \textbf{Beschreibung} \\
 \hline
-\texttt{kubectl get pods --selector=<label-key>=<label-value>} & Listet alle Pods auf, die einem bestimmten Label-Selector entsprechen \\
+\texttt{kubectl get pods {-}{-}selector=<label-key>=<label-value>} & Listet alle Pods auf, die einem bestimmten Label-Selector entsprechen \\
 \texttt{kubectl get nodes -o=jsonpath=} & Listet Nodes anhand eines spezifischen Labels \\
 \texttt{'\{.items[?(@.metadata.labels.<label-key>=="<label-value>")].metadata.name\}'} &  \\
 \hline

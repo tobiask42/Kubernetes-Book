@@ -12,7 +12,7 @@ Stellen dauerhaften Speicher bereit, der unabhängig vom Lebenszyklus von Pods e
 \texttt{kubectl apply -f <pv-config.yaml>} & PersistentVolume erstellen \\
 \texttt{kubectl edit pv <pv-name>} & PersistentVolume bearbeiten \\
 \texttt{kubectl get pv -o yaml} & Alle PersistentVolumes anzeigen \\
-\texttt{kubectl patch pv <pv-name> --patch '<json-patch>'} & PersistentVolume aktualisieren \\
+\texttt{kubectl patch pv <pv-name> {-}{-}patch '<json-patch>'} & PersistentVolume aktualisieren \\
 \hline
 \end{tabular}
 \subsubsection{Beispielkonfiguration eines PersistentVolumes}
@@ -31,7 +31,7 @@ PVs werden in Pods über PersistentVolumeClaims (PVCs) verwendet:
 \texttt{kubectl apply -f <pvc-config.yaml>} & PersistentVolumeClaim erstellen \\
 \texttt{kubectl edit pvc <pvc-name>} & PersistentVolumeClaim bearbeiten \\
 \texttt{kubectl get pvc -o yaml} & PersistentVolumeClaims anzeigen \\
-\texttt{kubectl patch pvc <pvc-name> --patch '<json-patch>'} & PersistentVolumeClaim aktualisieren \\
+\texttt{kubectl patch pvc <pvc-name> {-}{-}patch '<json-patch>'} & PersistentVolumeClaim aktualisieren \\
 \hline
 \end{tabular}
 \newpage

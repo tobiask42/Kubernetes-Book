@@ -39,7 +39,7 @@ Stellen sicher, dass eine Kopie eines Pods auf jeder Node (oder einer ausgewähl
 \hline
 \texttt{kubectl rollout status daemonset/<daemonset-name>} & Den Rollout-Status eines DaemonSets anzeigen \\
 \texttt{kubectl edit daemonset <daemonset-name>} & Ein DaemonSet direkt im Editor bearbeiten \\
-\texttt{kubectl scale --replicas=<number> daemonset <daemonset-name>} & Die Anzahl der Pods in einem DaemonSet ändern \\
+\texttt{kubectl scale {-}{-}replicas=<number> daemonset <daemonset-name>} & Die Anzahl der Pods in einem DaemonSet ändern \\
 \texttt{kubectl get daemonset <daemonset-name> -o yaml} & Die vollständige YAML-Konfiguration eines DaemonSets anzeigen \\
 \texttt{kubectl patch daemonset <daemonset-name> -p <patch-data>} & Einen Patch auf ein DaemonSet anwenden \\
 \hline
@@ -95,7 +95,7 @@ Verwalten den Zustand und die Identität von Pods, insbesondere für zustandsbeh
 \hline
 \texttt{kubectl rollout status statefulset/<statefulset-name>} & Rollout-Status anzeigen \\
 \texttt{kubectl edit statefulset <statefulset-name>} & StatefulSet bearbeiten \\
-\texttt{kubectl scale --replicas=<number> statefulset <statefulset-name>} & Anzahl der Pods ändern \\
+\texttt{kubectl scale {-}{-}replicas=<number> statefulset <statefulset-name>} & Anzahl der Pods ändern \\
 \texttt{kubectl get statefulset <statefulset-name> -o yaml} & Konfiguration anzeigen \\
 \texttt{kubectl patch statefulset <statefulset-name> -p <patch-data>} & Patch anwenden \\
 \hline
@@ -123,8 +123,8 @@ ReplicaSets stellen sicher, dass eine definierte Anzahl von Pod-Replikaten zu je
 \texttt{kubectl describe replicaset <replicaset-name>} & Details anzeigen \\
 \texttt{kubectl create -f <replicaset.yaml>} & ReplicaSet aus Datei erstellen \\
 \texttt{kubectl delete replicaset <replicaset-name>} & ReplicaSet löschen \\
-\texttt{kubectl scale replicaset <replicaset-name> --replicas=<number>} & Anzahl der Pods skalieren \\
-\texttt{kubectl get pods --selector=<label>=<value>} & Zugeordnete Pods anzeigen \\
+\texttt{kubectl scale replicaset <replicaset-name> {-}{-}replicas=<number>} & Anzahl der Pods skalieren \\
+\texttt{kubectl get pods {-}{-}selector=<label>=<value>} & Zugeordnete Pods anzeigen \\
 \texttt{kubectl edit replicaset <replicaset-name>} & ReplicaSet bearbeiten \\
 \texttt{kubectl patch replicaset <replicaset-name> -p <patch-data>} & ReplicaSet patchen \\
 \hline
@@ -158,8 +158,8 @@ ReplicaSets stellen sicher, dass eine definierte Anzahl von Pod-Replikaten zu je
 \texttt{kubectl set image replicaset/<replicaset-name> <container-name>=<new-image>} & Das Image eines Containers in einem ReplicaSet aktualisieren \\
 \texttt{kubectl get rs -o wide} & Detaillierte Informationen zu allen ReplicaSets anzeigen \\
 \texttt{kubectl get pods -l <label>=<value>} & Pods anzeigen, die einem bestimmten ReplicaSet zugeordnet sind \\
-\texttt{kubectl delete pod --force --grace-period=0 <pod-name>} & Einen Pod sofort löschen, damit das ReplicaSet ihn neu erstellen kann \\
-\texttt{kubectl scale replicaset nginx-replicaset --replicas=5} & Skalierung eines ReplicaSets über einen Konsolenbefehl\\
+\texttt{kubectl delete pod {-}{-}force {-}{-}grace-period=0 <pod-name>} & Einen Pod sofort löschen, damit das ReplicaSet ihn neu erstellen kann \\
+\texttt{kubectl scale replicaset nginx-replicaset {-}{-}replicas=5} & Skalierung eines ReplicaSets über einen Konsolenbefehl\\
 \hline
 \end{tabular}
 \subsubsection{YAML-Datei für die Skalierung eines ReplicaSets}
@@ -220,8 +220,8 @@ Ermöglichen die einmalige Ausführung von Aufgaben, bis sie erfolgreich abgesch
 \hline
 \texttt{kubectl get job <job-name> -o yaml} & Die vollständige YAML-Konfiguration eines Jobs anzeigen \\
 \texttt{kubectl logs job/<job-name>} & Logs eines Jobs anzeigen \\
-\texttt{kubectl get pods --selector=job-name=<job-name>} & Die Pods anzeigen, die zu einem bestimmten Job gehören \\
-\texttt{kubectl wait --for=condition=complete job/<job-name>} & Warten, bis ein Job abgeschlossen ist \\
+\texttt{kubectl get pods {-}{-}selector=job-name=<job-name>} & Die Pods anzeigen, die zu einem bestimmten Job gehören \\
+\texttt{kubectl wait {-}{-}for=condition=complete job/<job-name>} & Warten, bis ein Job abgeschlossen ist \\
 \texttt{kubectl patch job <job-name> -p <patch-data>} & Einen Patch auf einen Job anwenden \\
 \hline
 \end{tabular}
@@ -287,18 +287,18 @@ Ein CronJob erstellt auf Basis eines vordefinierten Zeitplans automatisch Jobs. 
 \textbf{Befehl} & \textbf{Beschreibung} \\
 \hline
 \texttt{kubectl get cronjob <cronjob-name> -o yaml} & Konfiguration anzeigen \\
-\texttt{kubectl logs job/\$(kubectl get jobs --selector=cronjob-name=<cronjob-name> -o jsonpath="{.items[0].metadata.name}")} & Logs anzeigen \\
-\texttt{kubectl create job --from=cronjob/<cronjob-name> <job-name>} & Erstellen eines Jobs \\
-\texttt{kubectl get jobs --selector=cronjob-name=<cronjob-name>} & Jobs auflisten \\
+\texttt{kubectl logs job/\$(kubectl get jobs {-}{-}selector=cronjob-name=<cronjob-name> -o jsonpath="{.items[0].metadata.name}")} & Logs anzeigen \\
+\texttt{kubectl create job {-}{-}from=cronjob/<cronjob-name> <job-name>} & Erstellen eines Jobs \\
+\texttt{kubectl get jobs {-}{-}selector=cronjob-name=<cronjob-name>} & Jobs auflisten \\
 \texttt{kubectl patch cronjob <cronjob-name> -p <patch-data>} & Patch anwenden \\
-\texttt{kubectl delete job --selector=cronjob-name=<cronjob-name>} & Alle Jobs löschen \\
+\texttt{kubectl delete job {-}{-}selector=cronjob-name=<cronjob-name>} & Alle Jobs löschen \\
 \hline
 \end{tabular}
 
 \subsection{Fehlerbehebung bei CronJobs}
 \begin{itemize}
     \item \textbf{Job startet nicht:} Logs des CronJobs und des erstellten Jobs mit folgendem Befehl überprüfen, um mögliche Fehlerursachen zu identifizieren:\\
-    \texttt{kubectl logs job/\$(kubectl get jobs --selector=cronjob-name=<cronjob-name> -o\\jsonpath="{.items[0].metadata.name}")}
+    \texttt{kubectl logs job/\$(kubectl get jobs {-}{-}selector=cronjob-name=<cronjob-name> -o\\jsonpath="{.items[0].metadata.name}")}
     \item \textbf{CronJob wird nicht ausgeführt:} sicherstellen, dass der Zeitplan \enquote{\texttt{schedule}} korrekt ist und keine Syntaxfehler enthält. Zeit und Datumseinstellungen des Clusters überprüfen.
     \item \textbf{Jobs bleiben hängen:} Die Pods, die von den Jobs erstellt wurden überprüfen, um zu sehen, ob sie in einem Fehlerzustand sind. \enquote{\texttt{kubectl describe pod <pod-name>}} für detaillierte Informationen verwenden.
     \item \textbf{Mehrere Instanzen eines Jobs:} \enquote{\texttt{concurrencyPolicy}} auf \enquote{\texttt{Forbid}} oder \enquote{\texttt{Replace}} setzen, um die gleichzeitige Ausführung mehrerer Instanzen eines Jobs zu verhindern.

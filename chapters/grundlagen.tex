@@ -12,7 +12,7 @@ Die kleinste und einfachste Kubernetes-Einheit, die eine oder mehrere Container 
 \texttt{kubectl describe pod <pod-name>} & Details zu einem bestimmten Pod anzeigen \\
 \texttt{kubectl delete pod <pod-name>} & Einen Pod löschen \\
 \texttt{kubectl logs <pod-name>} & Logs eines Pods anzeigen \\
-\texttt{kubectl exec -it <pod-name> -- <command>} & Befehle in einem Pod ausführen \\
+\texttt{kubectl exec -it <pod-name> {-}{-} <command>} & Befehle in einem Pod ausführen \\
 \hline
 \end{tabular}
 
@@ -43,7 +43,7 @@ Verwaltet und skaliert eine Gruppe von Pods und stellt sicher, dass eine bestimm
 \texttt{kubectl describe deployment <deployment-name>} & Details anzeigen \\
 \texttt{kubectl delete deployment <deployment-name>} & Deployment löschen \\
 \texttt{kubectl rollout restart deployment <deployment-name>} & Deployment neu starten \\
-\texttt{kubectl scale deployment <deployment-name> --replicas=<number>} & Anzahl der Pods ändern \\
+\texttt{kubectl scale deployment <deployment-name> {-}{-}replicas=<number>} & Anzahl der Pods ändern \\
 \texttt{kubectl set image deployment <deployment-name> <container-name>=<new-image>} & Image aktualisieren \\
 \hline
 \end{tabular}
@@ -100,7 +100,7 @@ Services abstrahieren die Kommunikation mit Pods. Sie stellen eine dauerhafte IP
 \texttt{kubectl get services} & Services auflisten \\
 \texttt{kubectl describe service <service-name>} & Details anzeigen \\
 \texttt{kubectl delete service <service-name>} & Service löschen \\
-\texttt{kubectl expose <resource> --port=<port>} & Service erstellen\\
+\texttt{kubectl expose <resource> {-}{-}port=<port>} & Service erstellen\\
 \hline
 \end{tabular}
 
@@ -187,7 +187,7 @@ Nodes sind physische oder virtuelle Maschinen in einem Kubernetes-Cluster. Sie s
 \texttt{kubectl edit node <node-name>} & Node bearbeiten \\
 \texttt{kubectl get node <node-name> -o yaml} & Konfiguration anzeigen \\
 \texttt{kubectl patch node <node-name> -p <patch-data>} & Patch anwenden \\
-\texttt{kubectl get events --field-selector involvedObject.kind=Node} & Ereignisse der Node anzeigen \\
+\texttt{kubectl get events {-}{-}field-selector involvedObject.kind=Node} & Ereignisse der Node anzeigen \\
 \texttt{kubectl annotate node <node-name> <annotation-key>=<annotation-value>} & Annotation hinzufügen \\
 \hline
 \end{tabular}
@@ -207,11 +207,11 @@ Ermöglichen die Trennung von Ressourcen innerhalb eines Kubernetes-Clusters, um
 \texttt{kubectl describe namespace <namespace-name>} & Details zu einem Namespace anzeigen \\
 \texttt{kubectl create namespace <namespace-name>} & Neuen Namespace erstellen \\
 \texttt{kubectl delete namespace <namespace-name>} & Einen Namespace löschen \\
-\texttt{kubectl get pods --namespace=<namespace-name>} & In einem bestimmten Namespace ausführen \\
-\texttt{kubectl config set-context --current --namespace=<namespace-name>} & Namespace als Standard setzen \\
-\texttt{kubectl config view --minify | grep namespace:} & Aktuellen Namespace anzeigen \\
-\texttt{kubectl api-resources --namespaced=true} & Ressourcen in namespaces \\
-\texttt{kubectl api-resources --namespaced=false} & Ressourcen außerhalb von namespaces\\
+\texttt{kubectl get pods {-}{-}namespace=<namespace-name>} & In einem bestimmten Namespace ausführen \\
+\texttt{kubectl config set-context {-}{-}current {-}{-}namespace=<namespace-name>} & Namespace als Standard setzen \\
+\texttt{kubectl config view {-}{-}minify | grep namespace:} & Aktuellen Namespace anzeigen \\
+\texttt{kubectl api-resources {-}{-}namespaced=true} & Ressourcen in namespaces \\
+\texttt{kubectl api-resources {-}{-}namespaced=false} & Ressourcen außerhalb von namespaces\\
 \hline
 \end{tabular}
 
@@ -240,7 +240,7 @@ Labels werden zur Selektion und Gruppierung von Ressourcen verwendet, während A
 \hline
 \textbf{Befehl} & \textbf{Beschreibung} \\
 \hline
-\texttt{kubectl get pods --show-labels} & Alle Pods mit ihren Labels auflisten \\
+\texttt{kubectl get pods {-}{-}show-labels} & Alle Pods mit ihren Labels auflisten \\
 \texttt{kubectl label pod <pod-name> <key>=<value>} & Ein Label zu einem Pod hinzufügen \\
 \texttt{kubectl label pod <pod-name> <key>-} & Ein Label von einem Pod entfernen \\
 \texttt{kubectl annotate pod <pod-name> <key>=<value>} & Eine Annotation zu einem Pod hinzufügen \\
@@ -340,7 +340,7 @@ Sie können miteinander verkettet werden:
 Zudem können mehrere Ressourcentypen gleichzeitig ausgewählt werden:
 \input{minted/tex/BASH-feld-selektor-multi.tex}
 \subsubsection{Durch Feld-Selektoren unterstützte Felder}
-Die folgende Tabelle listet Ressourcenarten und ihre jeweiligen Felder auf, die im Rahmen von Feld-Selektoren (`--field-selector`) verwendet werden können.\\
+Die folgende Tabelle listet Ressourcenarten und ihre jeweiligen Felder auf, die im Rahmen von Feld-Selektoren (`{-}{-}field-selector`) verwendet werden können.\\
 \begin{table}[htbp]
 \centering
 \begin{tabular}{|p{0.25\textwidth}|p{0.7\textwidth}|}
