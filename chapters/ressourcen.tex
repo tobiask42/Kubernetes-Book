@@ -5,20 +5,20 @@ Ermöglicht es, Ressourcenlimits und -quoten für Namespaces festzulegen. Resour
 
 \noindent
 \begin{tabular}{
-|p{0.5\textwidth}|p{0.5\textwidth}|}
+|p{0.7\textwidth}|p{0.3\textwidth}|}
 \hline
 \textbf{Befehl} & \textbf{Beschreibung} \\
 \hline
-\texttt{kubectl get resourcequotas} & Alle ResourceQuotas im aktuellen Namespace auflisten \\
-\texttt{kubectl describe resourcequota <resourcequota-name>} & Details zu einer ResourceQuota anzeigen \\
-\texttt{kubectl delete resourcequota <resourcequota-name>} & Eine ResourceQuota löschen \\
-\texttt{kubectl get limitranges} & Alle LimitRanges im aktuellen Namespace auflisten \\
-\texttt{kubectl create -f <resourcequota.yaml>} & eine Resource Quota erstellen\\
-\texttt{kubectl create -f <limitrange.yaml>} & Eine LimitRange erstellen\\
-\texttt{kubectl apply -f <resourcequota.yaml>} & eine Resource Quota erstellen oder updaten\\
-\texttt{kubectl apply -f <limitrage.yaml>} & eine LimitRange erstellen oder updaten\\
-\texttt{kubectl describe limitrange <limitrange-name>} & Details zu einer LimitRange anzeigen \\
-\texttt{kubectl delete limitrange <limitrange-name>} & Eine LimitRange löschen \\
+\texttt{kubectl get resourcequotas} & ResourceQuotas auflisten \\
+\texttt{kubectl describe resourcequota <resourcequota-name>} & Details anzeigen \\
+\texttt{kubectl delete resourcequota <resourcequota-name>} & ResourceQuota löschen \\
+\texttt{kubectl get limitranges} & LimitRanges auflisten \\
+\texttt{kubectl create -f <resourcequota.yaml>} & Resource Quota erstellen\\
+\texttt{kubectl create -f <limitrange.yaml>} & LimitRange erstellen\\
+\texttt{kubectl apply -f <resourcequota.yaml>} & Resource Quota updaten\\
+\texttt{kubectl apply -f <limitrage.yaml>} & LimitRange updaten\\
+\texttt{kubectl describe limitrange <limitrange-name>} & Details anzeigen \\
+\texttt{kubectl delete limitrange <limitrange-name>} & LimitRange löschen \\
 \hline
 \end{tabular}
 
@@ -39,35 +39,38 @@ Ermöglicht es, Ressourcenlimits und -quoten für Namespaces festzulegen. Resour
 
 \subsection{Best Practices für Resource Quotas und LimitRanges}
 \begin{itemize}
-    \item Setze realistische Quoten und Limits basierend auf der tatsächlichen Nutzung und den Anforderungen der Anwendungen.
-    \item Überwache regelmäßig die Ressourcennutzung, um sicherzustellen, dass die Quoten und Limits angemessen sind.
-    \item Kommuniziere die Quoten und Limits klar an alle Teams, um Verständnis und Akzeptanz zu fördern.
-    \item Nutze Namespaces, um verschiedene Quoten und Limits für unterschiedliche Teams oder Projekte festzulegen.
-    \item Passe die Quoten und Limits bei Änderungen der Anforderungen oder der Clusterkapazität an.
+    \item Realistische Quoten und Limits basierend auf der tatsächlichen Nutzung und den Anforderungen der Anwendungen setzen.
+    \item Regelmäßig die Ressourcennutzung überwachen, um sicherzustellen, dass die Quoten und Limits angemessen sind.
+    \item Die Quoten und Limits klar an alle Teams kommunizieren, um Verständnis und Akzeptanz zu fördern.
+    \item Namespaces nutzen, um verschiedene Quoten und Limits für unterschiedliche Teams oder Projekte festzulegen.
+    \item Die Quoten und Limits bei Änderungen der Anforderungen oder der Clusterkapazität anpassen.
 \end{itemize}
 
 \subsection{Weitere nützliche Befehle für Resource Quotas und LimitRanges}
-\begin{tabular}{|p{0.53\textwidth}|p{0.47\textwidth}|}
+\begin{tabular}{|p{0.7\textwidth}|p{0.3\textwidth}|}
 \hline
 \textbf{Befehl} & \textbf{Beschreibung} \\
 \hline
-\texttt{kubectl get resourcequotas -o yaml} & YAML-Konfiguration aller ResourceQuotas im aktuellen Namespace anzeigen \\
-\texttt{kubectl get limitranges -o yaml} & YAML-Konfiguration aller LimitRanges im aktuellen Namespace anzeigen \\
-\texttt{kubectl patch resourcequota <resourcequota-name> -p <patch-data>} & Einen Patch auf eine ResourceQuota anwenden \\
-\texttt{kubectl patch limitrange <limitrange-name> -p <patch-data>} & Einen Patch auf eine LimitRange anwenden \\
-\texttt{kubectl edit resourcequota <resourcequota-name>} & Eine ResourceQuota im Editor bearbeiten \\
-\texttt{kubectl edit limitrange <limitrange-name>} & Eine LimitRange im Editor bearbeiten \\
-\texttt{kubectl get pods {-}{-}namespace=<namespace> {-}{-}field-selector=status.phase=Failed} & Alle fehlgeschlagenen Pods in einem Namespace auflisten, um Ressourcenlecks zu identifizieren \\
+\texttt{kubectl get resourcequotas -o yaml} & Konfiguration anzeigen \\
+\texttt{kubectl get limitranges -o yaml} & Konfiguration anzeigen \\
+\texttt{kubectl patch resourcequota <resourcequota-name> -p <patch-data>} & Patch anwenden \\
+\texttt{kubectl patch limitrange <limitrange-name> -p <patch-data>} & Patch anwenden \\
+\texttt{kubectl edit resourcequota <resourcequota-name>} & ResourceQuota bearbeiten \\
+\texttt{kubectl edit limitrange <limitrange-name>} & LimitRange bearbeiten \\
+\texttt{kubectl get pods {-}{-}namespace=<namespace> {-}{-}field-selector=status.phase=Failed} & Fehlgeschlagene Pods auflisten\\
 \hline
 \end{tabular}
 
 \subsection*{Nützliche Links und Ressourcen}
-\begin{itemize}
-    \item \href{https://kubernetes.io/docs/concepts/policy/resource-quotas/}{Kubernetes Resource Quotas Dokumentation}
-    \item \href{https://kubernetes.io/docs/tasks/administer-cluster/quota-api-object/}{Kubernetes Task: Administering Resource Quotas}
-    \item \href{https://kubernetes.io/docs/concepts/policy/limit-range/}{Kubernetes Limit Range Dokumentation}
-    \item \href{https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/memory-default-namespace/}{Kubernetes Task: Managing Compute Resources for Containers}
-\end{itemize}
+Kubernetes Resource Quotas Dokumentation:\\
+\url{https://kubernetes.io/docs/concepts/policy/resource-quotas/}\\
+Kubernetes Task: Administering Resource Quotas:\\
+\url{https://kubernetes.io/docs/tasks/administer-cluster/quota-api-object/}\\
+Kubernetes Limit Range Dokumentation:\\
+\url{https://kubernetes.io/docs/concepts/policy/limit-range/}\\
+Kubernetes Task: Managing Compute Resources for Containers:\\
+{\normalsize\ttfamily\href{https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/memory-default-namespace/}{https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/memory-default-namespace/}}
+
 
 
 
@@ -80,11 +83,11 @@ PodDisruptionBudgets (PDB) werden verwendet, um die Anzahl der gleichzeitigen Po
 \hline
 \textbf{Befehl} & \textbf{Beschreibung} \\
 \hline
-\texttt{kubectl get pdb} & Alle PodDisruptionBudgets im aktuellen Namespace auflisten \\
-\texttt{kubectl describe pdb <pdb-name>} & Details zu einem PodDisruptionBudget anzeigen \\
+\texttt{kubectl get pdb} & PodDisruptionBudgets auflisten \\
+\texttt{kubectl describe pdb <pdb-name>} & Details anzeigen \\
 \texttt{kubectl create -f <pdb.yaml>} & PodDisruptionBudget erstellen\\
-\texttt{kubectl apply -f <pdb.yaml>} & PodDisruptionBudget erstellen oder updaten\\
-\texttt{kubectl delete pdb <pdb-name>} & Ein PodDisruptionBudget löschen \\
+\texttt{kubectl apply -f <pdb.yaml>} & PodDisruptionBudget updaten\\
+\texttt{kubectl delete pdb <pdb-name>} & PodDisruptionBudget löschen \\
 \hline
 \end{tabular}
 
@@ -103,11 +106,11 @@ PodDisruptionBudgets (PDB) werden verwendet, um die Anzahl der gleichzeitigen Po
 
 \subsection{Best Practices für PodDisruptionBudgets}
 \begin{itemize}
-    \item Setze realistische Werte für \texttt{minAvailable} oder \texttt{maxUnavailable}, um die Verfügbarkeit von Anwendungen zu gewährleisten.
+    \item Realistische Werte für \texttt{minAvailable} oder \texttt{maxUnavailable} setzen, um die Verfügbarkeit von Anwendungen zu gewährleisten.
     \item Überprüfe regelmäßig die Konfiguration der PDBs, um sicherzustellen, dass sie den aktuellen Anforderungen entsprechen.
-    \item Kombiniere PDBs mit anderen Hochverfügbarkeitsstrategien wie ReplicaSets und Deployments.
-    \item Dokumentiere alle PDBs und deren Zweck, um die Verwaltung zu erleichtern.
-    \item Teste die Auswirkungen von PDBs in einer Staging-Umgebung, bevor sie in der Produktion verwendet werden.
+    \item PDBs mit anderen Hochverfügbarkeitsstrategien wie ReplicaSets und Deployments kombinieren.
+    \item Alle PDBs und deren Zweck dokumentieren, um die Verwaltung zu erleichtern.
+    \item Die Auswirkungen von PDBs in einer Staging-Umgebung testen, bevor sie in der Produktion verwendet werden.
 \end{itemize}
 
 \subsection{Weitere nützliche Befehle für PodDisruptionBudgets}
@@ -115,15 +118,15 @@ PodDisruptionBudgets (PDB) werden verwendet, um die Anzahl der gleichzeitigen Po
 \hline
 \textbf{Befehl} & \textbf{Beschreibung} \\
 \hline
-\texttt{kubectl get pdb -o yaml} & YAML-Konfiguration aller PodDisruptionBudgets im aktuellen Namespace anzeigen \\
-\texttt{kubectl edit pdb <pdb-name>} & Ein PodDisruptionBudget im Editor bearbeiten \\
-\texttt{kubectl patch pdb <pdb-name> -p <patch-data>} & Einen Patch auf ein PodDisruptionBudget anwenden \\
-\texttt{kubectl get pods {-}{-}selector=<label-selector>} & Alle Pods auflisten, die von einem bestimmten PDB betroffen sind \\
+\texttt{kubectl get pdb -o yaml} & Konfiguration anzeigen \\
+\texttt{kubectl edit pdb <pdb-name>} & PodDisruptionBudget bearbeiten \\
+\texttt{kubectl patch pdb <pdb-name> -p <patch-data>} & Patch anwenden \\
+\texttt{kubectl get pods {-}{-}selector=<label-selector>} & Von PDB betroffene Pods auflisten \\
 \hline
 \end{tabular}
 
-\subsection{Nützliche Links und Ressourcen}
-\begin{itemize}
-    \item \href{https://kubernetes.io/docs/concepts/workloads/pods/disruptions/}{Kubernetes PodDisruptionBudgets Dokumentation}
-    \item \href{https://kubernetes.io/docs/tasks/run-application/configure-pdb/}{Kubernetes Task: Configure PodDisruptionBudget}
-\end{itemize}
+\subsection*{Nützliche Links und Ressourcen}
+Kubernetes PodDisruptionBudgets Dokumentation:\\
+\url{https://kubernetes.io/docs/concepts/workloads/pods/disruptions/}\\
+Kubernetes Task: Configure PodDisruptionBudget:\\
+\url{https://kubernetes.io/docs/tasks/run-application/configure-pdb/}
