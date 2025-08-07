@@ -26,6 +26,7 @@
 \usepackage{etoolbox}
 \usepackage{xurl}
 \Urlmuskip=0mu plus 1mu
+\usepackage{changepage}
 
 
 % Schriftgröße für URLs anpassen
@@ -39,8 +40,6 @@
   Ligatures=TeX,
   ItalicFont={Fira Code}
 ]{Fira Code}
-
-
 
 
 \let\oldtexttt\texttt
@@ -120,7 +119,11 @@ Für kommerzielle Nutzung, Feedback oder allgemeine Anfragen: \href{https://tobi
 \clearpage
 
 \pagenumbering{arabic}
+
+\input{chapters/vorwort.tex}
+
 \setcounter{page}{1}
+
 \tableofcontents
 
 \input{chapters/grundlagen}
