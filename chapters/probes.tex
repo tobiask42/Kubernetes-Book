@@ -60,7 +60,7 @@ Dabei muss Folgendes beachtet werden:
 \subsubsection{Python Code für readyz-Endpunkt}
 Die Funktion readyz prüft ob die API bereit ist. Zum Beispiel könnte sie testen ob ein Zugriff auf eine Datenbank möglich ist. Ist dies der Fall wird auch hier der Statuscode 200 zurückgegeben.
 Ansonsten wird der Statuscode 503 \enquote{Service Unavailable} zurückgegeben. Kubernetes akzeptiert alle Codes von 400 bis 599 als Fehlschlag.\\
-Je nach Resultat wird die Node
+Je nach Resultat kann Kubernetes den Pod als nicht bereit markieren und ihn aus dem Service-Traffic nehmen. Im Gegensatz zur Liveness Probe führt ein Fehlschlag der Readiness Probe jedoch nicht direkt zu einem Neustart des Pods, sondern signalisiert lediglich, dass er vorübergehend keine Anfragen verarbeiten soll.
 \input{minted/tex/PYTHON-endpoint-readyz}
 \subsubsection{Konfiguration für Readiness Probe}
 Die Readiness Probe verwendet das gleiche Prinzip mit Endpunkt, initialDelay und periodSeconds, wie die Liveness Probe.
